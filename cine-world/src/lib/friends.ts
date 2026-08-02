@@ -1,6 +1,8 @@
 import "server-only";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { verifySession } from "@/lib/dal";
+import { sendFriendRequestEmail } from "@/lib/email";
 
 export interface FriendProfile {
   id: string;
@@ -85,6 +87,10 @@ export async function sendFriendRequest(email: string): Promise<SendRequestResul
     if (error.code === "23505") return "already-exists"; // unique violation on (requester_id, addressee_id)
     throw new Error(`Failed to send request: ${error.message}`);
   }
+
+  const origin = (await headers()).get("origin") ?? "";
+  await sendFriendRequestEmail(email, user.email ?? "Someone", origin);
+
   return "sent";
 }
 
