@@ -55,6 +55,20 @@ export async function getFilm(id: string): Promise<Film | null> {
   return data ? rowToFilm(data as FilmRow) : null;
 }
 
+/** A friend's collection — RLS only allows this when the friendship is accepted, so an empty array means either. */
+export async function listFilmsForUser(userId: string): Promise<Film[]> {
+  await verifySession();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("films")
+    .select("id, title, director, year, country, rating, cluster, note, rewatches")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+
+  if (error) throw new Error(`Failed to load films: ${error.message}`);
+  return (data as FilmRow[]).map(rowToFilm);
+}
+
 export interface CommonsPlacement {
   cluster: ClusterId;
   rating: number;

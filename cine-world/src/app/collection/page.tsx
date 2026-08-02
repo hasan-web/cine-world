@@ -5,28 +5,35 @@ import { PlateFrame } from "@/components/atlas/PlateFrame";
 import { OverlapCanvas } from "@/components/sky/OverlapCanvas";
 import { SkyCanvas } from "@/components/sky/SkyCanvas";
 import { CLUSTERS } from "@/data/clusters";
-import { MEI, MEI_FILMS } from "@/data/friends";
 import { verifySession } from "@/lib/dal";
-import { listFilms } from "@/lib/films";
+import { listFilms, listFilmsForUser } from "@/lib/films";
+import { listFriends } from "@/lib/friends";
 import { signOut } from "@/lib/auth-actions";
 
 const NEW_COLLECTION_THRESHOLD = 4;
 
 export default async function CollectionPage() {
   const user = await verifySession();
-  const films = await listFilms();
-  const sharedCount = films.filter((f) => MEI.filmIds.includes(f.id)).length;
+  const [films, friends] = await Promise.all([listFilms(), listFriends()]);
+  const twin = friends[0];
+  const twinFilms = twin ? await listFilmsForUser(twin.id) : [];
+  const sharedCount = twin ? films.filter((f) => twinFilms.some((tf) => tf.id === f.id)).length : 0;
   const isNewCollection = films.length > 0 && films.length < NEW_COLLECTION_THRESHOLD;
 
   return (
     <main className="mx-auto max-w-[740px] px-7 py-20">
       <div className="mb-6 flex items-center justify-between">
         <span className="font-mono text-[10.5px] text-ink-soft">{user.email}</span>
-        <form action={signOut}>
-          <button type="submit" className="font-mono text-[10.5px] tracking-[0.08em] text-brass uppercase">
-            sign out
-          </button>
-        </form>
+        <div className="flex items-center gap-5">
+          <Link href="/friends" className="font-mono text-[10.5px] tracking-[0.08em] text-brass uppercase">
+            friends
+          </Link>
+          <form action={signOut}>
+            <button type="submit" className="font-mono text-[10.5px] tracking-[0.08em] text-brass uppercase">
+              sign out
+            </button>
+          </form>
+        </div>
       </div>
 
       <Frontispiece />
@@ -76,24 +83,44 @@ export default async function CollectionPage() {
           )}
         </PlateFrame>
 
-        {films.length > 0 && (
+        {films.length > 0 && twin && (
           <PlateFrame
             roman="II"
             title="two collections, overlaid"
             caption={
               <>
                 Of {films.length} specimens in this survey, {sharedCount} fall in exactly the same place as{" "}
-                {MEI.name}&rsquo;s own collection — marked <em>coincident</em> above.{" "}
+                {twin.email}&rsquo;s own collection — marked <em>coincident</em> above.{" "}
                 {isNewCollection ? (
                   <>This fills in as you log more — the overlap only shows up once there&rsquo;s something to overlap.</>
                 ) : (
-                  <>That density of overlap, not a percentage on a profile page, is what makes her a taste twin.</>
+                  <>That density of overlap, not a percentage on a profile page, is what makes them a taste twin.</>
                 )}
               </>
             }
           >
-            <OverlapCanvas yourFilms={films} theirFilms={MEI_FILMS} clusters={CLUSTERS} height={340} />
+            <OverlapCanvas yourFilms={films} theirFilms={twinFilms} clusters={CLUSTERS} height={340} />
             <OverlapLegend />
+          </PlateFrame>
+        )}
+
+        {films.length > 0 && !twin && (
+          <PlateFrame
+            roman="II"
+            title="two collections, overlaid"
+            caption={
+              <>Add a friend to see where your collections agree — a real taste twin, not a percentage on a profile page.</>
+            }
+          >
+            <div className="flex h-[220px] flex-col items-center justify-center gap-5 px-6 text-center">
+              <p className="font-body text-[15px] italic text-ink-soft">no one to overlay yet</p>
+              <Link
+                href="/friends"
+                className="border border-brass px-6 py-3 font-display text-[11px] tracking-[0.14em] text-oxblood uppercase"
+              >
+                Add a friend →
+              </Link>
+            </div>
           </PlateFrame>
         )}
       </div>
