@@ -34,12 +34,7 @@ export default async function CollectionPage() {
           title="the collection"
           caption={
             films.length === 0 ? (
-              <>
-                An empty sky has no stars yet.{" "}
-                <Link href="/log" className="text-oxblood not-italic">
-                  Log your first film →
-                </Link>
-              </>
+              <>Nothing pressed here yet — the box above is where your first specimen will land.</>
             ) : (
               <>
                 {films.length} specimens, pressed by feeling rather than genre code. <em>Solitudo</em> holds the
@@ -53,23 +48,37 @@ export default async function CollectionPage() {
             )
           }
         >
-          <SkyCanvas films={films} clusters={CLUSTERS} height={420} showFrame showLabels interactive navigable />
+          {films.length === 0 ? (
+            <div className="flex h-[420px] flex-col items-center justify-center gap-5 px-6 text-center">
+              <p className="font-body text-[16px] italic text-ink-soft">an empty sky has no stars yet</p>
+              <Link
+                href="/log"
+                className="border border-brass px-6 py-3 font-display text-[11px] tracking-[0.14em] text-oxblood uppercase"
+              >
+                Log your first film →
+              </Link>
+            </div>
+          ) : (
+            <SkyCanvas films={films} clusters={CLUSTERS} height={420} showFrame showLabels interactive navigable />
+          )}
         </PlateFrame>
 
-        <PlateFrame
-          roman="II"
-          title="two collections, overlaid"
-          caption={
-            <>
-              Of {films.length} specimens in this survey, {sharedCount} fall in exactly the same place as{" "}
-              {MEI.name}&rsquo;s own collection — marked <em>coincident</em> above. That density of overlap, not
-              a percentage on a profile page, is what makes her a taste twin.
-            </>
-          }
-        >
-          <OverlapCanvas yourFilms={films} theirFilms={MEI_FILMS} clusters={CLUSTERS} height={340} />
-          <OverlapLegend />
-        </PlateFrame>
+        {films.length > 0 && (
+          <PlateFrame
+            roman="II"
+            title="two collections, overlaid"
+            caption={
+              <>
+                Of {films.length} specimens in this survey, {sharedCount} fall in exactly the same place as{" "}
+                {MEI.name}&rsquo;s own collection — marked <em>coincident</em> above. That density of overlap,
+                not a percentage on a profile page, is what makes her a taste twin.
+              </>
+            }
+          >
+            <OverlapCanvas yourFilms={films} theirFilms={MEI_FILMS} clusters={CLUSTERS} height={340} />
+            <OverlapLegend />
+          </PlateFrame>
+        )}
       </div>
     </main>
   );
