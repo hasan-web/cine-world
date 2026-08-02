@@ -54,7 +54,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body className="min-h-screen bg-paper text-ink font-body antialiased">{children}</body>
+      <body className="flex min-h-screen flex-col bg-paper text-ink font-body antialiased">
+        <div className="flex-1">{children}</div>
+        <footer className="py-8 text-center">
+          <p className="font-mono text-[9.5px] tracking-[0.1em] text-ink-soft/60 uppercase">
+            © Love for Cinema {new Date().getFullYear()} — All rights reserved
+          </p>
+        </footer>
+      </body>
     </html>
   );
 }
