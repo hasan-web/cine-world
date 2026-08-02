@@ -10,10 +10,13 @@ import { verifySession } from "@/lib/dal";
 import { listFilms } from "@/lib/films";
 import { signOut } from "@/lib/auth-actions";
 
+const NEW_COLLECTION_THRESHOLD = 4;
+
 export default async function CollectionPage() {
   const user = await verifySession();
   const films = await listFilms();
   const sharedCount = films.filter((f) => MEI.filmIds.includes(f.id)).length;
+  const isNewCollection = films.length > 0 && films.length < NEW_COLLECTION_THRESHOLD;
 
   return (
     <main className="mx-auto max-w-[740px] px-7 py-20">
@@ -35,6 +38,16 @@ export default async function CollectionPage() {
           caption={
             films.length === 0 ? (
               <>Nothing pressed here yet — the box above is where your first specimen will land.</>
+            ) : isNewCollection ? (
+              <>
+                {films.length} specimen{films.length === 1 ? "" : "s"} placed — this is what it looks like
+                early on. Click it to open its own page and see who else has placed the same film.{" "}
+                <Link href="/log" className="text-oxblood not-italic">
+                  Log another →
+                </Link>{" "}
+                Threads start connecting once a few films share a mood, and the taste-twin plate below gets
+                more interesting the more you place.
+              </>
             ) : (
               <>
                 {films.length} specimens, pressed by feeling rather than genre code. <em>Solitudo</em> holds the
@@ -70,8 +83,12 @@ export default async function CollectionPage() {
             caption={
               <>
                 Of {films.length} specimens in this survey, {sharedCount} fall in exactly the same place as{" "}
-                {MEI.name}&rsquo;s own collection — marked <em>coincident</em> above. That density of overlap,
-                not a percentage on a profile page, is what makes her a taste twin.
+                {MEI.name}&rsquo;s own collection — marked <em>coincident</em> above.{" "}
+                {isNewCollection ? (
+                  <>This fills in as you log more — the overlap only shows up once there&rsquo;s something to overlap.</>
+                ) : (
+                  <>That density of overlap, not a percentage on a profile page, is what makes her a taste twin.</>
+                )}
               </>
             }
           >
