@@ -95,7 +95,10 @@ export default async function CollectionPage() {
                   <>This fills in as you log more — the overlap only shows up once there&rsquo;s something to overlap.</>
                 ) : (
                   <>That density of overlap, not a percentage on a profile page, is what makes them a taste twin.</>
-                )}
+                )}{" "}
+                <Link href={`/friends/${twin.id}`} className="text-oxblood not-italic">
+                  Open their full sky →
+                </Link>
               </>
             }
           >

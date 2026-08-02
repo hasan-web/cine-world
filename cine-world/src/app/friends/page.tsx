@@ -66,7 +66,9 @@ export default async function FriendsPage() {
           <ul className="flex flex-col gap-2">
             {friends.map((f) => (
               <li key={f.id} className="flex items-center justify-between border-b border-line pb-2">
-                <span className="font-mono text-[12.5px] text-ink">{f.email}</span>
+                <Link href={`/friends/${f.id}`} className="font-mono text-[12.5px] text-ink underline decoration-line underline-offset-4">
+                  {f.email}
+                </Link>
                 <form action={removeFriend.bind(null, f.id)}>
                   <button
                     type="submit"
