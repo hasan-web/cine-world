@@ -1,3 +1,4 @@
+import { RewatchForm } from "@/components/film/RewatchForm";
 import { SkyCanvas } from "@/components/sky/SkyCanvas";
 import { CLUSTERS } from "@/data/clusters";
 import type { Film } from "@/lib/types";
@@ -40,16 +41,16 @@ export function FilmEntry({ film, specimenNumber }: FilmEntryProps) {
 
         {film.note && <p className="mb-5 max-w-[38ch] text-[13.5px] leading-[1.7] text-ink-soft">{film.note}</p>}
 
-        {film.rewatches && film.rewatches.length > 0 && (
-          <div className="border-t border-line-soft pt-3">
-            <span className="mb-2 block font-display text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">
-              Rewatch record
-            </span>
-            <div className="relative flex h-[34px] items-start">
+        <div className="border-t border-line-soft pt-3">
+          <span className="mb-2 block font-display text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">
+            Rewatch record
+          </span>
+          {film.rewatches && film.rewatches.length > 0 && (
+            <div className="relative mb-1 flex h-[34px] items-start">
               <div className="absolute top-[14px] right-0 left-0 h-px bg-line" />
               {film.rewatches.map((rewatch, i) => (
                 <div
-                  key={rewatch.year}
+                  key={`${rewatch.year}-${i}`}
                   className="absolute flex -translate-x-1/2 flex-col items-center"
                   style={{ left: `${(i / (film.rewatches!.length - 1 || 1)) * 100}%`, top: "10px" }}
                 >
@@ -61,8 +62,9 @@ export function FilmEntry({ film, specimenNumber }: FilmEntryProps) {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          )}
+          <RewatchForm filmId={film.id} />
+        </div>
       </div>
     </div>
   );

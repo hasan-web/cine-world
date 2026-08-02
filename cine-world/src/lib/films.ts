@@ -95,6 +95,20 @@ export interface NewFilm {
   note?: string;
 }
 
+/** Appends a rewatch to an existing film, keeping the record chronological rather than log order. */
+export async function addRewatch(filmId: string, rewatch: Rewatch): Promise<void> {
+  const user = await verifySession();
+  const film = await getFilm(filmId);
+  if (!film) throw new Error("Film not found");
+
+  const rewatches = [...(film.rewatches ?? []), rewatch].sort((a, b) => a.year - b.year);
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("films").update({ rewatches }).eq("id", filmId).eq("user_id", user.id);
+
+  if (error) throw new Error(`Failed to log rewatch: ${error.message}`);
+}
+
 export async function createFilm(input: NewFilm): Promise<void> {
   const user = await verifySession();
   const supabase = await createClient();
