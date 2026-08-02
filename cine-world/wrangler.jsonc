@@ -1,11 +1,15 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
-  "name": "constellation",
+  "name": "cine-world",
   "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://udunwqxeuwkccdhtebjp.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_R7j_1Or-iU1N0Uwl6lymvQ_ZBHQW_62"
   }
 }
