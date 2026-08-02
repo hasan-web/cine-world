@@ -1,0 +1,55 @@
+<svg viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="400" fill="#f2e9d3" />
+  <rect x="40" y="40" width="1120" height="320" fill="#e8dcc0" stroke="rgba(43,32,24,0.14)" />
+
+  <!-- corner brackets -->
+  <path d="M 56 76 L 56 60 L 72 60" fill="none" stroke="#a97c2f" stroke-width="3" opacity="0.6" />
+  <path d="M 1128 76 L 1128 60 L 1112 60" fill="none" stroke="#a97c2f" stroke-width="3" opacity="0.6" />
+  <path d="M 56 324 L 56 340 L 72 340" fill="none" stroke="#a97c2f" stroke-width="3" opacity="0.6" />
+  <path d="M 1128 324 L 1128 340 L 1112 340" fill="none" stroke="#a97c2f" stroke-width="3" opacity="0.6" />
+
+  <!-- text block -->
+  <text x="90" y="140" font-family="Helvetica, Arial, sans-serif" font-size="15" letter-spacing="6" fill="#a97c2f">LOVE FOR CINEMA</text>
+  <text x="90" y="192" font-family="Helvetica, Arial, sans-serif" font-size="46" font-weight="600" letter-spacing="10" fill="#6b2027">CONSTELLATION</text>
+  <line x1="90" y1="216" x2="170" y2="216" stroke="#a97c2f" stroke-width="1.5" />
+  <text x="90" y="256" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="20" fill="#5a4d3e">a keepsake program for</text>
+  <text x="90" y="284" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="20" fill="#5a4d3e">what you&#8217;ve watched</text>
+
+  <!-- constellation motif -->
+  <g stroke="#5c6b45" stroke-width="1" opacity="0.35">
+    <line x1="760" y1="130" x2="800" y2="105" />
+    <line x1="800" y1="105" x2="790" y2="150" />
+    <line x1="790" y1="150" x2="830" y2="175" />
+    <line x1="960" y1="115" x2="1010" y2="140" />
+    <line x1="1010" y1="140" x2="990" y2="185" />
+    <line x1="800" y1="255" x2="835" y2="230" />
+    <line x1="835" y1="230" x2="880" y2="260" />
+    <line x1="880" y1="260" x2="870" y2="300" />
+    <line x1="1000" y1="245" x2="1040" y2="270" />
+    <line x1="1040" y1="270" x2="1020" y2="310" />
+  </g>
+  <g fill="none" stroke="#c99a3e">
+    <circle cx="760" cy="130" r="4" stroke-width="1.5" />
+    <circle cx="800" cy="105" r="5" stroke-width="1.5" />
+    <circle cx="790" cy="150" r="4" stroke-width="1.5" />
+    <circle cx="830" cy="175" r="6" stroke-width="1.5" />
+    <circle cx="960" cy="115" r="4" stroke-width="1.5" />
+    <circle cx="1010" cy="140" r="5" stroke-width="1.5" />
+    <circle cx="990" cy="185" r="4" stroke-width="1.5" />
+    <circle cx="800" cy="255" r="4" stroke-width="1.5" />
+    <circle cx="835" cy="230" r="5" stroke-width="1.5" />
+    <circle cx="880" cy="260" r="4" stroke-width="1.5" />
+    <circle cx="870" cy="300" r="6" stroke-width="1.5" />
+    <circle cx="1000" cy="245" r="4" stroke-width="1.5" />
+    <circle cx="1040" cy="270" r="5" stroke-width="1.5" />
+    <circle cx="1020" cy="310" r="4" stroke-width="1.5" />
+  </g>
+  <text x="745" y="90" font-family="Helvetica, Arial, sans-serif" font-size="12" letter-spacing="2" fill="#6b2027" font-weight="600">SOLITUDO</text>
+  <text x="745" y="106" font-family="Georgia, serif" font-style="italic" font-size="11" fill="#5a4d3e">the quiet ones</text>
+  <text x="955" y="90" font-family="Helvetica, Arial, sans-serif" font-size="12" letter-spacing="2" fill="#6b2027" font-weight="600">AMPLITUDO</text>
+  <text x="955" y="106" font-family="Georgia, serif" font-style="italic" font-size="11" fill="#5a4d3e">the epics</text>
+  <text x="785" y="220" font-family="Helvetica, Arial, sans-serif" font-size="12" letter-spacing="2" fill="#6b2027" font-weight="600">DOMUS</text>
+  <text x="785" y="236" font-family="Georgia, serif" font-style="italic" font-size="11" fill="#5a4d3e">comfort watches</text>
+  <text x="990" y="220" font-family="Helvetica, Arial, sans-serif" font-size="12" letter-spacing="2" fill="#6b2027" font-weight="600">LACRIMA</text>
+  <text x="990" y="236" font-family="Georgia, serif" font-style="italic" font-size="11" fill="#5a4d3e">what wrecked you</text>
+</svg>
