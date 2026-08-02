@@ -20,13 +20,24 @@ const DIFFERENTIATORS = [
   },
 ];
 
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Love for Cinema",
+  alternateName: "Constellation",
+  url: "https://loveforcinema.com",
+  description: "A keepsake program for what you've watched — log films as specimens in your own personal sky.",
+};
+
 export default async function LandingPage() {
   const user = await getOptionalUser();
   if (user) redirect("/collection");
 
   return (
     <main className="mx-auto max-w-[740px] px-7 py-20">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <div className="mb-12 text-center">
+        <p className="mb-2 font-mono text-[10px] tracking-[0.3em] text-brass uppercase">Love for Cinema</p>
         <h1 className="mb-2 font-display text-[13px] tracking-[0.4em] text-oxblood uppercase">Constellation</h1>
         <div className="mx-auto mb-5 h-px w-16 bg-brass" />
         <p className="mb-5 font-body text-[17px] italic text-ink-soft">a keepsake program for what you&rsquo;ve watched</p>

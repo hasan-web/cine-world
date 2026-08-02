@@ -21,9 +21,30 @@ const mono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
+const SITE_URL = "https://loveforcinema.com";
+const SITE_NAME = "Love for Cinema";
+const DESCRIPTION =
+  "Love for Cinema's keepsake program for what you've watched — Constellation logs each film as a specimen in your own personal sky, placed by how it felt, not its genre.";
+
 export const metadata: Metadata = {
-  title: "Constellation",
-  description: "A keepsake program for what you've watched.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — Constellation`,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: DESCRIPTION,
+  openGraph: {
+    title: `${SITE_NAME} — Constellation`,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: `${SITE_NAME} — Constellation`,
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
