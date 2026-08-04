@@ -1,4 +1,4 @@
-import { RewatchForm } from "@/components/film/RewatchForm";
+import { RewatchRecord } from "@/components/film/RewatchRecord";
 import { SkyCanvas } from "@/components/sky/SkyCanvas";
 import { CLUSTERS } from "@/data/clusters";
 import type { Film } from "@/lib/types";
@@ -48,30 +48,7 @@ export function FilmEntry({ film, specimenNumber, justLogged }: FilmEntryProps) 
 
         {film.note && <p className="mb-5 max-w-[38ch] text-[13.5px] leading-[1.7] text-ink-soft">{film.note}</p>}
 
-        <div className="border-t border-line-soft pt-3">
-          <span className="mb-2 block font-display text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">
-            Rewatch record
-          </span>
-          {film.rewatches && film.rewatches.length > 0 && (
-            <div className="relative mb-1 flex h-[34px] items-start">
-              <div className="absolute top-[14px] right-0 left-0 h-px bg-line" />
-              {film.rewatches.map((rewatch, i) => (
-                <div
-                  key={`${rewatch.year}-${i}`}
-                  className="absolute flex -translate-x-1/2 flex-col items-center"
-                  style={{ left: `${(i / (film.rewatches!.length - 1 || 1)) * 100}%`, top: "10px" }}
-                >
-                  <span
-                    className="h-[6px] w-[6px] rotate-45 bg-brass-light"
-                    style={{ opacity: 0.45 + 0.55 * (i / (film.rewatches!.length - 1 || 1)) }}
-                  />
-                  <span className="mt-1.5 font-mono text-[9px] text-ink-soft">{rewatch.year}</span>
-                </div>
-              ))}
-            </div>
-          )}
-          <RewatchForm filmId={film.id} />
-        </div>
+        <RewatchRecord filmId={film.id} initialRewatches={film.rewatches ?? []} />
       </div>
     </div>
   );

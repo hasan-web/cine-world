@@ -2,9 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { addRewatch } from "@/lib/films";
+import type { Rewatch } from "@/lib/types";
 
 export interface LogRewatchState {
   error?: string;
+  addedRewatch?: Rewatch;
 }
 
 export async function logRewatch(
@@ -22,8 +24,9 @@ export async function logRewatch(
     return { error: "Pick a rating from 1 to 5." };
   }
 
-  await addRewatch(filmId, { year, rating });
+  const addedRewatch: Rewatch = { year, rating };
+  await addRewatch(filmId, addedRewatch);
   revalidatePath(`/film/${filmId}`);
   revalidatePath("/collection");
-  return {};
+  return { addedRewatch };
 }

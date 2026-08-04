@@ -29,9 +29,25 @@
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
+  --animate-rewatch-settle: rewatch-settle 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 body {
   background: var(--paper);
   color: var(--ink);
+}
+
+/* A rewatch dot growing into place, same overshoot-then-settle feel as a just-logged star. Only
+   animates transform, never opacity — the dot's brightness gradient is controlled inline by its
+   position in the timeline, and an animated opacity would fight that. */
+@keyframes rewatch-settle {
+  0% { transform: scale(0) rotate(45deg); }
+  60% { transform: scale(1.15) rotate(45deg); }
+  100% { transform: scale(1) rotate(45deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rewatch-settle {
+    animation: none;
+  }
 }

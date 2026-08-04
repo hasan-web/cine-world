@@ -62,7 +62,7 @@ export function FriendOverlapPlate({ yourFilms, twins, clusters, isNewCollection
         </div>
       )}
       <OverlapCanvas yourFilms={yourFilms} theirFilms={twin.films} clusters={clusters} height={340} />
-      <OverlapLegend />
+      <OverlapLegend friendLabel={twin.friend.email.split("@")[0]} />
     </PlateFrame>
   );
 }
