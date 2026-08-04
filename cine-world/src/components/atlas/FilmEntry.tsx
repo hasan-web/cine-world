@@ -6,15 +6,22 @@ import type { Film } from "@/lib/types";
 interface FilmEntryProps {
   film: Film;
   specimenNumber?: number;
+  justLogged?: boolean;
 }
 
-export function FilmEntry({ film, specimenNumber }: FilmEntryProps) {
+export function FilmEntry({ film, specimenNumber, justLogged }: FilmEntryProps) {
   const cluster = CLUSTERS.find((c) => c.id === film.cluster);
 
   return (
     <div className="flex flex-wrap gap-8">
       <div className="w-[220px] flex-none border-r border-line-soft pr-8">
-        <SkyCanvas films={[film]} clusters={[{ ...cluster!, x: 0.5, y: 0.5 }]} height={180} color="#8d703a" />
+        <SkyCanvas
+          films={[film]}
+          clusters={[{ ...cluster!, x: 0.5, y: 0.5 }]}
+          height={180}
+          color="#8d703a"
+          newStarId={justLogged ? film.id : undefined}
+        />
       </div>
       <div className="min-w-[240px] flex-1">
         {specimenNumber != null && (

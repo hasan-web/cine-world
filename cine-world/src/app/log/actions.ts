@@ -38,5 +38,5 @@ export async function logFilm(_prevState: LogFilmState, formData: FormData): Pro
     note: String(formData.get("note") ?? "").trim() || undefined,
   });
 
-  redirect(`/film/${id}`);
+  redirect(`/film/${id}?new=1`);
 }

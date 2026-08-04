@@ -25,6 +25,15 @@ interface SkyCanvasProps {
   interactive?: boolean;
   /** When set, clicking a specimen navigates to /film/[id] instead of doing nothing. */
   navigable?: boolean;
+  /** The id of a just-logged film — it settles into place with a brief animation instead of appearing instantly. */
+  newStarId?: string;
+}
+
+/** A small overshoot-then-settle curve — the star grows past its final size before easing back, like it was pressed into place. */
+function easeOutBack(t: number): number {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
 
 export function SkyCanvas({
@@ -37,11 +46,13 @@ export function SkyCanvas({
   showLabels = false,
   interactive = false,
   navigable = false,
+  newStarId,
 }: SkyCanvasProps) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<PositionedStar<Film>[]>([]);
+  const hasAnimatedRef = useRef(false);
   const [hovered, setHovered] = useState<PositionedStar<Film> | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
@@ -50,13 +61,11 @@ export function SkyCanvas({
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
-    const render = () => {
-      const width = container.getBoundingClientRect().width;
-      const ctx = fitCanvas(canvas, width, height);
+    let rafId = 0;
+
+    const paint = (ctx: CanvasRenderingContext2D, width: number, stars: PositionedStar<Film>[], settleScale?: number) => {
       ctx.clearRect(0, 0, width, height);
       if (showFrame) drawCornerBrackets(ctx, width, height);
-      const stars = layoutStars(films, clusters, width, height, seed);
-      starsRef.current = stars;
       drawThreads(ctx, stars, "rgba(92,107,69,0.35)", seed + 1);
       if (showLabels) {
         for (const cluster of clusters) {
@@ -64,15 +73,48 @@ export function SkyCanvas({
         }
       }
       for (const star of stars) {
-        drawStar(ctx, star, color, star.item.rating >= 4);
+        const scale = settleScale != null && star.item.id === newStarId ? settleScale : 1;
+        drawStar(ctx, star, color, star.item.rating >= 4, scale);
+      }
+    };
+
+    const render = () => {
+      const width = container.getBoundingClientRect().width;
+      const ctx = fitCanvas(canvas, width, height);
+      const stars = layoutStars(films, clusters, width, height, seed);
+      starsRef.current = stars;
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const shouldAnimate =
+        newStarId && !hasAnimatedRef.current && !reduceMotion && stars.some((s) => s.item.id === newStarId);
+
+      if (shouldAnimate) {
+        hasAnimatedRef.current = true;
+        const duration = 650;
+        const start = performance.now();
+        const step = (now: number) => {
+          const t = Math.min(1, (now - start) / duration);
+          paint(ctx, width, stars, easeOutBack(t));
+          if (t < 1) {
+            rafId = requestAnimationFrame(step);
+          } else {
+            window.history.replaceState(null, "", window.location.pathname);
+          }
+        };
+        rafId = requestAnimationFrame(step);
+      } else {
+        paint(ctx, width, stars);
       }
     };
 
     render();
     const observer = new ResizeObserver(render);
     observer.observe(container);
-    return () => observer.disconnect();
-  }, [films, clusters, height, seed, color, showFrame, showLabels]);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(rafId);
+    };
+  }, [films, clusters, height, seed, color, showFrame, showLabels, newStarId]);
 
   return (
     <div ref={containerRef} className="relative w-full">

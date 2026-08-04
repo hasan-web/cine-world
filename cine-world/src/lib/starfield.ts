@@ -72,22 +72,30 @@ export function findNearestStar<T extends StarLike>(
   return nearest;
 }
 
-/** A pressed specimen: ink-outlined circle, gilt-filled and ringed once rating reaches 4/5. */
-export function drawStar(ctx: CanvasRenderingContext2D, star: PositionedStar, color: string, gilt = false) {
+/**
+ * A pressed specimen: ink-outlined circle, gilt-filled and ringed once rating reaches 4/5.
+ * `scale` (default 1) shrinks and fades the mark — used to animate a just-logged star settling
+ * into place; values above 1 (a brief overshoot) are allowed for the settle's bounce, but alpha
+ * itself is clamped at full opacity.
+ */
+export function drawStar(ctx: CanvasRenderingContext2D, star: PositionedStar, color: string, gilt = false, scale = 1) {
+  const r = star.r * Math.max(scale, 0);
   ctx.lineWidth = 1.2;
   ctx.strokeStyle = gilt ? color : "#5a4d3e";
   ctx.fillStyle = gilt ? `${color}29` : "rgba(90,77,62,0.08)";
+  ctx.globalAlpha = Math.min(1, Math.max(scale, 0));
   ctx.beginPath();
-  ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+  ctx.arc(star.x, star.y, r, 0, Math.PI * 2);
   ctx.fill();
   ctx.stroke();
   if (gilt) {
     ctx.strokeStyle = color;
     ctx.lineWidth = 0.8;
     ctx.beginPath();
-    ctx.arc(star.x, star.y, star.r + 2.5, 0, Math.PI * 2);
+    ctx.arc(star.x, star.y, r + 2.5 * Math.max(scale, 0), 0, Math.PI * 2);
     ctx.stroke();
   }
+  ctx.globalAlpha = 1;
 }
 
 /** A moss-green stem connecting each specimen to its nearest same-cluster neighbor, like sprigs on one branch. */

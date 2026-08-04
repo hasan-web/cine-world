@@ -5,8 +5,14 @@ import { CommonsCanvas } from "@/components/sky/CommonsCanvas";
 import { CLUSTERS } from "@/data/clusters";
 import { getFilm, getFilmCommons, listFilms } from "@/lib/films";
 
-export default async function FilmPage({ params }: { params: Promise<{ id: string }> }) {
+interface FilmPageProps {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ new?: string }>;
+}
+
+export default async function FilmPage({ params, searchParams }: FilmPageProps) {
   const { id } = await params;
+  const { new: justLoggedParam } = await searchParams;
   const [film, films, commons] = await Promise.all([getFilm(id), listFilms(), getFilmCommons(id)]);
   const specimenNumber = films.findIndex((f) => f.id === id) + 1;
 
@@ -19,7 +25,11 @@ export default async function FilmPage({ params }: { params: Promise<{ id: strin
       {film ? (
         <div className="flex flex-col gap-[4.5rem]">
           <div className="relative mt-6 border border-line bg-paper-deep p-6 shadow-[0_10px_26px_-14px_rgba(43,32,24,0.35)]">
-            <FilmEntry film={film} specimenNumber={specimenNumber > 0 ? specimenNumber : undefined} />
+            <FilmEntry
+              film={film}
+              specimenNumber={specimenNumber > 0 ? specimenNumber : undefined}
+              justLogged={justLoggedParam === "1"}
+            />
           </div>
 
           <PlateFrame
