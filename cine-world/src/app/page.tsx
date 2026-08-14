@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { WhatsComing } from "@/components/landing/WhatsComing";
@@ -46,6 +47,10 @@ const DIFFERENTIATORS = [
     ),
   },
 ];
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const JSON_LD = {
   "@context": "https://schema.org",

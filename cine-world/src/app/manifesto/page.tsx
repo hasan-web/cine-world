@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "A mood-based film diary and letterboxd alternative",
   description:
     "Constellation logs films by how they felt, not their genre — a letterboxd alternative built around honest rewatches and real taste-twin matches with friends, not a follower count.",
+  alternates: { canonical: "/manifesto" },
 };
 
 export default function ManifestoPage() {

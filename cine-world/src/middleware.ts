@@ -50,5 +50,9 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)"],
+  // Excludes by file extension rather than enumerating each static asset by name —
+  // the enumerated version silently broke og-image.png and icon.svg (redirected
+  // to /login for every signed-out visitor, including social-share and search
+  // crawlers) each time a new public asset was added without updating this list.
+  matcher: ["/((?!_next/static|_next/image|.*\\.(?:ico|svg|png|jpg|jpeg|gif|webp|txt|xml)$).*)"],
 };

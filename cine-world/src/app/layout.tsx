@@ -40,11 +40,13 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: SITE_NAME,
     type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: `${SITE_NAME} — Constellation` }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: `${SITE_NAME} — Constellation`,
     description: DESCRIPTION,
+    images: ["/og-image.png"],
   },
 };
 
