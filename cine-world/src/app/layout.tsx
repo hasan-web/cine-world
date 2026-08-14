@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Jost, Libre_Baskerville, JetBrains_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const display = Jost({
@@ -56,10 +57,16 @@ export default function RootLayout({
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body className="flex min-h-screen flex-col bg-paper text-ink font-body antialiased">
         <div className="flex-1">{children}</div>
-        <footer className="py-8 text-center">
+        <footer className="flex flex-col items-center gap-1.5 py-8 text-center">
           <p className="font-mono text-[9.5px] tracking-[0.1em] text-ink-soft/60 uppercase">
             © Love for Cinema {new Date().getFullYear()} — All rights reserved
           </p>
+          <Link
+            href="/manifesto"
+            className="font-mono text-[9px] tracking-[0.08em] text-ink-soft/60 uppercase underline decoration-line-soft underline-offset-4"
+          >
+            Why we built it this way
+          </Link>
         </footer>
       </body>
     </html>

@@ -112,6 +112,11 @@ export default async function LandingPage() {
         >
           Sign in and start your own →
         </Link>
+        <p className="mt-4">
+          <Link href="/manifesto" className="font-mono text-[10.5px] tracking-[0.06em] text-ink-soft underline decoration-line-soft underline-offset-4">
+            Why we built it this way →
+          </Link>
+        </p>
       </div>
     </main>
   );

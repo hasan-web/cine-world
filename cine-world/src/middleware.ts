@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_ROUTES = ["/login", "/auth/confirm"];
+const PUBLIC_ROUTES = ["/login", "/auth/confirm", "/manifesto"];
 
 /**
  * Refreshes the Supabase session cookie on every request and does an optimistic

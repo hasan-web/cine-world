@@ -12,6 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: "https://loveforcinema.com/manifesto",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: "https://loveforcinema.com/login",
       lastModified: new Date(),
       changeFrequency: "monthly",
