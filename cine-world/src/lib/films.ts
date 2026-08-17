@@ -13,7 +13,10 @@ interface FilmRow {
   cluster: ClusterId;
   note: string | null;
   rewatches: Rewatch[];
+  watched_on: string;
 }
+
+const FILM_COLUMNS = "id, title, director, year, country, rating, cluster, note, rewatches, watched_on";
 
 function rowToFilm(row: FilmRow): Film {
   return {
@@ -26,6 +29,7 @@ function rowToFilm(row: FilmRow): Film {
     cluster: row.cluster,
     note: row.note ?? undefined,
     rewatches: row.rewatches.length > 0 ? row.rewatches : undefined,
+    watchedOn: row.watched_on,
   };
 }
 
@@ -33,10 +37,7 @@ function rowToFilm(row: FilmRow): Film {
 export async function listFilms(): Promise<Film[]> {
   await verifySession();
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("films")
-    .select("id, title, director, year, country, rating, cluster, note, rewatches")
-    .order("created_at", { ascending: true });
+  const { data, error } = await supabase.from("films").select(FILM_COLUMNS).order("created_at", { ascending: true });
 
   if (error) throw new Error(`Failed to load films: ${error.message}`);
   return (data as FilmRow[]).map(rowToFilm);
@@ -45,11 +46,7 @@ export async function listFilms(): Promise<Film[]> {
 export async function getFilm(id: string): Promise<Film | null> {
   await verifySession();
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("films")
-    .select("id, title, director, year, country, rating, cluster, note, rewatches")
-    .eq("id", id)
-    .maybeSingle();
+  const { data, error } = await supabase.from("films").select(FILM_COLUMNS).eq("id", id).maybeSingle();
 
   if (error) throw new Error(`Failed to load film: ${error.message}`);
   return data ? rowToFilm(data as FilmRow) : null;
@@ -61,7 +58,7 @@ export async function listFilmsForUser(userId: string): Promise<Film[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("films")
-    .select("id, title, director, year, country, rating, cluster, note, rewatches")
+    .select(FILM_COLUMNS)
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
 
@@ -93,6 +90,12 @@ export interface NewFilm {
   rating: number;
   cluster: ClusterId;
   note?: string;
+  watchedOn: string;
+}
+
+/** Sorts chronologically by real date when present, falling back to just the year for legacy entries. */
+function rewatchSortKey(r: Rewatch): string {
+  return r.date ?? `${r.year}-01-01`;
 }
 
 /** Appends a rewatch to an existing film, keeping the record chronological rather than log order. */
@@ -101,7 +104,9 @@ export async function addRewatch(filmId: string, rewatch: Rewatch): Promise<void
   const film = await getFilm(filmId);
   if (!film) throw new Error("Film not found");
 
-  const rewatches = [...(film.rewatches ?? []), rewatch].sort((a, b) => a.year - b.year);
+  const rewatches = [...(film.rewatches ?? []), rewatch].sort((a, b) =>
+    rewatchSortKey(a).localeCompare(rewatchSortKey(b)),
+  );
 
   const supabase = await createClient();
   const { error } = await supabase.from("films").update({ rewatches }).eq("id", filmId).eq("user_id", user.id);
@@ -109,10 +114,15 @@ export async function addRewatch(filmId: string, rewatch: Rewatch): Promise<void
   if (error) throw new Error(`Failed to log rewatch: ${error.message}`);
 }
 
-export async function createFilm(input: NewFilm): Promise<void> {
+/**
+ * Inserts a new specimen — deliberately `.insert()`, not `.upsert()`, so logging a film you
+ * already have can never silently overwrite your original rating/mood/note. A unique-violation
+ * (23505) means it already exists; the caller should add a rewatch instead.
+ */
+export async function createFilm(input: NewFilm): Promise<{ alreadyExists: boolean }> {
   const user = await verifySession();
   const supabase = await createClient();
-  const { error } = await supabase.from("films").upsert({
+  const { error } = await supabase.from("films").insert({
     id: input.id,
     user_id: user.id,
     title: input.title,
@@ -122,7 +132,12 @@ export async function createFilm(input: NewFilm): Promise<void> {
     rating: input.rating,
     cluster: input.cluster,
     note: input.note ?? null,
+    watched_on: input.watchedOn,
   });
 
-  if (error) throw new Error(`Failed to save film: ${error.message}`);
+  if (error) {
+    if (error.code === "23505") return { alreadyExists: true };
+    throw new Error(`Failed to save film: ${error.message}`);
+  }
+  return { alreadyExists: false };
 }

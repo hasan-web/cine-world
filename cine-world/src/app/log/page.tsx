@@ -64,14 +64,26 @@ export default function LogPage() {
           </label>
         </div>
 
-        <label className="mb-6 flex items-baseline gap-2.5">
-          <span className="w-16 flex-none font-mono text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">Country</span>
-          <input
-            ref={countryRef}
-            name="country"
-            className="flex-1 border-b border-line bg-transparent pb-1.5 font-mono text-[12px] text-ink outline-none"
-          />
-        </label>
+        <div className="mb-6 flex gap-4">
+          <label className="flex flex-1 items-baseline gap-2.5">
+            <span className="font-mono text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">Country</span>
+            <input
+              ref={countryRef}
+              name="country"
+              className="flex-1 border-b border-line bg-transparent pb-1.5 font-mono text-[12px] text-ink outline-none"
+            />
+          </label>
+          <label className="flex items-baseline gap-2.5">
+            <span className="font-mono text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">Watched</span>
+            <input
+              name="watchedOn"
+              type="date"
+              defaultValue={new Date().toISOString().slice(0, 10)}
+              max={new Date().toISOString().slice(0, 10)}
+              className="border-b border-line bg-transparent pb-1.5 font-mono text-[12px] text-ink outline-none"
+            />
+          </label>
+        </div>
 
         <p className="mb-2 font-display text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">Place in</p>
         <div className="mb-6 flex gap-6">

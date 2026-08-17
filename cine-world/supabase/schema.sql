@@ -165,3 +165,12 @@ create policy "Friends can view each other's films"
           or (addressee_id = auth.uid() and requester_id = films.user_id))
     )
   );
+
+-- The date a specimen was actually watched, distinct from the film's own release year
+-- (already stored in `year`) and from `created_at` (when the row was inserted, which
+-- doesn't let you log something retroactively). Backfilled from created_at for existing
+-- rows, defaults to today for new ones.
+alter table public.films add column if not exists watched_on date;
+update public.films set watched_on = created_at::date where watched_on is null;
+alter table public.films alter column watched_on set not null;
+alter table public.films alter column watched_on set default current_date;

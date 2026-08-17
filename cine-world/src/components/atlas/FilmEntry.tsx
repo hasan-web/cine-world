@@ -30,9 +30,19 @@ export function FilmEntry({ film, specimenNumber, justLogged }: FilmEntryProps) 
           </p>
         )}
         <p className="mb-0.5 font-body text-[22px] italic">{film.title}</p>
-        <p className="mb-4 font-mono text-[10px] tracking-[0.08em] text-ink-soft uppercase">
+        <p className="mb-1 font-mono text-[10px] tracking-[0.08em] text-ink-soft uppercase">
           {film.director} · {film.year} · {film.country}
         </p>
+        {film.watchedOn && (
+          <p className="mb-4 font-mono text-[10px] tracking-[0.06em] text-ink-soft">
+            Watched{" "}
+            {new Date(`${film.watchedOn}T00:00:00`).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </p>
+        )}
 
         <div className="mb-4 flex items-center gap-2.5">
           <span className="font-display text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">Assessment</span>
@@ -48,7 +58,7 @@ export function FilmEntry({ film, specimenNumber, justLogged }: FilmEntryProps) 
 
         {film.note && <p className="mb-5 max-w-[38ch] text-[13.5px] leading-[1.7] text-ink-soft">{film.note}</p>}
 
-        <RewatchRecord filmId={film.id} initialRewatches={film.rewatches ?? []} />
+        <RewatchRecord filmId={film.id} initialRewatches={film.rewatches ?? []} initialCluster={film.cluster} />
       </div>
     </div>
   );

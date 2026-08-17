@@ -14,6 +14,10 @@ export interface Cluster {
 export interface Rewatch {
   year: number;
   rating: number;
+  /** ISO date (YYYY-MM-DD) — added later, so older entries may only have `year`. Prefer this for display when present. */
+  date?: string;
+  cluster?: ClusterId;
+  note?: string;
 }
 
 export interface Film {
@@ -27,4 +31,6 @@ export interface Film {
   cluster: ClusterId;
   note?: string;
   rewatches?: Rewatch[];
+  /** ISO date (YYYY-MM-DD) this specimen was actually watched — distinct from the film's release `year`. */
+  watchedOn?: string;
 }
