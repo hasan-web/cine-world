@@ -37,6 +37,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Scroll-reveal starts content hidden and JS brings it in. Without JS nothing would ever
+            undo that, so unhide everything up front for those readers. */}
+        <noscript>
+          <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
+      </head>
       <body className="flex min-h-screen flex-col font-sans text-ink antialiased">
         <div className="flex-1">{children}</div>
         <footer className="flex flex-col items-center gap-1.5 py-8 text-center">

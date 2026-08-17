@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { PlateFrame } from "@/components/atlas/PlateFrame";
+import { Reveal } from "@/components/motion/Reveal";
 
 interface ComingSoonPlateProps {
   title: string;
@@ -9,9 +10,11 @@ interface ComingSoonPlateProps {
 
 function ComingSoonPlate({ title, caption, children }: ComingSoonPlateProps) {
   return (
-    <PlateFrame title={title} padded caption={<><em>Coming soon.</em> {caption}</>}>
-      {children}
-    </PlateFrame>
+    <Reveal>
+      <PlateFrame title={title} padded caption={<><em>Coming soon.</em> {caption}</>}>
+        {children}
+      </PlateFrame>
+    </Reveal>
   );
 }
 
@@ -166,10 +169,12 @@ function TasteDriftPreview() {
 export function WhatsComing() {
   return (
     <div className="mb-16 border-t border-line pt-8">
-      <p className="mb-2 font-mono text-[10px] tracking-[0.2em] text-accent uppercase">In the works</p>
-      <p className="mb-8 max-w-[58ch] text-[14px] leading-[1.75] text-ink-soft">
-        Five things we&rsquo;re building next. These are sketches, not screenshots — but this is the direction.
-      </p>
+      <Reveal>
+        <p className="mb-2 font-mono text-[10px] tracking-[0.2em] text-accent uppercase">In the works</p>
+        <p className="mb-8 max-w-[58ch] text-[14px] leading-[1.75] text-ink-soft">
+          Five things we&rsquo;re building next. These are sketches, not screenshots — but this is the direction.
+        </p>
+      </Reveal>
       <div className="flex flex-col gap-10">
         <ComingSoonPlate
           title="margin notes"

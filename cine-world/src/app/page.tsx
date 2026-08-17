@@ -5,6 +5,7 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingHero } from "@/components/landing/LandingHero";
 import { WhatsComing } from "@/components/landing/WhatsComing";
+import { Reveal } from "@/components/motion/Reveal";
 import { getOptionalUser } from "@/lib/dal";
 
 const DIFFERENTIATORS = [
@@ -73,28 +74,30 @@ export default async function LandingPage() {
 
       <main className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
         <div id="why-different" className="mb-16 scroll-mt-24">
-          <p className="mb-2 text-[11px] tracking-[0.2em] text-accent uppercase">Why it works like this</p>
-          <p className="mb-8 max-w-[58ch] text-[14px] leading-[1.75] text-ink-soft">
-            Three decisions that make it fairly useless as a scoreboard.
-          </p>
+          <Reveal>
+            <p className="mb-2 text-[11px] tracking-[0.2em] text-accent uppercase">Why it works like this</p>
+            <p className="mb-8 max-w-[58ch] text-[14px] leading-[1.75] text-ink-soft">
+              Three decisions that make it fairly useless as a scoreboard.
+            </p>
+          </Reveal>
           <div className="grid gap-4 sm:grid-cols-3">
-            {DIFFERENTIATORS.map((d) => (
-              <div
-                key={d.label}
-                className="glass flex flex-col gap-4 px-6 py-6 transition-transform duration-200 hover:-translate-y-1"
-              >
-                <div className="flex h-14 w-14 items-center justify-center">{d.icon}</div>
-                <div>
-                  <p className="mb-1.5 text-[13px] font-semibold text-accent-strong">{d.label}</p>
-                  <p className="text-[13.5px] leading-[1.7] text-ink-soft">{d.body}</p>
+            {DIFFERENTIATORS.map((d, i) => (
+              <Reveal key={d.label} delay={i * 110} className="h-full">
+                <div className="glass flex h-full flex-col gap-4 px-6 py-6 transition-transform duration-200 hover:-translate-y-1">
+                  <div className="flex h-14 w-14 items-center justify-center">{d.icon}</div>
+                  <div>
+                    <p className="mb-1.5 text-[13px] font-semibold text-accent-strong">{d.label}</p>
+                    <p className="text-[13.5px] leading-[1.7] text-ink-soft">{d.body}</p>
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
 
         <WhatsComing />
 
+        <Reveal>
         <div className="glass relative overflow-hidden px-6 py-12 text-center">
           <div
             className="hero-blob hero-blob-a -top-24 left-1/2 h-[280px] w-[280px] -translate-x-1/2"
@@ -123,10 +126,13 @@ export default async function LandingPage() {
             </p>
           </div>
         </div>
+        </Reveal>
       </main>
 
       <div className="px-4 pb-4 sm:px-6">
-        <LandingFooter />
+        <Reveal>
+          <LandingFooter />
+        </Reveal>
       </div>
     </>
   );

@@ -115,6 +115,48 @@ body {
   }
 }
 
+/* Content easing into place as it scrolls into view. The hidden state lives in CSS but is only
+   ever undone by JS (or the noscript override in the layout), so a reader without JS still sees
+   everything — the animation is an enhancement, never a gate on the content. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.reveal-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* A first-paint entrance for above-the-fold content, which never gets a scroll event to react to. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise-in 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .rise {
+    animation: none;
+  }
+}
+
 /* Soft ambient light behind the landing hero — three blurred, tinted circles drifting slowly
    past each other. Purely decorative, so motion is dropped entirely when reduced motion is on. */
 .hero-blob {

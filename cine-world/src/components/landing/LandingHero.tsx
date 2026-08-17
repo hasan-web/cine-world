@@ -44,16 +44,21 @@ export function LandingHero() {
 
       <div className="relative mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
         <div>
-          <p className="mb-4 text-[11px] tracking-[0.3em] text-accent uppercase">Love for Cinema · Constellation</p>
-          <h1 className="mb-5 max-w-[15ch] text-[36px] leading-[1.1] font-semibold text-ink sm:text-[46px]">
+          <p className="rise mb-4 text-[11px] tracking-[0.3em] text-accent uppercase">
+            Love for Cinema · Constellation
+          </p>
+          <h1
+            className="rise mb-5 max-w-[15ch] text-[36px] leading-[1.1] font-semibold text-ink sm:text-[46px]"
+            style={{ animationDelay: "90ms" }}
+          >
             Nobody remembers what they rated it.
           </h1>
-          <p className="mb-8 max-w-[46ch] text-[16px] leading-[1.75] text-ink-soft">
+          <p className="rise mb-8 max-w-[46ch] text-[16px] leading-[1.75] text-ink-soft" style={{ animationDelay: "180ms" }}>
             You remember the walk home. You remember that nobody in the car said anything for ten minutes.
             Constellation is a film diary built around that part — where a film actually sat with you, not the
             number you gave it on the way out.
           </p>
-          <div className="mb-9 flex flex-wrap items-center gap-4">
+          <div className="rise mb-9 flex flex-wrap items-center gap-4" style={{ animationDelay: "270ms" }}>
             <Link
               href="/login"
               className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-6 py-3 text-[13px] font-semibold text-white shadow-[0_10px_30px_var(--color-accent-soft)]"
@@ -68,7 +73,7 @@ export function LandingHero() {
             </a>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="rise flex flex-wrap gap-2" style={{ animationDelay: "360ms" }}>
             {CLUSTERS.map((c) => (
               <button
                 key={c.id}
@@ -88,6 +93,9 @@ export function LandingHero() {
           </div>
         </div>
 
+        {/* The entrance animation lives on a wrapper, not the tilting panel itself — `rise` fills
+            forwards to `transform: none`, which would otherwise pin the panel and kill the tilt. */}
+        <div className="rise" style={{ animationDelay: "300ms" }}>
         <div
           ref={panelRef}
           onMouseMove={handlePanelMove}
@@ -109,6 +117,7 @@ export function LandingHero() {
               <>Someone else&rsquo;s sky, four years of it. Try a mood on the left, or hover a star.</>
             )}
           </p>
+        </div>
         </div>
       </div>
     </section>
