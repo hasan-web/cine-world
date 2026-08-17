@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/hero.svg" alt="Constellation — Love for Cinema: a keepsake program for what you've watched" width="100%" />
+  <img src="cine-world/docs/screenshots/landing.png" alt="Constellation — Love for Cinema: a mood-based film diary" width="100%" />
 </p>
 
 <h1 align="center">Constellation</h1>
@@ -25,6 +25,36 @@ Watching something again adds a new point to that film's own timeline instead of
 
 **Taste twins, made visible**
 Send a friend request, and once it's mutually accepted, overlay their collection over yours. A film that lands in *exactly* the same place for both of you glows — that's the overlap. Not a percentage on a profile page, an actual shared coordinate.
+
+## A closer look
+
+**Sign in** — Google, or a magic link, no password to remember.
+
+<img src="cine-world/docs/screenshots/login.png" width="520" alt="Login" />
+
+**Your sky** — the collection dashboard: the sky itself, a mood breakdown, top directors, a diary preview.
+
+<img src="cine-world/docs/screenshots/collection.png" width="720" alt="Collection dashboard" />
+
+**Diary** — every viewing as its own dated entry, newest first. A rewatch gets its own line instead of replacing the original, so a film watched three times shows up three times, each with the rating and mood you gave it that time.
+
+<img src="cine-world/docs/screenshots/diary.png" width="720" alt="Diary" />
+
+**Stats** — counted across viewings rather than films, so a rewatch you felt differently about registers as its own opinion. Rating distribution, activity over the last 12 months, mood split, decades, directors, most-rewatched.
+
+<img src="cine-world/docs/screenshots/stats.png" width="720" alt="Stats" />
+
+**Import from Letterboxd** — bring in `ratings.csv`, `diary.csv`, or `watched.csv`; whichever of those columns are present gets read, and repeat diary entries for the same film collapse into its rewatch history.
+
+<img src="cine-world/docs/screenshots/import.png" width="720" alt="Import from Letterboxd" />
+
+**Placing an import** — an export knows what you watched and how you rated it, not how it felt, so imported films arrive unplaced and wait here until you give each one a mood. Nothing joins the sky until it's placed.
+
+<img src="cine-world/docs/screenshots/place.png" width="720" alt="Place your films" />
+
+**Manifesto** — the reasoning behind the mood-based approach, for anyone who lands on the site cold.
+
+<img src="cine-world/docs/screenshots/manifesto.png" width="720" alt="Manifesto" />
 
 ## Tech stack
 
