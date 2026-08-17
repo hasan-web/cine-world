@@ -194,7 +194,18 @@ export default async function CollectionPage() {
       </div>
 
       {recent.length > 0 && (
-        <PlateFrame title="Diary" caption="Your most recently logged films." padded>
+        <PlateFrame
+          title="Diary"
+          caption={
+            <>
+              Your most recently logged films.{" "}
+              <Link href="/diary" className="text-accent-strong">
+                See the full diary →
+              </Link>
+            </>
+          }
+          padded
+        >
           <div className="flex flex-col">
             {recent.map((f) => (
               <Link

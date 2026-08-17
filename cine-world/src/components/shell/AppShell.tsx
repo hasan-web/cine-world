@@ -9,11 +9,13 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/collection" },
+  { label: "Diary", href: "/diary" },
+  { label: "Stats", href: "/stats" },
   { label: "Friends", href: "/friends" },
   { label: "Import", href: "/import" },
 ];
 
-const SOON_ITEMS = ["Diary", "Collections", "Discover", "Ask My Cinema", "Stats"];
+const SOON_ITEMS = ["Collections", "Discover", "Ask My Cinema"];
 
 interface AppShellProps {
   userEmail: string;
