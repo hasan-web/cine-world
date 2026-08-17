@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   drawClusterLabel,
-  drawCornerBrackets,
   drawStar,
   drawThreads,
   fitCanvas,
@@ -12,21 +11,23 @@ import {
   layoutStars,
   type PositionedStar,
 } from "@/lib/starfield";
-import type { Cluster, Film } from "@/lib/types";
+import type { Cluster, ClusterId, Film } from "@/lib/types";
 
 interface SkyCanvasProps {
   films: Film[];
   clusters: Cluster[];
   height: number;
   seed?: number;
+  /** Overrides the theme's star color — most callers should leave this alone. */
   color?: string;
-  showFrame?: boolean;
   showLabels?: boolean;
   interactive?: boolean;
   /** When set, clicking a specimen navigates to /film/[id] instead of doing nothing. */
   navigable?: boolean;
   /** The id of a just-logged film — it settles into place with a brief animation instead of appearing instantly. */
   newStarId?: string;
+  /** When set, specimens outside this cluster fade back so the chosen mood reads clearly. */
+  activeCluster?: ClusterId | null;
 }
 
 /** A small overshoot-then-settle curve — the star grows past its final size before easing back, like it was pressed into place. */
@@ -41,12 +42,12 @@ export function SkyCanvas({
   clusters,
   height,
   seed = 42,
-  color = "#a97c2f",
-  showFrame = false,
+  color,
   showLabels = false,
   interactive = false,
   navigable = false,
   newStarId,
+  activeCluster = null,
 }: SkyCanvasProps) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,18 +64,35 @@ export function SkyCanvas({
 
     let rafId = 0;
 
+    // Resolved from the live cascade, not hardcoded, so canvas painting tracks light/dark mode.
+    const styles = getComputedStyle(container);
+    const starColor = color ?? (styles.getPropertyValue("--star").trim() || "#c9973f");
+    const threadColor = styles.getPropertyValue("--line-strong").trim() || "rgba(0,0,0,0.16)";
+    const labelPrimary = styles.getPropertyValue("--accent-strong").trim() || "#8f6a26";
+    const labelSecondary = styles.getPropertyValue("--ink-soft").trim() || "#5b5f70";
+
     const paint = (ctx: CanvasRenderingContext2D, width: number, stars: PositionedStar<Film>[], settleScale?: number) => {
       ctx.clearRect(0, 0, width, height);
-      if (showFrame) drawCornerBrackets(ctx, width, height);
-      drawThreads(ctx, stars, "rgba(92,107,69,0.35)", seed + 1);
+      drawThreads(ctx, stars, threadColor, seed + 1, activeCluster);
       if (showLabels) {
         for (const cluster of clusters) {
-          drawClusterLabel(ctx, cluster.x * width - 30, cluster.y * height - 34, cluster.label, cluster.mood);
+          ctx.globalAlpha = activeCluster != null && cluster.id !== activeCluster ? 0.35 : 1;
+          drawClusterLabel(
+            ctx,
+            cluster.x * width - 30,
+            cluster.y * height - 34,
+            cluster.label,
+            cluster.mood,
+            labelPrimary,
+            labelSecondary,
+          );
         }
+        ctx.globalAlpha = 1;
       }
       for (const star of stars) {
         const scale = settleScale != null && star.item.id === newStarId ? settleScale : 1;
-        drawStar(ctx, star, color, star.item.rating >= 4, scale);
+        const dim = activeCluster != null && star.item.cluster !== activeCluster;
+        drawStar(ctx, star, starColor, star.item.rating >= 4, scale, dim);
       }
     };
 
@@ -114,7 +132,7 @@ export function SkyCanvas({
       observer.disconnect();
       cancelAnimationFrame(rafId);
     };
-  }, [films, clusters, height, seed, color, showFrame, showLabels, newStarId]);
+  }, [films, clusters, height, seed, color, showLabels, newStarId, activeCluster]);
 
   return (
     <div ref={containerRef} className="relative w-full">
@@ -148,11 +166,11 @@ export function SkyCanvas({
       />
       {interactive && hovered && (
         <div
-          className="pointer-events-none absolute z-10 whitespace-nowrap border border-line bg-paper-deep px-2 py-1 font-mono text-[10.5px] text-ink shadow-sm"
-          style={{ left: Math.min(hoverPos.x + 9, 9999), top: Math.max(hoverPos.y - 26, 0) }}
+          className="glass pointer-events-none absolute z-10 !rounded-lg px-2.5 py-1.5 text-[11px] whitespace-nowrap text-ink"
+          style={{ left: Math.min(hoverPos.x + 9, 9999), top: Math.max(hoverPos.y - 30, 0) }}
         >
           {hovered.item.title}
-          <span className="ml-1.5 text-brass">{hovered.item.rating}/5</span>
+          <span className="ml-1.5 text-accent-strong">{hovered.item.rating}/5</span>
         </div>
       )}
     </div>

@@ -14,27 +14,26 @@ export function FilmEntry({ film, specimenNumber, justLogged }: FilmEntryProps) 
 
   return (
     <div className="flex flex-wrap gap-8">
-      <div className="w-[220px] flex-none border-r border-line-soft pr-8">
+      <div className="w-[220px] flex-none border-r border-line pr-8">
         <SkyCanvas
           films={[film]}
           clusters={[{ ...cluster!, x: 0.5, y: 0.5 }]}
           height={180}
-          color="#8d703a"
           newStarId={justLogged ? film.id : undefined}
         />
       </div>
       <div className="min-w-[240px] flex-1">
         {specimenNumber != null && (
-          <p className="mb-1 font-display text-[9.5px] tracking-[0.14em] text-brass uppercase">
+          <p className="mb-1 text-[10.5px] font-semibold tracking-[0.1em] text-accent uppercase">
             Specimen no. {specimenNumber}
           </p>
         )}
-        <p className="mb-0.5 font-body text-[22px] italic">{film.title}</p>
-        <p className="mb-1 font-mono text-[10px] tracking-[0.08em] text-ink-soft uppercase">
+        <p className="mb-0.5 text-[22px] font-semibold text-ink">{film.title}</p>
+        <p className="mb-1 text-[11px] tracking-[0.04em] text-ink-faint uppercase">
           {film.director} · {film.year} · {film.country}
         </p>
         {film.watchedOn && (
-          <p className="mb-4 font-mono text-[10px] tracking-[0.06em] text-ink-soft">
+          <p className="mb-4 text-[11px] text-ink-faint">
             Watched{" "}
             {new Date(`${film.watchedOn}T00:00:00`).toLocaleDateString("en-US", {
               month: "long",
@@ -45,13 +44,10 @@ export function FilmEntry({ film, specimenNumber, justLogged }: FilmEntryProps) 
         )}
 
         <div className="mb-4 flex items-center gap-2.5">
-          <span className="font-display text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">Assessment</span>
+          <span className="text-[10.5px] tracking-[0.06em] text-ink-faint uppercase">Assessment</span>
           <div className="flex gap-1.5" aria-label={`${film.rating} of 5`}>
             {Array.from({ length: 5 }, (_, i) => (
-              <span
-                key={i}
-                className={`h-[7px] w-[7px] rotate-45 ${i < film.rating ? "bg-brass-light" : "bg-line"}`}
-              />
+              <span key={i} className={`h-2 w-2 rounded-full ${i < film.rating ? "bg-accent" : "bg-line"}`} />
             ))}
           </div>
         </div>

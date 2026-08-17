@@ -1,40 +1,103 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f2e9d3;
-  --paper-deep: #e8dcc0;
-  --line: rgba(43, 32, 24, 0.14);
-  --line-soft: rgba(43, 32, 24, 0.08);
-  --ink: #2b2018;
-  --ink-soft: #5a4d3e;
-  --oxblood: #6b2027;
-  --brass: #a97c2f;
-  --brass-light: #c99a3e;
-  --moss: #5c6b45;
-  --gilt-bright: #e3b94d;
+  --bg-top: #eef1f7;
+  --bg-bottom: #ffffff;
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-strong: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --glass-edge: rgba(31, 41, 66, 0.07);
+  --ink: #1c1e27;
+  --ink-soft: #5b5f70;
+  --ink-faint: #8b8fa3;
+  --accent: #b0812f;
+  --accent-strong: #8f6a26;
+  --accent-soft: rgba(176, 129, 47, 0.14);
+  --line: rgba(31, 41, 66, 0.08);
+  --line-strong: rgba(31, 41, 66, 0.14);
+  --star: #c9973f;
+  --star-glow: rgba(201, 151, 63, 0.55);
+  --success: #3f7a4e;
+  /* A second, cooler tone reserved for "the other person" in comparison views (Taste Twins
+     overlap, the commons) — keeps two parties visually distinct without reaching for a rainbow. */
+  --companion: #5b7a9e;
+  --companion-glow: rgba(91, 122, 158, 0.45);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-top: #0c0f1a;
+    --bg-bottom: #030409;
+    --glass: rgba(255, 255, 255, 0.055);
+    --glass-strong: rgba(255, 255, 255, 0.09);
+    --glass-border: rgba(255, 255, 255, 0.13);
+    --glass-edge: rgba(255, 255, 255, 0.06);
+    --ink: #f3f4f8;
+    --ink-soft: #b6bacb;
+    --ink-faint: #767c93;
+    --accent: #e3b95e;
+    --accent-strong: #f0cb7c;
+    --accent-soft: rgba(227, 185, 94, 0.16);
+    --line: rgba(255, 255, 255, 0.09);
+    --line-strong: rgba(255, 255, 255, 0.16);
+    --star: #f0cb7c;
+    --star-glow: rgba(240, 203, 124, 0.65);
+    --success: #7fbd8e;
+    --companion: #8fb0d6;
+    --companion-glow: rgba(143, 176, 214, 0.55);
+  }
 }
 
 @theme inline {
-  --color-paper: var(--paper);
-  --color-paper-deep: var(--paper-deep);
-  --color-line: var(--line);
-  --color-line-soft: var(--line-soft);
+  --color-bg-top: var(--bg-top);
+  --color-bg-bottom: var(--bg-bottom);
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-glass-border: var(--glass-border);
+  --color-glass-edge: var(--glass-edge);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
-  --color-oxblood: var(--oxblood);
-  --color-brass: var(--brass);
-  --color-brass-light: var(--brass-light);
-  --color-moss: var(--moss);
-  --color-gilt-bright: var(--gilt-bright);
-  --font-display: var(--font-display);
-  --font-body: var(--font-body);
+  --color-ink-faint: var(--ink-faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-star: var(--star);
+  --color-success: var(--success);
+  --color-companion: var(--companion);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --animate-rewatch-settle: rewatch-settle 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 body {
-  background: var(--paper);
+  background: radial-gradient(ellipse 1400px 900px at 20% -10%, var(--bg-top), var(--bg-bottom) 60%);
+  background-attachment: fixed;
   color: var(--ink);
+}
+
+/* The one reusable glass-material surface — translucent, blurred, with a soft top-edge
+   highlight so panels read as a physical sheet of glass rather than a flat tinted box. */
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 var(--glass-edge);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass {
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 var(--glass-edge);
+  }
 }
 
 /* A rewatch dot growing into place, same overshoot-then-settle feel as a just-logged star. Only
@@ -48,6 +111,35 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .animate-rewatch-settle {
+    animation: none;
+  }
+}
+
+/* Soft ambient light behind the landing hero — three blurred, tinted circles drifting slowly
+   past each other. Purely decorative, so motion is dropped entirely when reduced motion is on. */
+.hero-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  pointer-events: none;
+}
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -30px) scale(1.08); }
+}
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-35px, 28px) scale(1.05); }
+}
+@keyframes drift-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(25px, 35px) scale(0.95); }
+}
+.hero-blob-a { animation: drift-a 18s ease-in-out infinite; }
+.hero-blob-b { animation: drift-b 22s ease-in-out infinite; }
+.hero-blob-c { animation: drift-c 26s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob-a, .hero-blob-b, .hero-blob-c {
     animation: none;
   }
 }

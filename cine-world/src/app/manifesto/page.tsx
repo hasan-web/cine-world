@@ -10,17 +10,18 @@ export const metadata: Metadata = {
 
 export default function ManifestoPage() {
   return (
-    <main className="mx-auto max-w-[620px] px-7 py-20">
-      <Link href="/" className="font-mono text-[10.5px] tracking-[0.1em] text-brass uppercase">
+    <main className="mx-auto max-w-[680px] px-6 py-16 sm:px-10 sm:py-20">
+      <Link href="/" className="text-[11px] tracking-[0.08em] text-accent uppercase">
         ← Constellation
       </Link>
 
-      <p className="mt-8 mb-2 font-mono text-[10px] tracking-[0.2em] text-brass uppercase">Why we built it this way</p>
-      <h1 className="mb-8 max-w-[16ch] font-body text-[26px] italic leading-tight text-ink">
-        A mood-based film diary for people who are done with star averages
-      </h1>
+      <div className="glass mt-8 px-7 py-10 sm:px-12 sm:py-14">
+        <p className="mb-2 text-[10.5px] tracking-[0.14em] text-accent uppercase">Why we built it this way</p>
+        <h1 className="mb-8 max-w-[20ch] text-[26px] font-semibold text-ink">
+          A mood-based film diary for people who are done with star averages
+        </h1>
 
-      <div className="flex flex-col gap-6 text-[15px] leading-[1.85] text-ink-soft [&_em]:font-medium [&_em]:text-oxblood [&_em]:not-italic">
+        <div className="flex flex-col gap-6 text-[15px] leading-[1.85] text-ink-soft [&_em]:font-semibold [&_em]:text-accent-strong [&_em]:not-italic">
         <p>
           Every film tracker eventually turns into the same thing: a poster grid, a number out of five, a public
           tally of everything you&rsquo;ve watched this year. That&rsquo;s useful for keeping score. It&rsquo;s
@@ -68,19 +69,20 @@ export default function ManifestoPage() {
         </p>
 
         <p>
-          None of this makes Constellation faster to use than a five-tap rating. It&rsquo;s meant for people who
-          already suspected that wasn&rsquo;t really the point — who want a record of what they watched that
-          still means something to them years later, not just a list they can prove they finished.
-        </p>
-      </div>
+            None of this makes Constellation faster to use than a five-tap rating. It&rsquo;s meant for people who
+            already suspected that wasn&rsquo;t really the point — who want a record of what they watched that
+            still means something to them years later, not just a list they can prove they finished.
+          </p>
+        </div>
 
-      <div className="mt-12 border-t border-line-soft pt-8 text-center">
-        <Link
-          href="/login"
-          className="font-mono text-[11px] tracking-[0.08em] text-oxblood uppercase underline decoration-oxblood/50 underline-offset-4"
-        >
-          Sign in and start your own sky →
-        </Link>
+        <div className="mt-10 border-t border-line pt-8 text-center">
+          <Link
+            href="/login"
+            className="inline-block rounded-full bg-gradient-to-br from-accent to-accent-strong px-7 py-3 text-[12.5px] font-semibold text-white"
+          >
+            Sign in and start your own sky →
+          </Link>
+        </div>
       </div>
     </main>
   );

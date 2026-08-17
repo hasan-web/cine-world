@@ -1,0 +1,115 @@
+"use client";
+
+import Link from "next/link";
+import { type MouseEvent, useRef, useState } from "react";
+import { SkyCanvas } from "@/components/sky/SkyCanvas";
+import { CLUSTERS } from "@/data/clusters";
+import { FILMS } from "@/data/films";
+import type { ClusterId } from "@/lib/types";
+
+export function LandingHero() {
+  const [pinned, setPinned] = useState<ClusterId | null>(null);
+  const [hovered, setHovered] = useState<ClusterId | null>(null);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+  const [reduceMotion] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const active = pinned ?? hovered;
+  const activeMood = CLUSTERS.find((c) => c.id === active);
+
+  function handlePanelMove(e: MouseEvent<HTMLDivElement>) {
+    if (reduceMotion || !panelRef.current) return;
+    const rect = panelRef.current.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ rx: py * -5, ry: px * 5 });
+  }
+
+  return (
+    <section className="relative overflow-hidden px-4 pt-10 pb-14 sm:px-6 sm:pt-16 sm:pb-20">
+      <div
+        className="hero-blob hero-blob-a -top-32 -left-20 h-[420px] w-[420px]"
+        style={{ background: "radial-gradient(circle, var(--accent-soft), transparent 70%)" }}
+      />
+      <div
+        className="hero-blob hero-blob-b top-10 -right-24 h-[380px] w-[380px]"
+        style={{ background: "radial-gradient(circle, var(--companion-glow), transparent 70%)" }}
+      />
+      <div
+        className="hero-blob hero-blob-c bottom-[-140px] left-1/3 h-[320px] w-[320px]"
+        style={{ background: "radial-gradient(circle, var(--star-glow), transparent 70%)" }}
+      />
+
+      <div className="relative mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
+        <div>
+          <p className="mb-4 text-[11px] tracking-[0.3em] text-accent uppercase">Love for Cinema · Constellation</p>
+          <h1 className="mb-5 max-w-[16ch] text-[36px] leading-[1.1] font-semibold text-ink sm:text-[46px]">
+            Every film you watch, placed exactly where it felt.
+          </h1>
+          <p className="mb-8 max-w-[46ch] text-[16px] leading-[1.75] text-ink-soft">
+            No poster grid. No star-out-of-five average. Constellation is a mood-based film diary — you decide
+            where each film lands, and how much it mattered decides how brightly it burns.
+          </p>
+          <div className="mb-9 flex flex-wrap items-center gap-4">
+            <Link
+              href="/login"
+              className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-6 py-3 text-[13px] font-semibold text-white shadow-[0_10px_30px_var(--color-accent-soft)]"
+            >
+              Start your sky →
+            </Link>
+            <a
+              href="#why-different"
+              className="text-[13px] text-ink-soft underline decoration-line-strong underline-offset-4 hover:text-ink"
+            >
+              See what makes it different
+            </a>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {CLUSTERS.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                onMouseEnter={() => setHovered(c.id)}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => setPinned((p) => (p === c.id ? null : c.id))}
+                className={`rounded-full border px-3.5 py-1.5 text-[12px] transition-colors ${
+                  active === c.id
+                    ? "border-accent bg-accent-soft font-semibold text-accent-strong"
+                    : "border-line-strong text-ink-soft hover:border-accent/50"
+                }`}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div
+          ref={panelRef}
+          onMouseMove={handlePanelMove}
+          onMouseLeave={() => setTilt({ rx: 0, ry: 0 })}
+          className="glass overflow-hidden"
+          style={{
+            transform: `perspective(1200px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+            transition: "transform 0.2s ease-out",
+          }}
+        >
+          <SkyCanvas films={FILMS} clusters={CLUSTERS} height={360} showLabels interactive activeCluster={active} />
+          <p className="border-t border-line px-6 py-4 text-[13px] leading-[1.7] text-ink-soft">
+            {activeMood ? (
+              <>
+                <em className="font-semibold text-accent-strong not-italic">{activeMood.label}</em> —{" "}
+                {activeMood.mood}. Rest the cursor on a specimen to read it.
+              </>
+            ) : (
+              <>A sample sky — hover a mood at left to see where it gathers, or rest the cursor on a specimen.</>
+            )}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}

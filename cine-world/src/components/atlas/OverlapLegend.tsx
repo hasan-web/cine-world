@@ -9,16 +9,16 @@ interface OverlapLegendProps {
 
 export function OverlapLegend({ friendLabel }: OverlapLegendProps) {
   const items: LegendItem[] = [
-    { label: "you", color: "var(--brass)" },
-    { label: friendLabel, color: "var(--oxblood)" },
-    { label: "coincident", color: "var(--gilt-bright)" },
+    { label: "you", color: "var(--accent)" },
+    { label: friendLabel, color: "var(--companion)" },
+    { label: "coincident", color: "var(--star)" },
   ];
 
   return (
-    <div className="absolute right-3.5 bottom-3.5 z-10 border border-line bg-paper px-3 py-2 font-mono text-[9.5px] text-ink-soft">
+    <div className="glass absolute right-3.5 bottom-3.5 z-10 px-3 py-2 text-[10.5px] text-ink-soft">
       {items.map((item) => (
         <div key={item.label} className="my-0.5 flex items-center gap-1.5">
-          <span className="h-[7px] w-[7px] rotate-45" style={{ background: item.color }} />
+          <span className="h-[7px] w-[7px] rounded-full" style={{ background: item.color, boxShadow: `0 0 6px ${item.color}` }} />
           {item.label}
         </div>
       ))}

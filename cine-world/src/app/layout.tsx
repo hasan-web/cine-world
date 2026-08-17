@@ -1,26 +1,6 @@
 import type { Metadata } from "next";
-import { Jost, Libre_Baskerville, JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-
-const display = Jost({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const body = Libre_Baskerville({
-  variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
-});
-
-const mono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-});
 
 const SITE_URL = "https://loveforcinema.com";
 const SITE_NAME = "Love for Cinema";
@@ -56,16 +36,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body className="flex min-h-screen flex-col bg-paper text-ink font-body antialiased">
+    <html lang="en">
+      <body className="flex min-h-screen flex-col font-sans text-ink antialiased">
         <div className="flex-1">{children}</div>
         <footer className="flex flex-col items-center gap-1.5 py-8 text-center">
-          <p className="font-mono text-[9.5px] tracking-[0.1em] text-ink-soft/60 uppercase">
+          <p className="font-mono text-[10.5px] tracking-[0.06em] text-ink-faint">
             © Love for Cinema {new Date().getFullYear()} — All rights reserved
           </p>
           <Link
             href="/manifesto"
-            className="font-mono text-[9px] tracking-[0.08em] text-ink-soft/60 uppercase underline decoration-line-soft underline-offset-4"
+            className="font-mono text-[10px] tracking-[0.04em] text-ink-faint underline decoration-line-strong underline-offset-4"
           >
             Why we built it this way
           </Link>

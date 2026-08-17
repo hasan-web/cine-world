@@ -73,33 +73,42 @@ export function findNearestStar<T extends StarLike>(
 }
 
 /**
- * A pressed specimen: ink-outlined circle, gilt-filled and ringed once rating reaches 4/5.
- * `scale` (default 1) shrinks and fades the mark — used to animate a just-logged star settling
- * into place; values above 1 (a brief overshoot) are allowed for the settle's bounce, but alpha
- * itself is clamped at full opacity.
+ * A glowing point of light — soft shadow-blur halo, brighter and larger once `bright` (rating
+ * ≥ 4 or coincident with a friend's placement). `scale` (default 1) shrinks and fades the mark —
+ * used to animate a just-logged star settling into place; values above 1 (a brief overshoot) are
+ * allowed for the settle's bounce, but alpha itself is clamped at full opacity.
  */
-export function drawStar(ctx: CanvasRenderingContext2D, star: PositionedStar, color: string, gilt = false, scale = 1) {
-  const r = star.r * Math.max(scale, 0);
-  ctx.lineWidth = 1.2;
-  ctx.strokeStyle = gilt ? color : "#5a4d3e";
-  ctx.fillStyle = gilt ? `${color}29` : "rgba(90,77,62,0.08)";
-  ctx.globalAlpha = Math.min(1, Math.max(scale, 0));
+export function drawStar(
+  ctx: CanvasRenderingContext2D,
+  star: PositionedStar,
+  color: string,
+  bright = false,
+  scale = 1,
+  dim = false,
+) {
+  const r = star.r * Math.max(scale, 0) * (bright ? 1.15 : 1);
+  ctx.save();
+  ctx.globalAlpha = (dim ? 0.15 : 1) * Math.min(1, Math.max(scale, 0));
+  ctx.shadowColor = color;
+  ctx.shadowBlur = dim ? 3 : bright ? 16 : 7;
+  ctx.fillStyle = color;
   ctx.beginPath();
   ctx.arc(star.x, star.y, r, 0, Math.PI * 2);
   ctx.fill();
-  ctx.stroke();
-  if (gilt) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 0.8;
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, r + 2.5 * Math.max(scale, 0), 0, Math.PI * 2);
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
+  ctx.restore();
 }
 
-/** A moss-green stem connecting each specimen to its nearest same-cluster neighbor, like sprigs on one branch. */
-export function drawThreads(ctx: CanvasRenderingContext2D, stars: PositionedStar[], color: string, seed: number) {
+/**
+ * A faint thread connecting each star to its nearest same-cluster neighbor. When `activeCluster`
+ * is set, threads outside that cluster fade back so the highlighted mood reads clearly.
+ */
+export function drawThreads(
+  ctx: CanvasRenderingContext2D,
+  stars: PositionedStar[],
+  color: string,
+  seed: number,
+  activeCluster?: ClusterId | null,
+) {
   const rnd = mulberry32(seed);
   ctx.strokeStyle = color;
   ctx.lineWidth = 0.6;
@@ -110,42 +119,32 @@ export function drawThreads(ctx: CanvasRenderingContext2D, stars: PositionedStar
     if (!neighbor) continue;
     const jx = (rnd() - 0.5) * 3;
     const jy = (rnd() - 0.5) * 3;
+    ctx.globalAlpha = activeCluster != null && star.item.cluster !== activeCluster ? 0.12 : 1;
     ctx.beginPath();
     ctx.moveTo(star.x, star.y);
     ctx.lineTo((star.x + neighbor.x) / 2 + jx, (star.y + neighbor.y) / 2 + jy);
     ctx.lineTo(neighbor.x, neighbor.y);
     ctx.stroke();
   }
+  ctx.globalAlpha = 1;
 }
 
-/** Deco corner brackets standing in for an engraved program-page border. */
-export function drawCornerBrackets(ctx: CanvasRenderingContext2D, w: number, h: number) {
-  const size = 22;
-  const inset = 14;
-  ctx.strokeStyle = "rgba(169,124,47,0.55)";
-  ctx.lineWidth = 1.5;
-  const corners: [number, number, number, number][] = [
-    [inset, inset, 1, 1],
-    [w - inset, inset, -1, 1],
-    [inset, h - inset, 1, -1],
-    [w - inset, h - inset, -1, -1],
-  ];
-  for (const [x, y, dx, dy] of corners) {
-    ctx.beginPath();
-    ctx.moveTo(x, y + size * dy);
-    ctx.lineTo(x, y);
-    ctx.lineTo(x + size * dx, y);
-    ctx.stroke();
-  }
-}
-
-/** Cluster label set as Latin name over its common-name gloss, matching a specimen-sheet caption. */
-export function drawClusterLabel(ctx: CanvasRenderingContext2D, x: number, y: number, name: string, gloss: string) {
-  ctx.font = "600 12px Jost, sans-serif";
-  ctx.fillStyle = "rgba(107,32,39,0.75)";
+/** Cluster label set as mood name over its common-name gloss. Colors are passed in, resolved from
+ * CSS custom properties by the caller, so labels stay correct across light and dark mode. */
+export function drawClusterLabel(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  name: string,
+  gloss: string,
+  primaryColor: string,
+  secondaryColor: string,
+) {
+  ctx.font = "600 11px -apple-system, BlinkMacSystemFont, sans-serif";
+  ctx.fillStyle = primaryColor;
   ctx.fillText(name.toUpperCase(), x, y);
-  ctx.font = "italic 11px 'Libre Baskerville', serif";
-  ctx.fillStyle = "rgba(90,77,62,0.65)";
+  ctx.font = "12px -apple-system, BlinkMacSystemFont, sans-serif";
+  ctx.fillStyle = secondaryColor;
   ctx.fillText(gloss, x, y + 15);
 }
 

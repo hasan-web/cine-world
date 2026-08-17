@@ -61,7 +61,7 @@ export function TitleSearch({ onSelect }: TitleSearchProps) {
 
   return (
     <div className="mb-4 flex items-baseline gap-2.5">
-      <span className="w-16 flex-none font-mono text-[9.5px] tracking-[0.1em] text-ink-soft uppercase">Title</span>
+      <span className="w-16 flex-none text-[10.5px] tracking-[0.06em] text-ink-faint uppercase">Title</span>
       <div ref={containerRef} className="relative flex-1">
         <input
           name="title"
@@ -71,19 +71,19 @@ export function TitleSearch({ onSelect }: TitleSearchProps) {
           onFocus={() => visibleResults.length > 0 && setOpen(true)}
           autoComplete="off"
           placeholder="what did you watch…"
-          className="w-full border-b border-line bg-transparent pb-1.5 font-mono text-[13px] text-ink outline-none placeholder:text-ink-soft/60"
+          className="w-full border-b border-line bg-transparent pb-1.5 text-[13px] text-ink outline-none placeholder:text-ink-faint"
         />
         {open && visibleResults.length > 0 && (
-          <ul className="absolute inset-x-0 top-full z-10 mt-1 max-h-64 overflow-y-auto border border-line bg-paper shadow-[0_10px_26px_-14px_rgba(43,32,24,0.35)]">
+          <ul className="glass absolute inset-x-0 top-full z-10 mt-1 max-h-64 overflow-y-auto !rounded-xl">
             {visibleResults.map((r) => (
               <li key={r.id}>
                 <button
                   type="button"
                   onClick={() => selectResult(r)}
-                  className="flex w-full items-baseline justify-between px-4 py-2 text-left hover:bg-paper-deep"
+                  className="flex w-full items-baseline justify-between px-4 py-2 text-left hover:bg-glass-edge"
                 >
-                  <span className="font-body text-[13px] italic text-ink">{r.title}</span>
-                  <span className="font-mono text-[10px] text-ink-soft">{r.year ?? "—"}</span>
+                  <span className="text-[13px] text-ink">{r.title}</span>
+                  <span className="text-[10.5px] text-ink-faint">{r.year ?? "—"}</span>
                 </button>
               </li>
             ))}
