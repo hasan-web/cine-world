@@ -45,12 +45,13 @@ export function LandingHero() {
       <div className="relative mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
         <div>
           <p className="mb-4 text-[11px] tracking-[0.3em] text-accent uppercase">Love for Cinema · Constellation</p>
-          <h1 className="mb-5 max-w-[16ch] text-[36px] leading-[1.1] font-semibold text-ink sm:text-[46px]">
-            Every film you watch, placed exactly where it felt.
+          <h1 className="mb-5 max-w-[15ch] text-[36px] leading-[1.1] font-semibold text-ink sm:text-[46px]">
+            Nobody remembers what they rated it.
           </h1>
           <p className="mb-8 max-w-[46ch] text-[16px] leading-[1.75] text-ink-soft">
-            No poster grid. No star-out-of-five average. Constellation is a mood-based film diary — you decide
-            where each film lands, and how much it mattered decides how brightly it burns.
+            You remember the walk home. You remember that nobody in the car said anything for ten minutes.
+            Constellation is a film diary built around that part — where a film actually sat with you, not the
+            number you gave it on the way out.
           </p>
           <div className="mb-9 flex flex-wrap items-center gap-4">
             <Link
@@ -63,7 +64,7 @@ export function LandingHero() {
               href="#why-different"
               className="text-[13px] text-ink-soft underline decoration-line-strong underline-offset-4 hover:text-ink"
             >
-              See what makes it different
+              Why it works like this
             </a>
           </div>
 
@@ -102,10 +103,10 @@ export function LandingHero() {
             {activeMood ? (
               <>
                 <em className="font-semibold text-accent-strong not-italic">{activeMood.label}</em> —{" "}
-                {activeMood.mood}. Rest the cursor on a specimen to read it.
+                {activeMood.mood}. Hover a star to see which film it is.
               </>
             ) : (
-              <>A sample sky — hover a mood at left to see where it gathers, or rest the cursor on a specimen.</>
+              <>Someone else&rsquo;s sky, four years of it. Try a mood on the left, or hover a star.</>
             )}
           </p>
         </div>

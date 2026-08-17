@@ -9,8 +9,8 @@ import { getOptionalUser } from "@/lib/dal";
 
 const DIFFERENTIATORS = [
   {
-    label: "Mood, not genre",
-    body: "You place each film yourself, in whichever of four moods it actually felt like — not a category a catalogue assigned it.",
+    label: "Alien is a comfort watch",
+    body: "To someone else it's the most frightening thing they've ever sat through. Genre can't hold both readings, so you place the film yourself — and the same title can sit in a completely different corner of someone else's sky.",
     icon: (
       <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
         <line x1="16" y1="14" x2="28" y2="26" stroke="var(--line-strong)" strokeWidth="0.8" />
@@ -24,8 +24,8 @@ const DIFFERENTIATORS = [
     ),
   },
   {
-    label: "Rewatches don't overwrite",
-    body: "Watch something again and it adds to the record rather than replacing your first verdict, so how your reading of a film moved stays visible.",
+    label: "You at nineteen was a different critic",
+    body: "Watch something again and the old entry stays exactly where it was. The new one lands beside it. What builds up is a record of the drift — which films changed meaning on you, and roughly when.",
     icon: (
       <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
         <line x1="12" y1="28" x2="44" y2="28" stroke="var(--line)" strokeWidth="1" />
@@ -36,8 +36,8 @@ const DIFFERENTIATORS = [
     ),
   },
   {
-    label: "Taste twins, made visible",
-    body: "Overlay a friend's collection over yours. Where a film lands in exactly the same place for both of you, it glows — that's the overlap, not a percentage.",
+    label: "Not a 92% match",
+    body: "Lay a friend's collection over yours. Where you both filed the same film under the same feeling — separately, without discussing it — that star lights up. A real coincidence between two people beats a number an algorithm invented.",
     icon: (
       <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
         <circle cx="22" cy="28" r="8" fill="none" stroke="var(--accent)" strokeWidth="1" opacity="0.55" />
@@ -73,9 +73,9 @@ export default async function LandingPage() {
 
       <main className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
         <div id="why-different" className="mb-16 scroll-mt-24">
-          <p className="mb-2 text-[11px] tracking-[0.2em] text-accent uppercase">Why it&rsquo;s different</p>
+          <p className="mb-2 text-[11px] tracking-[0.2em] text-accent uppercase">Why it works like this</p>
           <p className="mb-8 max-w-[58ch] text-[14px] leading-[1.75] text-ink-soft">
-            Three decisions that separate Constellation from a plain film tracker.
+            Three decisions that make it fairly useless as a scoreboard.
           </p>
           <div className="grid gap-4 sm:grid-cols-3">
             {DIFFERENTIATORS.map((d) => (
@@ -101,8 +101,11 @@ export default async function LandingPage() {
             style={{ background: "radial-gradient(circle, var(--accent-soft), transparent 70%)" }}
           />
           <div className="relative">
-            <p className="mx-auto mb-4 max-w-[36ch] text-[16px] leading-[1.6] text-ink">
-              Your sky is empty until you press the first specimen into it.
+            <p className="mx-auto mb-2 max-w-[36ch] text-[18px] leading-[1.5] font-semibold text-ink">
+              Start with the last thing you watched.
+            </p>
+            <p className="mx-auto mb-6 max-w-[42ch] text-[14px] leading-[1.7] text-ink-soft">
+              Even if you haven&rsquo;t worked out how you feel about it yet. Especially then.
             </p>
             <Link
               href="/login"

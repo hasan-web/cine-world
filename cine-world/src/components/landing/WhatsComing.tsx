@@ -59,7 +59,7 @@ function SeasonsPreview() {
           <circle key={i} cx={d[0]} cy={d[1]} r={d[2]} fill="var(--accent)" opacity="0.85" />
         ))}
         <text x="100" y="77" textAnchor="middle" className="font-mono" fontSize="10" fill="var(--ink)">
-          38 specimens
+          38 films
         </text>
         <text x="100" y="91" textAnchor="middle" className="font-mono" fontSize="10" fill="var(--ink-soft)">
           across 11 months
@@ -121,7 +121,7 @@ function FirstLightPreview() {
           <circle cx="40" cy="40" r="8" fill="var(--glass-strong)" stroke="var(--accent)" strokeWidth="1.2" />
           <circle cx="40" cy="40" r="12" fill="none" stroke="var(--accent)" strokeWidth="0.8" opacity="0.6" />
         </svg>
-        <p className="mt-1 font-mono text-[10px] text-ink-soft">12 others have pressed this one</p>
+        <p className="mt-1 font-mono text-[10px] text-ink-soft">12 others have logged this one</p>
       </div>
     </div>
   );
@@ -168,36 +168,36 @@ export function WhatsComing() {
     <div className="mb-16 border-t border-line pt-8">
       <p className="mb-2 font-mono text-[10px] tracking-[0.2em] text-accent uppercase">In the works</p>
       <p className="mb-8 max-w-[58ch] text-[14px] leading-[1.75] text-ink-soft">
-        Five more plates sketched and waiting to be built — a preview of where the sky is headed next.
+        Five things we&rsquo;re building next. These are sketches, not screenshots — but this is the direction.
       </p>
       <div className="flex flex-col gap-10">
         <ComingSoonPlate
           title="margin notes"
-          caption="a note you can touch up any time, not just once at the moment you log the film."
+          caption="a note you can come back and change later — because what a film meant to you rarely holds still."
         >
           <MarginNotesPreview />
         </ComingSoonPlate>
         <ComingSoonPlate
           title="seasons"
-          caption="your year read as a ring — which months you were watching, and whether a mood clusters somewhere."
+          caption="your year as a ring — the months you were watching heavily, and the ones where a single mood took over."
         >
           <SeasonsPreview />
         </ComingSoonPlate>
         <ComingSoonPlate
           title="constellations you've drawn"
-          caption="a connection between two films that only makes sense to you, independent of mood entirely."
+          caption="draw a line between two films for a reason only you can explain. No mood, no genre — just your own private logic."
         >
           <ConstellationsPreview />
         </ComingSoonPlate>
         <ComingSoonPlate
           title="first light"
-          caption="a small mark for when you're the very first person to press a film — no leaderboard, just a quiet flag."
+          caption="a quiet mark for when you're the first person here to log a film. No leaderboard, no points — just a small flag that you got there first."
         >
           <FirstLightPreview />
         </ComingSoonPlate>
         <ComingSoonPlate
           title="taste drift"
-          caption="the same four quadrants from Plate I, one snapshot per year, so the whole collection's drift is visible too."
+          caption="the same four moods, one snapshot per year, so you can watch your whole taste drift across time."
         >
           <TasteDriftPreview />
         </ComingSoonPlate>

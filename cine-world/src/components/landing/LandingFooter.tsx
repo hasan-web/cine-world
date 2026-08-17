@@ -8,7 +8,7 @@ export function LandingFooter() {
         <p className="mb-2 text-[11px] tracking-[0.2em] text-accent uppercase">Love for Cinema</p>
         <p className="mb-4 text-[16px] font-semibold text-ink">Constellation</p>
         <p className="max-w-[38ch] text-[13px] leading-[1.7] text-ink-soft">
-          A keepsake program for what you&rsquo;ve watched — logged by feeling, not filed by genre.
+          A film diary for people who suspected the rating was never really the point.
         </p>
       </div>
       <div>
