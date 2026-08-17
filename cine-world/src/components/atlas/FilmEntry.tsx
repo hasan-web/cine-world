@@ -36,8 +36,10 @@ export function FilmEntry({ film, specimenNumber, justLogged }: FilmEntryProps) 
           </p>
         )}
         <p className="mb-0.5 text-[22px] font-semibold text-ink">{film.title}</p>
+        {/* Imported films have no director or country — a Letterboxd export carries neither — so
+            the separators are built from whatever is actually present rather than assumed. */}
         <p className="mb-1 text-[11px] tracking-[0.04em] text-ink-faint uppercase">
-          {film.director} · {film.year} · {film.country}
+          {[film.director, film.year || null, film.country].filter(Boolean).join(" · ")}
         </p>
         {film.watchedOn && (
           <p className="mb-4 text-[11px] text-ink-faint">
