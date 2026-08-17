@@ -2,6 +2,8 @@
 
 A mood-based film diary, built for [Love for Cinema](https://loveforcinema.com). No star-out-of-five average, no poster grid — every film you log is placed in one of four moods (*Solitudo*, *Amplitudo*, *Domus*, *Lacrima*), and where it lands is a choice, not a category a catalogue assigned it. A rewatch adds to that film's record instead of overwriting your first verdict, and comparing taste with a friend means overlaying two skies to see where you actually agree — not a percentage an algorithm invented.
 
+![Landing page](docs/screenshots/landing.png)
+
 ## Stack
 
 - **Next.js 16** (App Router, Turbopack) — this version has real breaking changes from what you may know; read `node_modules/next/dist/docs/` before assuming an API
@@ -45,14 +47,51 @@ npm run dev
 
 ## What's here
 
-- **Logging** — search TMDB, place a film in a mood, rate it, watch it become a star in your sky
-- **Rewatches** — each one is its own record (date, mood, note), not an overwrite of the original
-- **Collection dashboard** (`/collection`) — the sky itself, a mood breakdown, top directors, a diary preview
-- **Diary** (`/diary`) — every viewing as its own dated entry, rewatches included, newest first
-- **Stats** (`/stats`) — rating distribution, activity over the last 12 months, mood split, decades, most-rewatched
-- **Friends** (`/friends`) — mutual-consent requests (not a one-way follow) and a Taste Twins overlay showing where two collections actually coincide
-- **Import from Letterboxd** (`/import`) — bring in `ratings.csv`, `diary.csv`, or `watched.csv`; imported films land unplaced and wait in a queue (`/place`) until you give them a mood, since an export can't say how something felt
-- **Manifesto** (`/manifesto`) — the reasoning behind the mood-based approach
+### Sign in (`/login`)
+
+Google, or a magic link — no password to remember.
+
+![Login](docs/screenshots/login.png)
+
+### Logging and the sky (`/collection`)
+
+Search TMDB, place a film in one of four moods, rate it — it becomes a star in your sky, positioned by feeling rather than genre. The dashboard also shows a mood breakdown, top directors, and a diary preview.
+
+![Collection dashboard](docs/screenshots/collection.png)
+
+### Diary (`/diary`)
+
+Every viewing as its own dated entry, newest first. A rewatch gets its own line rather than replacing the original, so a film you've watched three times shows up three times — each with the rating and mood you gave it that time.
+
+![Diary](docs/screenshots/diary.png)
+
+### Stats (`/stats`)
+
+Counted across viewings rather than films, so a rewatch you felt differently about registers as its own opinion. Rating distribution, activity over the last 12 months, mood split, decades, directors, most-rewatched.
+
+![Stats](docs/screenshots/stats.png)
+
+### Friends (`/friends`)
+
+Mutual-consent requests — not a one-way follow. Once accepted, a Taste Twins overlay lays two collections on top of each other, and a film you both placed in the exact same spot lights up. That coincidence is the point, not a percentage a matching algorithm invented.
+
+### Import from Letterboxd (`/import`)
+
+Bring in `ratings.csv`, `diary.csv`, or `watched.csv` — whichever of those columns are present gets read, and repeat diary entries for the same film collapse into its rewatch history.
+
+![Import from Letterboxd](docs/screenshots/import.png)
+
+### Placing your import (`/place`)
+
+An export knows what you watched and how you rated it, not how it felt, so imported films arrive unplaced and wait here until you give each one a mood — one at a time, skip freely. Nothing joins your sky until it's placed.
+
+![Place your films](docs/screenshots/place.png)
+
+### Manifesto (`/manifesto`)
+
+The reasoning behind the mood-based approach, for anyone who lands on the site cold.
+
+![Manifesto](docs/screenshots/manifesto.png)
 
 ## Project structure
 
