@@ -11,10 +11,11 @@ import {
   layoutStars,
   type PositionedStar,
 } from "@/lib/starfield";
-import type { Cluster, ClusterId, Film } from "@/lib/types";
+import type { Cluster, ClusterId, PlacedFilm } from "@/lib/types";
 
 interface SkyCanvasProps {
-  films: Film[];
+  /** Only placed films can be drawn — an unplaced one has no mood to position it by. */
+  films: PlacedFilm[];
   clusters: Cluster[];
   height: number;
   seed?: number;
@@ -52,9 +53,9 @@ export function SkyCanvas({
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const starsRef = useRef<PositionedStar<Film>[]>([]);
+  const starsRef = useRef<PositionedStar<PlacedFilm>[]>([]);
   const hasAnimatedRef = useRef(false);
-  const [hovered, setHovered] = useState<PositionedStar<Film> | null>(null);
+  const [hovered, setHovered] = useState<PositionedStar<PlacedFilm> | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export function SkyCanvas({
     const labelPrimary = styles.getPropertyValue("--accent-strong").trim() || "#8f6a26";
     const labelSecondary = styles.getPropertyValue("--ink-soft").trim() || "#5b5f70";
 
-    const paint = (ctx: CanvasRenderingContext2D, width: number, stars: PositionedStar<Film>[], settleScale?: number) => {
+    const paint = (ctx: CanvasRenderingContext2D, width: number, stars: PositionedStar<PlacedFilm>[], settleScale?: number) => {
       ctx.clearRect(0, 0, width, height);
       drawThreads(ctx, stars, threadColor, seed + 1, activeCluster);
       if (showLabels) {

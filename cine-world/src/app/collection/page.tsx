@@ -5,13 +5,13 @@ import { AppShell } from "@/components/shell/AppShell";
 import { SkyCanvas } from "@/components/sky/SkyCanvas";
 import { CLUSTERS } from "@/data/clusters";
 import { verifySession } from "@/lib/dal";
-import { listFilms, listFilmsForUser } from "@/lib/films";
+import { countUnplacedFilms, listFilms, listFilmsForUser } from "@/lib/films";
 import { listFriends } from "@/lib/friends";
-import type { Film } from "@/lib/types";
+import { isPlaced, type Film, type PlacedFilm } from "@/lib/types";
 
 const NEW_COLLECTION_THRESHOLD = 4;
 
-function moodBreakdown(films: Film[]) {
+function moodBreakdown(films: PlacedFilm[]) {
   const counts = new Map(CLUSTERS.map((c) => [c.id, 0]));
   for (const f of films) counts.set(f.cluster, (counts.get(f.cluster) ?? 0) + 1);
   const total = films.length || 1;
@@ -21,7 +21,12 @@ function moodBreakdown(films: Film[]) {
 
 function topDirectors(films: Film[], limit = 4) {
   const counts = new Map<string, number>();
-  for (const f of films) counts.set(f.director, (counts.get(f.director) ?? 0) + 1);
+  // Imported films carry no director — a Letterboxd export doesn't include one — so they'd
+  // otherwise pile up under a blank name and win this list outright.
+  for (const f of films) {
+    if (!f.director) continue;
+    counts.set(f.director, (counts.get(f.director) ?? 0) + 1);
+  }
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, limit)
@@ -30,12 +35,19 @@ function topDirectors(films: Film[], limit = 4) {
 
 export default async function CollectionPage() {
   const user = await verifySession();
-  const [films, friends] = await Promise.all([listFilms(), listFriends()]);
+  const [allFilms, friends, unplaced] = await Promise.all([
+    listFilms(),
+    listFriends(),
+    countUnplacedFilms(),
+  ]);
+  // Only placed films belong in the sky and its statistics — an imported film has no mood yet,
+  // and inventing a position for it would put a star somewhere its owner never chose.
+  const films = allFilms.filter(isPlaced);
   const friendFilms = await Promise.all(friends.map((f) => listFilmsForUser(f.id)));
-  const twins = friends.map((friend, i) => ({ friend, films: friendFilms[i] }));
+  const twins = friends.map((friend, i) => ({ friend, films: friendFilms[i].filter(isPlaced) }));
   const isNewCollection = films.length > 0 && films.length < NEW_COLLECTION_THRESHOLD;
   const totalRewatches = films.reduce((sum, f) => sum + (f.rewatches?.length ?? 0), 0);
-  const countries = new Set(films.map((f) => f.country)).size;
+  const countries = new Set(films.map((f) => f.country).filter(Boolean)).size;
   const moods = moodBreakdown(films);
   const directors = topDirectors(films);
   const recent = [...films]
@@ -55,6 +67,23 @@ export default async function CollectionPage() {
 
   return (
     <AppShell userEmail={user.email ?? ""} activePath="/collection">
+      {unplaced > 0 && (
+        <Link
+          href="/place"
+          className="glass flex flex-wrap items-center justify-between gap-3 px-5 py-4 transition-transform duration-150 hover:-translate-y-0.5"
+        >
+          <span className="text-[13.5px] text-ink">
+            <span className="font-semibold text-accent-strong">
+              {unplaced.toLocaleString()} film{unplaced === 1 ? "" : "s"}
+            </span>{" "}
+            waiting to be placed — they stay out of your sky until they have a mood.
+          </span>
+          <span className="text-[12.5px] font-semibold whitespace-nowrap text-accent-strong">
+            Place them →
+          </span>
+        </Link>
+      )}
+
       <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[1.6fr_1fr] lg:items-start">
         <PlateFrame
           title="Your sky"

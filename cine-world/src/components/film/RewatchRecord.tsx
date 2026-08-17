@@ -8,7 +8,8 @@ import type { ClusterId, Rewatch } from "@/lib/types";
 interface RewatchRecordProps {
   filmId: string;
   initialRewatches: Rewatch[];
-  initialCluster: ClusterId;
+  /** Null for a film that's still unplaced — the picker just starts on the first mood instead. */
+  initialCluster: ClusterId | null;
 }
 
 const initialActionState: LogRewatchState = {};
@@ -27,7 +28,7 @@ export function RewatchRecord({ filmId, initialRewatches, initialCluster }: Rewa
   const [rewatches, setRewatches] = useState(initialRewatches);
   const [justAdded, setJustAdded] = useState<Rewatch | null>(null);
   const [rating, setRating] = useState(4);
-  const [cluster, setCluster] = useState<ClusterId>(initialCluster);
+  const [cluster, setCluster] = useState<ClusterId>(initialCluster ?? CLUSTERS[0].id);
 
   if (state !== prevState) {
     setPrevState(state);

@@ -1,7 +1,7 @@
 import { RewatchRecord } from "@/components/film/RewatchRecord";
 import { SkyCanvas } from "@/components/sky/SkyCanvas";
 import { CLUSTERS } from "@/data/clusters";
-import type { Film } from "@/lib/types";
+import { isPlaced, type Film } from "@/lib/types";
 
 interface FilmEntryProps {
   film: Film;
@@ -10,17 +10,24 @@ interface FilmEntryProps {
 }
 
 export function FilmEntry({ film, specimenNumber, justLogged }: FilmEntryProps) {
-  const cluster = CLUSTERS.find((c) => c.id === film.cluster);
+  const cluster = isPlaced(film) ? CLUSTERS.find((c) => c.id === film.cluster) : undefined;
 
   return (
     <div className="flex flex-wrap gap-8">
       <div className="w-[220px] flex-none border-r border-line pr-8">
-        <SkyCanvas
-          films={[film]}
-          clusters={[{ ...cluster!, x: 0.5, y: 0.5 }]}
-          height={180}
-          newStarId={justLogged ? film.id : undefined}
-        />
+        {isPlaced(film) && cluster ? (
+          <SkyCanvas
+            films={[film]}
+            clusters={[{ ...cluster, x: 0.5, y: 0.5 }]}
+            height={180}
+            newStarId={justLogged ? film.id : undefined}
+          />
+        ) : (
+          <div className="flex h-[180px] flex-col items-center justify-center gap-2 text-center">
+            <span className="h-2.5 w-2.5 rounded-full border border-dashed border-line-strong" />
+            <span className="text-[11.5px] text-ink-faint">not placed yet</span>
+          </div>
+        )}
       </div>
       <div className="min-w-[240px] flex-1">
         {specimenNumber != null && (

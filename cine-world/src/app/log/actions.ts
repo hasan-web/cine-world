@@ -1,16 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { filmId } from "@/lib/film-id";
 import { addRewatch, createFilm } from "@/lib/films";
 import type { ClusterId } from "@/lib/types";
-
-function slugify(title: string): string {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
@@ -26,8 +19,8 @@ export async function logFilm(_prevState: LogFilmState, formData: FormData): Pro
     return { error: "Give the specimen a title." };
   }
 
-  const id = slugify(title);
   const year = Number(formData.get("year")) || new Date().getFullYear();
+  const id = filmId(title, year);
   const rating = Number(formData.get("rating")) || 3;
   const cluster = String(formData.get("cluster") ?? "solitudo") as ClusterId;
   const note = String(formData.get("note") ?? "").trim() || undefined;

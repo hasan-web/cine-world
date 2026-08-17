@@ -174,3 +174,12 @@ alter table public.films add column if not exists watched_on date;
 update public.films set watched_on = created_at::date where watched_on is null;
 alter table public.films alter column watched_on set not null;
 alter table public.films alter column watched_on set default current_date;
+
+-- Imported films arrive with no mood: a Letterboxd export knows what you watched and how you
+-- rated it, but nothing about how it felt, and guessing would fabricate exactly the judgement
+-- the app exists to record. So cluster becomes nullable — null means "waiting to be placed".
+-- Unplaced films are deliberately kept out of the sky until their owner places them.
+--
+-- Note the existing `cluster in (...)` check still holds: in SQL a check constraint passes when
+-- it evaluates to null, so nulls are admitted without weakening the constraint on real values.
+alter table public.films alter column cluster drop not null;

@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { drawStar, drawThreads, fitCanvas, layoutStars } from "@/lib/starfield";
-import type { Cluster, Film } from "@/lib/types";
+import type { Cluster, PlacedFilm } from "@/lib/types";
 
 interface OverlapCanvasProps {
-  yourFilms: Film[];
-  theirFilms: Film[];
+  yourFilms: PlacedFilm[];
+  theirFilms: PlacedFilm[];
   clusters: Cluster[];
   height: number;
 }

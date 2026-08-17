@@ -4,6 +4,7 @@ import { CLUSTERS } from "@/data/clusters";
 import { verifySession } from "@/lib/dal";
 import { listFilmsForUser } from "@/lib/films";
 import { listFriends } from "@/lib/friends";
+import { isPlaced } from "@/lib/types";
 
 export default async function FriendCollectionPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await verifySession();
@@ -26,7 +27,8 @@ export default async function FriendCollectionPage({ params }: { params: Promise
 }
 
 async function FriendSky({ friendId, email }: { friendId: string; email: string }) {
-  const films = await listFilmsForUser(friendId);
+  // A friend's unplaced imports aren't part of their sky any more than yours are part of yours.
+  const films = (await listFilmsForUser(friendId)).filter(isPlaced);
 
   return (
     <div>

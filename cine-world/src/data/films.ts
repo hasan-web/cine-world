@@ -1,6 +1,6 @@
-import type { Film } from "@/lib/types";
+import type { PlacedFilm } from "@/lib/types";
 
-export const FILMS: Film[] = [
+export const FILMS: PlacedFilm[] = [
   {
     id: "chungking-express",
     title: "Chungking Express",

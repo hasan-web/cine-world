@@ -10,7 +10,7 @@ interface FilmRow {
   year: number;
   country: string;
   rating: number;
-  cluster: ClusterId;
+  cluster: ClusterId | null;
   note: string | null;
   rewatches: Rewatch[];
   watched_on: string;
@@ -90,6 +90,142 @@ export interface NewFilm {
   rating: number;
   cluster: ClusterId;
   note?: string;
+  watchedOn: string;
+}
+
+/**
+ * Storage ceilings. Every film row costs roughly 250-300 bytes once its index entry is counted,
+ * so an unbounded import is the one action a single user could take that meaningfully eats the
+ * database. These caps keep the worst case per account bounded and knowable.
+ */
+export const MAX_FILMS_PER_USER = 10_000;
+export const MAX_IMPORT_ROWS = 5_000;
+
+/** How many films this user already has — used to enforce MAX_FILMS_PER_USER before an import. */
+export async function countFilms(): Promise<number> {
+  const user = await verifySession();
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("films")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id);
+
+  if (error) throw new Error(`Failed to count films: ${error.message}`);
+  return count ?? 0;
+}
+
+/**
+ * Films imported but not yet given a mood. These are deliberately kept out of the sky. Returned
+ * a batch at a time — someone importing a decade of logging can have thousands of these, and
+ * shipping them all to the browser to place a handful would be wasteful.
+ */
+export async function listUnplacedFilms(limit = 40): Promise<Film[]> {
+  await verifySession();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("films")
+    .select(FILM_COLUMNS)
+    .is("cluster", null)
+    .order("watched_on", { ascending: false })
+    .limit(limit);
+
+  if (error) throw new Error(`Failed to load unplaced films: ${error.message}`);
+  return (data as FilmRow[]).map(rowToFilm);
+}
+
+export async function countUnplacedFilms(): Promise<number> {
+  const user = await verifySession();
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("films")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .is("cluster", null);
+
+  if (error) throw new Error(`Failed to count unplaced films: ${error.message}`);
+  return count ?? 0;
+}
+
+/** Gives an unplaced film its mood, which is what moves it into the sky. */
+export async function placeFilm(filmId: string, cluster: ClusterId): Promise<void> {
+  const user = await verifySession();
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("films")
+    .update({ cluster })
+    .eq("id", filmId)
+    .eq("user_id", user.id);
+
+  if (error) throw new Error(`Failed to place film: ${error.message}`);
+}
+
+/**
+ * Discards everything still waiting to be placed — the undo for an import the user regrets.
+ * Manual logging always sets a mood, so an unplaced row can only have come from an import;
+ * that's what makes this safe to offer as a bulk delete.
+ */
+export async function discardUnplacedFilms(): Promise<number> {
+  const user = await verifySession();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("films")
+    .delete()
+    .eq("user_id", user.id)
+    .is("cluster", null)
+    .select("id");
+
+  if (error) throw new Error(`Failed to discard unplaced films: ${error.message}`);
+  return data?.length ?? 0;
+}
+
+/**
+ * Bulk-inserts imported films, skipping any the user already has rather than overwriting them —
+ * an import must never clobber a mood or note someone set by hand. Chunked so a large library
+ * doesn't become one enormous request, and so a partial failure is bounded.
+ */
+export async function insertImportedFilms(films: NewImportedFilm[]): Promise<number> {
+  const user = await verifySession();
+  const supabase = await createClient();
+
+  const CHUNK = 500;
+  let inserted = 0;
+
+  for (let i = 0; i < films.length; i += CHUNK) {
+    const rows = films.slice(i, i + CHUNK).map((f) => ({
+      id: f.id,
+      user_id: user.id,
+      title: f.title,
+      director: f.director,
+      year: f.year,
+      country: f.country,
+      rating: f.rating,
+      cluster: null,
+      note: f.note ?? null,
+      rewatches: f.rewatches,
+      watched_on: f.watchedOn,
+    }));
+
+    const { data, error } = await supabase
+      .from("films")
+      .upsert(rows, { onConflict: "user_id,id", ignoreDuplicates: true })
+      .select("id");
+
+    if (error) throw new Error(`Failed to import films: ${error.message}`);
+    inserted += data?.length ?? 0;
+  }
+
+  return inserted;
+}
+
+export interface NewImportedFilm {
+  id: string;
+  title: string;
+  director: string;
+  year: number;
+  country: string;
+  rating: number;
+  note?: string;
+  rewatches: Rewatch[];
   watchedOn: string;
 }
 

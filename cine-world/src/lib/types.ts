@@ -28,9 +28,20 @@ export interface Film {
   country: string;
   /** 1-5, drives star size/brightness. */
   rating: number;
-  cluster: ClusterId;
+  /**
+   * Which mood the film was placed in, or null when it's still waiting to be placed — imported
+   * films land unplaced, since a Letterboxd export can't say how something felt.
+   */
+  cluster: ClusterId | null;
   note?: string;
   rewatches?: Rewatch[];
   /** ISO date (YYYY-MM-DD) this specimen was actually watched — distinct from the film's release `year`. */
   watchedOn?: string;
+}
+
+/** A film its owner has actually placed — the only kind that can be drawn into a sky. */
+export type PlacedFilm = Film & { cluster: ClusterId };
+
+export function isPlaced(film: Film): film is PlacedFilm {
+  return film.cluster !== null;
 }

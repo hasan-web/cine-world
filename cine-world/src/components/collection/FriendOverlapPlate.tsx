@@ -6,15 +6,15 @@ import { OverlapLegend } from "@/components/atlas/OverlapLegend";
 import { PlateFrame } from "@/components/atlas/PlateFrame";
 import { OverlapCanvas } from "@/components/sky/OverlapCanvas";
 import type { FriendProfile } from "@/lib/friends";
-import type { Cluster, Film } from "@/lib/types";
+import type { Cluster, PlacedFilm } from "@/lib/types";
 
 interface Twin {
   friend: FriendProfile;
-  films: Film[];
+  films: PlacedFilm[];
 }
 
 interface FriendOverlapPlateProps {
-  yourFilms: Film[];
+  yourFilms: PlacedFilm[];
   twins: Twin[];
   clusters: Cluster[];
   isNewCollection: boolean;
