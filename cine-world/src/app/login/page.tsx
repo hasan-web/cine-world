@@ -20,7 +20,7 @@ export default function LoginPage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-[440px] items-center px-7 py-16">
       <div className="glass w-full px-8 py-10">
-        <h1 className="mb-1 text-[13px] font-semibold tracking-[0.14em] text-accent-strong uppercase">Constellation</h1>
+        <h1 className="mb-1 text-[13px] font-semibold tracking-[0.14em] text-accent-strong uppercase">Love for Cinema</h1>
         <p className="mb-4 text-[16px] text-ink-soft">a keepsake program for what you&rsquo;ve watched</p>
         <p className="mb-8 max-w-[38ch] text-[13.5px] leading-[1.7] text-ink-soft">
           Every film you log becomes a specimen pressed into your own collection — placed by how it felt, not

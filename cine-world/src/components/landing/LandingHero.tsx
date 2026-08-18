@@ -45,7 +45,7 @@ export function LandingHero() {
       <div className="relative mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
         <div>
           <p className="rise mb-4 text-[11px] tracking-[0.3em] text-accent uppercase">
-            Love for Cinema · Constellation
+            Love for Cinema
           </p>
           <h1
             className="rise mb-5 max-w-[15ch] text-[36px] leading-[1.1] font-semibold text-ink sm:text-[46px]"
@@ -55,7 +55,7 @@ export function LandingHero() {
           </h1>
           <p className="rise mb-8 max-w-[46ch] text-[16px] leading-[1.75] text-ink-soft" style={{ animationDelay: "180ms" }}>
             You remember the walk home. You remember that nobody in the car said anything for ten minutes.
-            Constellation is a film diary built around that part — where a film actually sat with you, not the
+            Love for Cinema is a film diary built around that part — where a film actually sat with you, not the
             number you gave it on the way out.
           </p>
           <div className="rise mb-9 flex flex-wrap items-center gap-4" style={{ animationDelay: "270ms" }}>

@@ -13,9 +13,10 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Stats", href: "/stats" },
   { label: "Friends", href: "/friends" },
   { label: "Import", href: "/import" },
+  { label: "Discover", href: "/movies" },
 ];
 
-const SOON_ITEMS = ["Collections", "Discover", "Ask My Cinema"];
+const SOON_ITEMS = ["Collections", "Ask My Cinema"];
 
 interface AppShellProps {
   userEmail: string;
@@ -29,8 +30,7 @@ export function AppShell({ userEmail, activePath, children }: AppShellProps) {
       <div className="mx-auto grid max-w-[1360px] gap-5 md:grid-cols-[224px_1fr]">
         <aside className="glass flex h-fit flex-row items-center gap-2 overflow-x-auto p-3 md:sticky md:top-7 md:flex-col md:items-stretch md:gap-6 md:overflow-visible md:p-5">
           <div className="hidden flex-col gap-0.5 px-2 md:flex">
-            <span className="text-[10px] tracking-[0.14em] text-ink-faint uppercase">Love for Cinema</span>
-            <span className="text-lg font-semibold text-accent-strong">Constellation</span>
+            <span className="text-lg font-semibold text-accent-strong">Love for Cinema</span>
           </div>
 
           <nav className="flex flex-row gap-1 md:flex-col">

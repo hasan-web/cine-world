@@ -1,7 +1,7 @@
 import "server-only";
 
 const RESEND_API = "https://api.resend.com/emails";
-const FROM = "Constellation <hello@loveforcinema.com>";
+const FROM = "Love for Cinema <hello@loveforcinema.com>";
 
 const FONT_DISPLAY = "'Jost', Helvetica, Arial, sans-serif";
 const FONT_BODY = "'Libre Baskerville', Georgia, 'Times New Roman', serif";
@@ -25,7 +25,7 @@ interface EmailShellOptions {
 }
 
 /**
- * The one visual shell every Constellation email shares — table-based and
+ * The one visual shell every Love for Cinema email shares — table-based and
  * inline-styled since email clients don't reliably support Tailwind, custom
  * fonts, or modern CSS. Mirrors the app's herbarium/marquee "keepsake
  * program" look with web-safe fallbacks for Jost/Libre Baskerville/JetBrains Mono.
@@ -36,14 +36,14 @@ export function renderEmailShell({ preheader, heading, bodyHtml, ctaLabel, ctaHr
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Constellation</title>
+    <title>Love for Cinema</title>
   </head>
   <body style="margin:0; padding:32px 16px; background:#f2e9d3; font-family:${FONT_BODY};">
     <span style="display:none; font-size:1px; color:#f2e9d3; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden;">${escapeHtml(preheader)}</span>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px; margin:0 auto; background:#e8dcc0; border:1px solid rgba(43,32,24,0.14);">
       <tr>
         <td style="padding:40px 36px; text-align:center;">
-          <div style="font-family:${FONT_DISPLAY}; font-size:11px; letter-spacing:3px; color:#6b2027; text-transform:uppercase;">Constellation</div>
+          <div style="font-family:${FONT_DISPLAY}; font-size:11px; letter-spacing:3px; color:#6b2027; text-transform:uppercase;">Love for Cinema</div>
           <div style="width:36px; height:1px; background:#a97c2f; margin:16px auto;"></div>
           <div style="font-family:${FONT_BODY}; font-style:italic; font-size:20px; color:#2b2018; margin-bottom:16px;">${escapeHtml(heading)}</div>
           <div style="font-family:${FONT_BODY}; font-size:14px; line-height:1.7; color:#5a4d3e; text-align:left;">${bodyHtml}</div>
@@ -85,7 +85,7 @@ async function sendEmail(params: { to: string; subject: string; html: string }):
 export async function sendFriendRequestEmail(toEmail: string, fromEmail: string, siteUrl: string): Promise<void> {
   const safeFrom = escapeHtml(fromEmail);
   const html = renderEmailShell({
-    preheader: `${fromEmail} wants to compare skies with you on Constellation.`,
+    preheader: `${fromEmail} wants to compare skies with you on Love for Cinema.`,
     heading: "a request has arrived",
     bodyHtml: `<strong style="color:#2b2018;">${safeFrom}</strong> wants to see where your collections agree — accept to open your sky to each other, or leave it for later.`,
     ctaLabel: "View the request →",

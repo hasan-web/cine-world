@@ -9,6 +9,8 @@ export interface Cluster {
   /** Fractional anchor position (0-1) within a plate. */
   x: number;
   y: number;
+  /** One-sentence public description, used on /moods/[slug]. */
+  description: string;
 }
 
 export interface Rewatch {

@@ -21,7 +21,7 @@ export async function addFriend(_prevState: AddFriendState, formData: FormData):
     case "self":
       return { error: "That's your own email." };
     case "not-found":
-      return { error: "No Constellation account with that email." };
+      return { error: "No Love for Cinema account with that email." };
     case "already-exists":
       return { error: "You've already sent a request, or you're already friends." };
   }

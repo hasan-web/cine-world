@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "A mood-based film diary and letterboxd alternative",
   description:
-    "Constellation logs films by how they felt, not their genre — a letterboxd alternative built around honest rewatches and real taste-twin matches with friends, not a follower count.",
+    "Love for Cinema logs films by how they felt, not their genre — a letterboxd alternative built around honest rewatches and real taste-twin matches with friends, not a follower count.",
   alternates: { canonical: "/manifesto" },
 };
 
@@ -12,7 +12,7 @@ export default function ManifestoPage() {
   return (
     <main className="mx-auto max-w-[680px] px-6 py-16 sm:px-10 sm:py-20">
       <Link href="/" className="text-[11px] tracking-[0.08em] text-accent uppercase">
-        ← Constellation
+        ← Love for Cinema
       </Link>
 
       <div className="glass mt-8 px-7 py-10 sm:px-12 sm:py-14">
@@ -25,14 +25,14 @@ export default function ManifestoPage() {
         <p>
           Every film tracker eventually turns into the same thing: a poster grid, a number out of five, a public
           tally of everything you&rsquo;ve watched this year. That&rsquo;s useful for keeping score. It&rsquo;s
-          not very useful for remembering what a film actually did to you. Constellation started as a{" "}
+          not very useful for remembering what a film actually did to you. Love for Cinema started as a{" "}
           <em>letterboxd alternative</em> for exactly that reason — not because the format is wrong, but because
           the unit it measures in is wrong. A genre tag doesn&rsquo;t tell you why a film mattered. A star rating
           doesn&rsquo;t either, once you&rsquo;ve logged a few hundred of them and they all start to blur.
         </p>
 
         <p>
-          So instead of a grid, Constellation is a <em>mood-based film diary</em>. Every film you log becomes a
+          So instead of a grid, Love for Cinema is a <em>mood-based film diary</em>. Every film you log becomes a
           specimen pressed into your own sky, and where it lands isn&rsquo;t decided by its genre — it&rsquo;s
           decided by you, by which of four moods it actually felt like: <em>Solitudo</em> for the quiet, tense
           ones, <em>Amplitudo</em> for the epics, <em>Domus</em> for comfort watches, <em>Lacrima</em> for what
@@ -42,7 +42,7 @@ export default function ManifestoPage() {
         </p>
 
         <p>
-          That&rsquo;s what we mean when we say Constellation lets you <em>log films by how they felt</em>, not
+          That&rsquo;s what we mean when we say Love for Cinema lets you <em>log films by how they felt</em>, not
           what they scored. The brightness of a specimen comes from how much it mattered to you, not from an
           aggregate of strangers&rsquo; opinions. A quiet film that changed how you see things can outshine a
           blockbuster you enjoyed and forgot by the weekend — because that&rsquo;s closer to the truth of how you
@@ -51,7 +51,7 @@ export default function ManifestoPage() {
 
         <p>
           Most trackers also treat a rewatch as a correction: you watch something again, you update the number,
-          the old verdict disappears. Constellation treats it as a second data point instead of a replacement.
+          the old verdict disappears. Love for Cinema treats it as a second data point instead of a replacement.
           Log a rewatch and it adds a new mark to that film&rsquo;s own timeline rather than overwriting the
           first one, so the way your reading of a film moved — sometimes gently, sometimes completely — stays
           visible instead of getting erased. Some of the most interesting entries in a collection are the ones
@@ -59,7 +59,7 @@ export default function ManifestoPage() {
         </p>
 
         <p>
-          The part we&rsquo;re most protective of, though, is friends. Constellation isn&rsquo;t a social feed —
+          The part we&rsquo;re most protective of, though, is friends. Love for Cinema isn&rsquo;t a social feed —
           there&rsquo;s no follower count, no public activity wall. What it has instead is a <em>taste twin</em>{" "}
           match: once you and a friend have both agreed to it, your collections overlay each other, and any film
           you both happened to place in the exact same spot lights up. Not a percentage-match score calculated
@@ -69,8 +69,8 @@ export default function ManifestoPage() {
         </p>
 
         <p>
-            None of this makes Constellation faster to use than a five-tap rating. It&rsquo;s meant for people who
-            already suspected that wasn&rsquo;t really the point — who want a record of what they watched that
+            None of this makes Love for Cinema faster to use than a five-tap rating. It&rsquo;s meant for people
+            who already suspected that wasn&rsquo;t really the point — who want a record of what they watched that
             still means something to them years later, not just a list they can prove they finished.
           </p>
         </div>
