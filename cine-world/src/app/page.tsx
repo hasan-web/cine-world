@@ -26,7 +26,7 @@ const DIFFERENTIATORS = [
   },
   {
     label: "You at nineteen was a different critic",
-    body: "Watch something again and the old entry stays exactly where it was. The new one lands beside it. What builds up is a record of the drift — which films changed meaning on you, and roughly when.",
+    body: "Watch something again and the old entry stays exactly where it was. The new one lands beside it. Before Sunset already knew this — nine years pass between its two conversations, and what happened in the meantime is what the film is actually about. Your own diary keeps the same kind of record.",
     icon: (
       <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
         <line x1="12" y1="28" x2="44" y2="28" stroke="var(--line)" strokeWidth="1" />

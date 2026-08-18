@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated Cloudflare/OpenNext build output — bundled, minified JS. Linting it isn't
+    // useful (it's not source we write) and its size is enough to OOM a default Node heap.
+    ".open-next/**",
+    ".wrangler/**",
   ]),
 ]);
 
