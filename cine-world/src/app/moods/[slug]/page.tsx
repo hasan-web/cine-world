@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LandingFooter } from "@/components/landing/LandingFooter";
-import { LandingHeader } from "@/components/landing/LandingHeader";
 import { Reveal } from "@/components/motion/Reveal";
+import { PublicPageShell } from "@/components/shell/PublicPageShell";
 import { getCatalogFilmsByCluster } from "@/data/catalog";
 import { CLUSTERS } from "@/data/clusters";
 import type { ClusterId } from "@/lib/types";
@@ -48,9 +48,8 @@ export default async function MoodPage({ params }: MoodPageProps) {
   const otherMoods = CLUSTERS.filter((c) => c.id !== cluster.id);
 
   return (
-    <>
-      <LandingHeader />
-      <main className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
+    <PublicPageShell>
+      <div className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
         <p className="mb-8 pt-8 text-[11px] tracking-[0.08em] text-ink-faint uppercase">
           <Link href="/moods" className="text-accent hover:underline">
             Moods
@@ -97,10 +96,10 @@ export default async function MoodPage({ params }: MoodPageProps) {
             </div>
           </div>
         </Reveal>
-      </main>
+      </div>
       <div className="px-4 pb-4 sm:px-6">
         <LandingFooter />
       </div>
-    </>
+    </PublicPageShell>
   );
 }

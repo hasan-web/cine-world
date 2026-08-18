@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LandingFooter } from "@/components/landing/LandingFooter";
-import { LandingHeader } from "@/components/landing/LandingHeader";
 import { Reveal } from "@/components/motion/Reveal";
+import { PublicPageShell } from "@/components/shell/PublicPageShell";
 import { getCatalogFilmsByCluster } from "@/data/catalog";
 import { CLUSTERS } from "@/data/clusters";
 
@@ -15,9 +15,8 @@ export const metadata: Metadata = {
 
 export default function MoodsIndexPage() {
   return (
-    <>
-      <LandingHeader />
-      <main className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
+    <PublicPageShell>
+      <div className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
         <Reveal>
           <p className="mb-2 pt-8 text-[11px] tracking-[0.2em] text-accent uppercase">Browse</p>
           <h1 className="mb-3 text-[28px] font-semibold text-ink">Moods</h1>
@@ -46,10 +45,10 @@ export default function MoodsIndexPage() {
             );
           })}
         </div>
-      </main>
+      </div>
       <div className="px-4 pb-4 sm:px-6">
         <LandingFooter />
       </div>
-    </>
+    </PublicPageShell>
   );
 }

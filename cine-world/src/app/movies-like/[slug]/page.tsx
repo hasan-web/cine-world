@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LandingFooter } from "@/components/landing/LandingFooter";
-import { LandingHeader } from "@/components/landing/LandingHeader";
 import { Reveal } from "@/components/motion/Reveal";
+import { PublicPageShell } from "@/components/shell/PublicPageShell";
 import { CATALOG, getCatalogFilm, getRelatedFilms, hasMoviesLikePage } from "@/data/catalog";
 import { CLUSTERS } from "@/data/clusters";
 
@@ -60,10 +60,9 @@ export default async function MoviesLikePage({ params }: MoviesLikePageProps) {
   };
 
   return (
-    <>
+    <PublicPageShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <LandingHeader />
-      <main className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
+      <div className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
         <p className="mb-8 pt-8 text-[11px] tracking-[0.08em] text-ink-faint uppercase">
           <Link href="/movies" className="text-accent hover:underline">
             Movies
@@ -117,10 +116,10 @@ export default async function MoviesLikePage({ params }: MoviesLikePageProps) {
             </Link>
           </div>
         </Reveal>
-      </main>
+      </div>
       <div className="px-4 pb-4 sm:px-6">
         <LandingFooter />
       </div>
-    </>
+    </PublicPageShell>
   );
 }

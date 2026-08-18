@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LandingFooter } from "@/components/landing/LandingFooter";
-import { LandingHeader } from "@/components/landing/LandingHeader";
 import { PublicSkyCanvas } from "@/components/sky/PublicSkyCanvas";
 import { ShareIntents } from "@/components/sky/ShareIntents";
 import { Reveal } from "@/components/motion/Reveal";
+import { PublicPageShell } from "@/components/shell/PublicPageShell";
 import { CLUSTERS } from "@/data/clusters";
 import { getPublicSky } from "@/lib/films";
 
@@ -42,9 +42,8 @@ export default async function SkyPage({ params }: SkyPageProps) {
   const shareText = "A sky on Love for Cinema — a film diary that places films by mood, not genre.";
 
   return (
-    <>
-      <LandingHeader />
-      <main className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
+    <PublicPageShell>
+      <div className="mx-auto max-w-[820px] px-6 pb-16 sm:px-10 sm:pb-20">
         <Reveal>
           <p className="mb-2 pt-8 text-[11px] tracking-[0.2em] text-accent uppercase">A sky on Love for Cinema</p>
           <h1 className="mb-3 text-[28px] font-semibold text-ink">
@@ -79,10 +78,10 @@ export default async function SkyPage({ params }: SkyPageProps) {
             </div>
           </div>
         </Reveal>
-      </main>
+      </div>
       <div className="px-4 pb-4 sm:px-6">
         <LandingFooter />
       </div>
-    </>
+    </PublicPageShell>
   );
 }
