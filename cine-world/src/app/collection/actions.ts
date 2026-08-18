@@ -2,13 +2,16 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { withClockSkewRetry } from "@/lib/supabase/retry";
 import { verifySession } from "@/lib/dal";
 
 /** The current share link for this account, or null if they've never generated one. */
 export async function getMyShareToken(): Promise<string | null> {
   const user = await verifySession();
   const supabase = await createClient();
-  const { data, error } = await supabase.from("profiles").select("share_token").eq("id", user.id).maybeSingle();
+  const { data, error } = await withClockSkewRetry(() =>
+    supabase.from("profiles").select("share_token").eq("id", user.id).maybeSingle(),
+  );
 
   if (error) throw new Error(`Failed to load share link: ${error.message}`);
   return data?.share_token ?? null;

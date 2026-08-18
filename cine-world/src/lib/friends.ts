@@ -1,6 +1,7 @@
 import "server-only";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { withClockSkewRetry } from "@/lib/supabase/retry";
 import { verifySession } from "@/lib/dal";
 import { sendFriendRequestEmail } from "@/lib/email";
 
@@ -22,11 +23,13 @@ async function resolveProfiles(supabase: SupabaseServerClient, ids: string[]): P
 export async function listFriends(): Promise<FriendProfile[]> {
   const user = await verifySession();
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("friendships")
-    .select("requester_id, addressee_id")
-    .eq("status", "accepted")
-    .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`);
+  const { data, error } = await withClockSkewRetry(() =>
+    supabase
+      .from("friendships")
+      .select("requester_id, addressee_id")
+      .eq("status", "accepted")
+      .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`),
+  );
 
   if (error) throw new Error(`Failed to load friends: ${error.message}`);
   const otherIds = (data as { requester_id: string; addressee_id: string }[]).map((row) =>

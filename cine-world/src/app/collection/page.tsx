@@ -38,11 +38,14 @@ function topDirectors(films: Film[], limit = 4) {
 
 export default async function CollectionPage() {
   const user = await verifySession();
+  // getMyShareToken() is allowed to fail on its own — it's one control in the stats row, not core
+  // to the page, and a transient hiccup there (retried already inside getMyShareToken()) shouldn't
+  // take the whole dashboard down with it. Everything else here is what the page actually is.
   const [allFilms, friends, unplaced, shareToken] = await Promise.all([
     listFilms(),
     listFriends(),
     countUnplacedFilms(),
-    getMyShareToken(),
+    getMyShareToken().catch(() => null),
   ]);
   // Only placed films belong in the sky and its statistics — an imported film has no mood yet,
   // and inventing a position for it would put a star somewhere its owner never chose.

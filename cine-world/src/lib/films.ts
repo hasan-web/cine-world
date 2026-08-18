@@ -1,6 +1,7 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
+import { withClockSkewRetry } from "@/lib/supabase/retry";
 import { verifySession } from "@/lib/dal";
 import type { ClusterId, Film, Rewatch } from "@/lib/types";
 
@@ -43,11 +44,9 @@ export function rowToFilm(row: FilmRow): Film {
 export async function listFilms(): Promise<Film[]> {
   const user = await verifySession();
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("films")
-    .select(FILM_COLUMNS)
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: true });
+  const { data, error } = await withClockSkewRetry(() =>
+    supabase.from("films").select(FILM_COLUMNS).eq("user_id", user.id).order("created_at", { ascending: true }),
+  );
 
   if (error) throw new Error(`Failed to load films: ${error.message}`);
   return (data as FilmRow[]).map(rowToFilm);
@@ -215,11 +214,9 @@ export async function listUnplacedFilms(limit = 40): Promise<Film[]> {
 export async function countUnplacedFilms(): Promise<number> {
   const user = await verifySession();
   const supabase = await createClient();
-  const { count, error } = await supabase
-    .from("films")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id)
-    .is("cluster", null);
+  const { count, error } = await withClockSkewRetry(() =>
+    supabase.from("films").select("id", { count: "exact", head: true }).eq("user_id", user.id).is("cluster", null),
+  );
 
   if (error) throw new Error(`Failed to count unplaced films: ${error.message}`);
   return count ?? 0;
