@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FriendOverlapPlate } from "@/components/collection/FriendOverlapPlate";
+import { ShareCard } from "@/components/collection/ShareCard";
 import { PlateFrame } from "@/components/atlas/PlateFrame";
 import { AppShell } from "@/components/shell/AppShell";
 import { SkyCanvas } from "@/components/sky/SkyCanvas";
@@ -122,19 +123,31 @@ export default async function CollectionPage() {
             <SkyCanvas films={films} clusters={CLUSTERS} height={380} showLabels interactive navigable />
           )}
           {films.length > 0 && (
-            <div className="flex flex-wrap gap-6 border-t border-line px-5 py-4">
-              <div>
-                <div className="text-[19px] font-semibold text-ink">{films.length}</div>
-                <div className="text-[10px] tracking-[0.05em] text-ink-faint uppercase">Films</div>
+            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line px-5 py-4">
+              <div className="flex flex-wrap gap-6">
+                <div>
+                  <div className="text-[19px] font-semibold text-ink">{films.length}</div>
+                  <div className="text-[10px] tracking-[0.05em] text-ink-faint uppercase">Films</div>
+                </div>
+                <div>
+                  <div className="text-[19px] font-semibold text-ink">{totalRewatches}</div>
+                  <div className="text-[10px] tracking-[0.05em] text-ink-faint uppercase">Rewatched</div>
+                </div>
+                <div>
+                  <div className="text-[19px] font-semibold text-ink">{countries}</div>
+                  <div className="text-[10px] tracking-[0.05em] text-ink-faint uppercase">Countries</div>
+                </div>
               </div>
-              <div>
-                <div className="text-[19px] font-semibold text-ink">{totalRewatches}</div>
-                <div className="text-[10px] tracking-[0.05em] text-ink-faint uppercase">Rewatched</div>
-              </div>
-              <div>
-                <div className="text-[19px] font-semibold text-ink">{countries}</div>
-                <div className="text-[10px] tracking-[0.05em] text-ink-faint uppercase">Countries</div>
-              </div>
+              <ShareCard
+                films={films}
+                clusters={CLUSTERS}
+                stats={{
+                  totalFilms: films.length,
+                  totalRewatches,
+                  topMood:
+                    moods[0] && moods[0].count > 0 ? { label: moods[0].cluster.label, pct: moods[0].pct } : null,
+                }}
+              />
             </div>
           )}
         </PlateFrame>
