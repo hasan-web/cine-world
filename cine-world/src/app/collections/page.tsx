@@ -2,8 +2,15 @@ import type { Metadata } from "next";
 import { CollectionCard } from "@/components/collections/CollectionCard";
 import { NewCollectionForm } from "@/components/collections/NewCollectionForm";
 import { AppShell } from "@/components/shell/AppShell";
+import { ExampleContent } from "@/components/shell/ExampleContent";
 import { verifySession } from "@/lib/dal";
 import { listCollections } from "@/lib/collections";
+import type { Collection } from "@/lib/types";
+
+const EXAMPLE_COLLECTIONS: Collection[] = [
+  { id: "example-1", name: "rainy sunday comfort", createdAt: "", filmCount: 8 },
+  { id: "example-2", name: "films that wrecked me", createdAt: "", filmCount: 5 },
+];
 
 export const metadata: Metadata = {
   title: "Collections",
@@ -29,11 +36,20 @@ export default async function CollectionsPage() {
         </section>
 
         {collections.length === 0 ? (
-          <div className="glass p-8 text-center">
-            <p className="mb-2 text-[15px] font-semibold text-ink">No collections yet.</p>
-            <p className="text-[13.5px] text-ink-soft">
-              Create one above, then add films to it from any film&rsquo;s own page.
-            </p>
+          <div className="flex flex-col gap-6">
+            <ExampleContent label="what a collection looks like">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {EXAMPLE_COLLECTIONS.map((c) => (
+                  <CollectionCard key={c.id} collection={c} />
+                ))}
+              </div>
+            </ExampleContent>
+            <div className="glass p-8 text-center">
+              <p className="mb-2 text-[15px] font-semibold text-ink">No collections yet.</p>
+              <p className="text-[13.5px] text-ink-soft">
+                Create one above, then add films to it from any film&rsquo;s own page.
+              </p>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">

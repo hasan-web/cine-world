@@ -5,8 +5,10 @@ import { ShareCard } from "@/components/collection/ShareCard";
 import { ShareLinkControl } from "@/components/collection/ShareLinkControl";
 import { PlateFrame } from "@/components/atlas/PlateFrame";
 import { AppShell } from "@/components/shell/AppShell";
+import { ExampleContent } from "@/components/shell/ExampleContent";
 import { SkyCanvas } from "@/components/sky/SkyCanvas";
 import { CLUSTERS } from "@/data/clusters";
+import { EXAMPLE_FILMS } from "@/data/exampleFilms";
 import { verifySession } from "@/lib/dal";
 import { countUnplacedFilms, listFilms, listFilmsForUser } from "@/lib/films";
 import { listFriends } from "@/lib/friends";
@@ -116,11 +118,14 @@ export default async function CollectionPage() {
           }
         >
           {films.length === 0 ? (
-            <div className="flex h-[420px] flex-col items-center justify-center gap-5 px-6 text-center">
+            <div className="flex flex-col gap-6 px-6 py-8 text-center">
+              <ExampleContent label="what your sky will look like, once you place a few">
+                <SkyCanvas films={EXAMPLE_FILMS} clusters={CLUSTERS} height={260} showLabels />
+              </ExampleContent>
               <p className="text-[15px] text-ink-soft">an empty sky has no stars yet</p>
               <Link
                 href="/log"
-                className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-6 py-2.5 text-[12px] font-semibold text-white"
+                className="mx-auto rounded-full bg-gradient-to-br from-accent to-accent-strong px-6 py-2.5 text-[12px] font-semibold text-white"
               >
                 Log your first film →
               </Link>

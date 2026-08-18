@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppShell } from "@/components/shell/AppShell";
+import { ExampleContent } from "@/components/shell/ExampleContent";
+import { EXAMPLE_FILMS } from "@/data/exampleFilms";
 import { verifySession } from "@/lib/dal";
 import { buildDiary } from "@/lib/diary";
 import { listFilms } from "@/lib/films";
@@ -61,33 +63,13 @@ function BarList({ bars, unit = "" }: { bars: Bar[]; unit?: string }) {
 export default async function StatsPage() {
   const user = await verifySession();
   const films = await listFilms();
-  const viewings = buildDiary(films);
-  const stats = buildStats(films, viewings);
+  const isEmpty = films.length === 0;
+  const sourceFilms = isEmpty ? EXAMPLE_FILMS : films;
+  const viewings = buildDiary(sourceFilms);
+  const stats = buildStats(sourceFilms, viewings);
 
-  if (films.length === 0) {
-    return (
-      <AppShell userEmail={user.email ?? ""} activePath="/stats">
-        <div className="mx-auto w-full max-w-[620px]">
-          <h1 className="mb-1 text-[16px] font-semibold text-ink">Your stats</h1>
-          <p className="mb-7 text-[13.5px] text-ink-soft">
-            Nothing to count yet — this fills in as you log.
-          </p>
-          <div className="glass p-8 text-center">
-            <Link
-              href="/import"
-              className="inline-block rounded-full bg-gradient-to-br from-accent to-accent-strong px-5 py-2.5 text-[12.5px] font-semibold text-white"
-            >
-              Import from Letterboxd →
-            </Link>
-          </div>
-        </div>
-      </AppShell>
-    );
-  }
-
-  return (
-    <AppShell userEmail={user.email ?? ""} activePath="/stats">
-      <div className="mx-auto w-full max-w-[860px]">
+  const body = (
+    <div className="mx-auto w-full max-w-[860px]">
         <h1 className="mb-1 text-[16px] font-semibold text-ink">Your stats</h1>
         <p className="mb-7 max-w-[54ch] text-[13.5px] leading-[1.7] text-ink-soft">
           Counted across viewings rather than films, so a rewatch you felt differently about counts as
@@ -208,7 +190,27 @@ export default async function StatsPage() {
             .
           </p>
         )}
-      </div>
+    </div>
+  );
+
+  return (
+    <AppShell userEmail={user.email ?? ""} activePath="/stats">
+      {isEmpty ? (
+        <div className="flex flex-col gap-6">
+          <ExampleContent label="what your stats will look like">{body}</ExampleContent>
+          <div className="glass p-8 text-center">
+            <p className="mb-6 text-[13.5px] text-ink-soft">Nothing to count yet — this fills in as you log.</p>
+            <Link
+              href="/import"
+              className="inline-block rounded-full bg-gradient-to-br from-accent to-accent-strong px-5 py-2.5 text-[12.5px] font-semibold text-white"
+            >
+              Import from Letterboxd →
+            </Link>
+          </div>
+        </div>
+      ) : (
+        body
+      )}
     </AppShell>
   );
 }

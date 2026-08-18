@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AppShell } from "@/components/shell/AppShell";
+import { ExampleContent } from "@/components/shell/ExampleContent";
 import { CLUSTERS } from "@/data/clusters";
+import { EXAMPLE_FILMS } from "@/data/exampleFilms";
 import { verifySession } from "@/lib/dal";
-import { buildDiary, groupByMonth } from "@/lib/diary";
+import { buildDiary, groupByMonth, type Viewing } from "@/lib/diary";
 import { listFilms } from "@/lib/films";
 
 export const metadata: Metadata = {
@@ -20,6 +22,51 @@ function moodLabel(cluster: string | null): string | null {
 /** Renders "10" from 2024-03-10 without constructing a Date, which would shift across timezones. */
 function dayOf(date: string): string {
   return String(Number(date.slice(8, 10)));
+}
+
+function MonthList({ months }: { months: ReturnType<typeof groupByMonth> }) {
+  return (
+    <div className="flex flex-col gap-7">
+      {months.map((month) => (
+        <section key={month.key}>
+          <h2 className="mb-3 text-[11px] tracking-[0.1em] text-accent uppercase">{month.label}</h2>
+          <div className="glass overflow-hidden">
+            {month.viewings.map((v: Viewing, i: number) => (
+              <Link
+                key={`${v.filmId}-${v.date}-${i}`}
+                href={`/film/${v.filmId}`}
+                className="flex gap-4 border-b border-line px-5 py-3.5 last:border-none hover:bg-glass-edge"
+              >
+                <span className="w-6 flex-none pt-0.5 text-right text-[13px] font-semibold text-ink-faint tabular-nums">
+                  {dayOf(v.date)}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex flex-wrap items-baseline gap-x-2">
+                    <span className="text-[14px] font-medium text-ink">{v.title}</span>
+                    {v.year > 0 && <span className="text-[12px] text-ink-faint">{v.year}</span>}
+                    {v.isRewatch && (
+                      <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[10px] font-semibold tracking-[0.04em] text-accent-strong uppercase">
+                        rewatch
+                      </span>
+                    )}
+                  </span>
+                  <span className="mt-1 flex flex-wrap items-center gap-x-2.5 text-[11.5px] text-ink-faint">
+                    <span className="flex gap-1" aria-label={`${v.rating} of 5`}>
+                      {Array.from({ length: 5 }, (_, s) => (
+                        <span key={s} className={`h-1.5 w-1.5 rounded-full ${s < v.rating ? "bg-accent" : "bg-line"}`} />
+                      ))}
+                    </span>
+                    {moodLabel(v.cluster) ? <span>{moodLabel(v.cluster)}</span> : <span className="italic">not placed</span>}
+                  </span>
+                  {v.note && <span className="mt-1.5 block text-[12.5px] leading-[1.6] text-ink-soft italic">{v.note}</span>}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
 }
 
 export default async function DiaryPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
@@ -49,78 +96,33 @@ export default async function DiaryPage({ searchParams }: { searchParams: Promis
         </p>
 
         {all.length === 0 ? (
-          <div className="glass p-8 text-center">
-            <p className="mb-6 text-[13.5px] text-ink-soft">
-              Log a film, or bring your history over from Letterboxd.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Link
-                href="/log"
-                className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-5 py-2.5 text-[12.5px] font-semibold text-white"
-              >
-                Log a film →
-              </Link>
-              <Link
-                href="/import"
-                className="rounded-full border border-line-strong px-5 py-2.5 text-[12.5px] text-ink-soft"
-              >
-                Import from Letterboxd
-              </Link>
+          <div className="flex flex-col gap-6">
+            <ExampleContent label="what your diary looks like">
+              <MonthList months={groupByMonth(buildDiary(EXAMPLE_FILMS))} />
+            </ExampleContent>
+            <div className="glass p-8 text-center">
+              <p className="mb-6 text-[13.5px] text-ink-soft">
+                Log a film, or bring your history over from Letterboxd.
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link
+                  href="/log"
+                  className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-5 py-2.5 text-[12.5px] font-semibold text-white"
+                >
+                  Log a film →
+                </Link>
+                <Link
+                  href="/import"
+                  className="rounded-full border border-line-strong px-5 py-2.5 text-[12.5px] text-ink-soft"
+                >
+                  Import from Letterboxd
+                </Link>
+              </div>
             </div>
           </div>
         ) : (
           <>
-            <div className="flex flex-col gap-7">
-              {months.map((month) => (
-                <section key={month.key}>
-                  <h2 className="mb-3 text-[11px] tracking-[0.1em] text-accent uppercase">{month.label}</h2>
-                  <div className="glass overflow-hidden">
-                    {month.viewings.map((v, i) => (
-                      <Link
-                        key={`${v.filmId}-${v.date}-${i}`}
-                        href={`/film/${v.filmId}`}
-                        className="flex gap-4 border-b border-line px-5 py-3.5 last:border-none hover:bg-glass-edge"
-                      >
-                        <span className="w-6 flex-none pt-0.5 text-right text-[13px] font-semibold text-ink-faint tabular-nums">
-                          {dayOf(v.date)}
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="flex flex-wrap items-baseline gap-x-2">
-                            <span className="text-[14px] font-medium text-ink">{v.title}</span>
-                            {v.year > 0 && <span className="text-[12px] text-ink-faint">{v.year}</span>}
-                            {v.isRewatch && (
-                              <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[10px] font-semibold tracking-[0.04em] text-accent-strong uppercase">
-                                rewatch
-                              </span>
-                            )}
-                          </span>
-                          <span className="mt-1 flex flex-wrap items-center gap-x-2.5 text-[11.5px] text-ink-faint">
-                            <span className="flex gap-1" aria-label={`${v.rating} of 5`}>
-                              {Array.from({ length: 5 }, (_, s) => (
-                                <span
-                                  key={s}
-                                  className={`h-1.5 w-1.5 rounded-full ${s < v.rating ? "bg-accent" : "bg-line"}`}
-                                />
-                              ))}
-                            </span>
-                            {moodLabel(v.cluster) ? (
-                              <span>{moodLabel(v.cluster)}</span>
-                            ) : (
-                              <span className="italic">not placed</span>
-                            )}
-                          </span>
-                          {v.note && (
-                            <span className="mt-1.5 block text-[12.5px] leading-[1.6] text-ink-soft italic">
-                              {v.note}
-                            </span>
-                          )}
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                </section>
-              ))}
-            </div>
+            <MonthList months={months} />
 
             {totalPages > 1 && (
               <div className="mt-9 flex items-center justify-between border-t border-line pt-5">
