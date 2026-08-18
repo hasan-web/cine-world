@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { getMyShareToken } from "@/app/collection/actions";
 import { FriendOverlapPlate } from "@/components/collection/FriendOverlapPlate";
 import { ShareCard } from "@/components/collection/ShareCard";
+import { ShareLinkControl } from "@/components/collection/ShareLinkControl";
 import { PlateFrame } from "@/components/atlas/PlateFrame";
 import { AppShell } from "@/components/shell/AppShell";
 import { SkyCanvas } from "@/components/sky/SkyCanvas";
@@ -36,10 +38,11 @@ function topDirectors(films: Film[], limit = 4) {
 
 export default async function CollectionPage() {
   const user = await verifySession();
-  const [allFilms, friends, unplaced] = await Promise.all([
+  const [allFilms, friends, unplaced, shareToken] = await Promise.all([
     listFilms(),
     listFriends(),
     countUnplacedFilms(),
+    getMyShareToken(),
   ]);
   // Only placed films belong in the sky and its statistics — an imported film has no mood yet,
   // and inventing a position for it would put a star somewhere its owner never chose.
@@ -138,16 +141,19 @@ export default async function CollectionPage() {
                   <div className="text-[10px] tracking-[0.05em] text-ink-faint uppercase">Countries</div>
                 </div>
               </div>
-              <ShareCard
-                films={films}
-                clusters={CLUSTERS}
-                stats={{
-                  totalFilms: films.length,
-                  totalRewatches,
-                  topMood:
-                    moods[0] && moods[0].count > 0 ? { label: moods[0].cluster.label, pct: moods[0].pct } : null,
-                }}
-              />
+              <div className="flex flex-wrap items-center gap-3">
+                <ShareLinkControl initialToken={shareToken} />
+                <ShareCard
+                  films={films}
+                  clusters={CLUSTERS}
+                  stats={{
+                    totalFilms: films.length,
+                    totalRewatches,
+                    topMood:
+                      moods[0] && moods[0].count > 0 ? { label: moods[0].cluster.label, pct: moods[0].pct } : null,
+                  }}
+                />
+              </div>
             </div>
           )}
         </PlateFrame>

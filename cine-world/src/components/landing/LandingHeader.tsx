@@ -1,5 +1,13 @@
 import Link from "next/link";
+import { HeaderAuthAction } from "@/components/landing/HeaderAuthAction";
 
+/**
+ * Shared across every public page (landing, manifesto, movies, moods) — including ones a signed-in
+ * visitor reaches directly, like clicking "Discover" in their own sidebar nav. Deliberately stays a
+ * plain, cookie-free Server Component: the sign-in/sign-out button is the only piece that needs to
+ * know about the session, and that lives in HeaderAuthAction specifically so checking it doesn't
+ * force every page this header sits on to render dynamically — see that file for why.
+ */
 export function LandingHeader() {
   return (
     <header className="sticky top-0 z-20 px-4 pt-4 sm:px-6">
@@ -17,12 +25,7 @@ export function LandingHeader() {
           <Link href="/manifesto" className="hidden text-[12.5px] text-ink-soft hover:text-ink sm:inline">
             Manifesto
           </Link>
-          <Link
-            href="/login"
-            className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-4 py-2 text-[12px] font-semibold text-white"
-          >
-            Sign in
-          </Link>
+          <HeaderAuthAction />
         </nav>
       </div>
     </header>

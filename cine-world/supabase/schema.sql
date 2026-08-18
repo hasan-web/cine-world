@@ -225,3 +225,31 @@ $$;
 -- Grants to anon too, deliberately — this is read by signed-out visitors on public movie pages,
 -- not just from inside the authenticated app.
 grant execute on function public.public_film_stats(text) to anon, authenticated;
+
+-- A public, opt-in "share your sky" link. Null by default — nobody's collection is reachable this
+-- way until they deliberately generate a link from inside the app (see public_sky_by_token()
+-- below). A random token rather than the account's own id, so the link can be revoked (generate a
+-- new one, the old URL stops working) without touching the account itself, and so the URL never
+-- doubles as a permanent, unrevokable pointer to someone's internal id.
+alter table public.profiles add column if not exists share_token uuid unique;
+
+-- Real, anonymized-of-identity placements for a public "my sky" page — same anonymization shape as
+-- film_commons and public_film_stats (security definer, no note, no watched_on, no rewatch
+-- content), scoped to whichever single account this token belongs to. Returns nothing at all for a
+-- token that doesn't match any profile, which covers both "never generated" and "revoked" the same
+-- way, on purpose — a caller can't tell those two apart from the response.
+create or replace function public.public_sky_by_token(p_token uuid)
+returns table (id text, title text, cluster text, rating int)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select f.id, f.title, f.cluster, f.rating
+  from public.films f
+  join public.profiles p on p.id = f.user_id
+  where p.share_token = p_token
+    and f.cluster is not null
+$$;
+
+grant execute on function public.public_sky_by_token(uuid) to anon, authenticated;

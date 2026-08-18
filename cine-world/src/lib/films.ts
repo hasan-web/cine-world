@@ -123,6 +123,28 @@ export async function getPublicFilmStats(filmId: string): Promise<PublicFilmStat
   };
 }
 
+export interface PublicSkyStar {
+  id: string;
+  title: string;
+  cluster: ClusterId;
+  rating: number;
+}
+
+/**
+ * One account's sky for the public /sky/[token] page — opted into deliberately, looked up by a
+ * random token rather than any account identifier. Same anonymized shape as the other public RPCs:
+ * no note, no watched_on, no rewatch content, nothing that isn't needed to draw the sky itself and
+ * label a star on hover. Empty array covers both "never generated a link" and "link was revoked" —
+ * indistinguishable on purpose, same as the film-stats threshold.
+ */
+export async function getPublicSky(token: string): Promise<PublicSkyStar[]> {
+  const supabase = createPublicClient();
+  const { data, error } = await supabase.rpc("public_sky_by_token", { p_token: token });
+
+  if (error) throw new Error(`Failed to load this sky: ${error.message}`);
+  return (data ?? []) as PublicSkyStar[];
+}
+
 export interface NewFilm {
   id: string;
   title: string;
