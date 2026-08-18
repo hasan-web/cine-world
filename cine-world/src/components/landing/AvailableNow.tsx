@@ -16,7 +16,7 @@ function MoviesPreview() {
         if (!cluster) return null;
         return (
           <Link key={film.slug} href={`/movies/${film.slug}`} className="group flex flex-col items-center gap-2 text-center">
-            <StarMark cluster={cluster} size={72} />
+            <StarMark cluster={cluster} seed={film.slug} size={72} />
             <span className="text-[11.5px] leading-tight font-medium text-ink group-hover:text-accent-strong">
               {film.title}
             </span>
@@ -37,7 +37,7 @@ function MoodsPreview() {
           href={`/moods/${cluster.id}`}
           className="group flex items-center gap-3 rounded-2xl border border-line px-4 py-3.5 transition-colors hover:border-accent/40"
         >
-          <StarMark cluster={cluster} size={40} />
+          <StarMark cluster={cluster} seed={cluster.id} size={40} />
           <span>
             <span className="block text-[13px] font-semibold text-ink group-hover:text-accent-strong">
               {cluster.label}

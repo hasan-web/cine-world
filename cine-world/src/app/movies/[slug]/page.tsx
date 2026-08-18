@@ -73,7 +73,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
         <Reveal>
           <div className="glass flex flex-wrap gap-7 px-6 py-7 sm:px-8 sm:py-8">
-            <StarMark cluster={cluster} />
+            <StarMark cluster={cluster} seed={film.slug} size={140} />
             <div className="min-w-[240px] flex-1">
               <h1 className="mb-1.5 text-[26px] font-semibold text-ink">{film.title}</h1>
               <p className="mb-4 text-[12px] tracking-[0.04em] text-ink-faint uppercase">
@@ -137,21 +137,27 @@ export default async function MoviePage({ params }: MoviePageProps) {
             <section className="mt-10">
               <h2 className="mb-4 text-[15px] font-semibold text-ink">Related films</h2>
               <div className="grid gap-3 sm:grid-cols-2">
-                {related.map(({ film: rel, sharedThemes }) => (
-                  <Link
-                    key={rel.slug}
-                    href={`/movies/${rel.slug}`}
-                    className="glass flex flex-col gap-1 px-5 py-4 transition-transform hover:-translate-y-0.5"
-                  >
-                    <span className="text-[14.5px] font-medium text-ink">{rel.title}</span>
-                    <span className="text-[11.5px] text-ink-faint">
-                      {rel.director} · {rel.year}
-                    </span>
-                    <span className="text-[11.5px] text-accent-strong capitalize">
-                      {sharedThemes.join(" · ")}
-                    </span>
-                  </Link>
-                ))}
+                {related.map(({ film: rel, sharedThemes }) => {
+                  const relCluster = CLUSTERS.find((c) => c.id === rel.cluster)!;
+                  return (
+                    <Link
+                      key={rel.slug}
+                      href={`/movies/${rel.slug}`}
+                      className="glass flex items-center gap-4 px-5 py-4 transition-transform hover:-translate-y-0.5"
+                    >
+                      <StarMark cluster={relCluster} seed={rel.slug} size={56} />
+                      <span className="flex flex-col gap-1">
+                        <span className="text-[14.5px] font-medium text-ink">{rel.title}</span>
+                        <span className="text-[11.5px] text-ink-faint">
+                          {rel.director} · {rel.year}
+                        </span>
+                        <span className="text-[11.5px] text-accent-strong capitalize">
+                          {sharedThemes.join(" · ")}
+                        </span>
+                      </span>
+                    </Link>
+                  );
+                })}
               </div>
             </section>
           </Reveal>
