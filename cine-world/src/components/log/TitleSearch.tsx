@@ -5,11 +5,12 @@ import type { TmdbMovieDetails, TmdbSearchResult } from "@/lib/tmdb";
 
 interface TitleSearchProps {
   onSelect: (details: TmdbMovieDetails) => void;
+  defaultValue?: string;
 }
 
 /** A title field that doubles as a TMDB search-as-you-type — selecting a result fills in the rest of the form. */
-export function TitleSearch({ onSelect }: TitleSearchProps) {
-  const [query, setQuery] = useState("");
+export function TitleSearch({ onSelect, defaultValue = "" }: TitleSearchProps) {
+  const [query, setQuery] = useState(defaultValue);
   const [results, setResults] = useState<TmdbSearchResult[]>([]);
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);

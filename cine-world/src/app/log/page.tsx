@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { Suspense, useActionState, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { TitleSearch } from "@/components/log/TitleSearch";
 import { AppShell } from "@/components/shell/AppShell";
 import { CLUSTERS } from "@/data/clusters";
@@ -11,6 +12,24 @@ import { logFilm, type LogFilmState } from "./actions";
 const initialState: LogFilmState = {};
 
 export default function LogPage() {
+  return (
+    <Suspense fallback={null}>
+      <LogForm />
+    </Suspense>
+  );
+}
+
+function LogForm() {
+  const searchParams = useSearchParams();
+  // Arrives from a catalog page's "Log this film" link — factual data only (title/director/
+  // year/country). Never the mood: the whole point of this app is that a mood is something you
+  // assign, not something a catalogue assigns for you, so cluster/rating always start at their
+  // own defaults regardless of what's in the URL.
+  const initialTitle = searchParams.get("title") ?? "";
+  const initialDirector = searchParams.get("director") ?? "";
+  const initialYear = searchParams.get("year") ?? "";
+  const initialCountry = searchParams.get("country") ?? "";
+
   const [state, action, pending] = useActionState(logFilm, initialState);
   const [cluster, setCluster] = useState<ClusterId>(CLUSTERS[0].id);
   const [rating, setRating] = useState(4);
@@ -37,7 +56,7 @@ export default function LogPage() {
           <input type="hidden" name="cluster" value={cluster} />
           <input type="hidden" name="rating" value={rating} />
 
-          <TitleSearch onSelect={handleSelect} />
+          <TitleSearch onSelect={handleSelect} defaultValue={initialTitle} />
 
           <div className="mb-5 flex gap-4">
             <label className="flex flex-1 items-baseline gap-2.5">
@@ -45,6 +64,7 @@ export default function LogPage() {
               <input
                 ref={directorRef}
                 name="director"
+                defaultValue={initialDirector}
                 className="flex-1 border-b border-line bg-transparent pb-1.5 text-[13px] text-ink outline-none"
               />
             </label>
@@ -54,6 +74,7 @@ export default function LogPage() {
                 ref={yearRef}
                 name="year"
                 inputMode="numeric"
+                defaultValue={initialYear}
                 className="w-14 border-b border-line bg-transparent pb-1.5 text-[13px] text-ink outline-none"
               />
             </label>
@@ -65,6 +86,7 @@ export default function LogPage() {
               <input
                 ref={countryRef}
                 name="country"
+                defaultValue={initialCountry}
                 className="flex-1 border-b border-line bg-transparent pb-1.5 text-[13px] text-ink outline-none"
               />
             </label>

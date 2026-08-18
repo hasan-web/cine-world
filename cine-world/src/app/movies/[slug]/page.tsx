@@ -132,7 +132,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   </Link>
                 )}
                 <Link
-                  href="/log"
+                  href={{
+                    pathname: "/log",
+                    query: { title: film.title, director: film.director, year: film.year, country: film.country },
+                  }}
                   className="inline-flex items-center rounded-full border border-line-strong px-5 py-2 text-[12px] font-semibold text-ink"
                 >
                   Log this film
