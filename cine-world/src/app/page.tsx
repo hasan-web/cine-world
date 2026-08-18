@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AvailableNow } from "@/components/landing/AvailableNow";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingHero } from "@/components/landing/LandingHero";
@@ -94,40 +95,8 @@ export default async function LandingPage() {
           </div>
         </div>
 
-        <div id="explore" className="mb-16 scroll-mt-24">
-          <Reveal>
-            <p className="mb-2 text-[11px] tracking-[0.2em] text-accent uppercase">Explore</p>
-            <p className="mb-8 max-w-[58ch] text-[14px] leading-[1.75] text-ink-soft">
-              A small, hand-picked corner of the app that&rsquo;s open without an account — browse by mood, or
-              follow a film to what&rsquo;s similar.
-            </p>
-          </Reveal>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Reveal>
-              <Link
-                href="/movies"
-                className="glass flex h-full flex-col gap-2 px-6 py-6 transition-transform duration-200 hover:-translate-y-1"
-              >
-                <span className="text-[15px] font-semibold text-ink">Movies</span>
-                <span className="text-[13px] leading-[1.7] text-ink-soft">
-                  Chungking Express, Aftersun, Past Lives, and a small set of others — each with what it&rsquo;s
-                  similar to and which mood it sits in.
-                </span>
-              </Link>
-            </Reveal>
-            <Reveal delay={90}>
-              <Link
-                href="/moods"
-                className="glass flex h-full flex-col gap-2 px-6 py-6 transition-transform duration-200 hover:-translate-y-1"
-              >
-                <span className="text-[15px] font-semibold text-ink">Moods</span>
-                <span className="text-[13px] leading-[1.7] text-ink-soft">
-                  Solitudo, Amplitudo, Domus, Lacrima — the four moods every film in Love for Cinema is actually
-                  placed by.
-                </span>
-              </Link>
-            </Reveal>
-          </div>
+        <div id="explore" className="scroll-mt-24">
+          <AvailableNow />
         </div>
 
         <WhatsComing />
