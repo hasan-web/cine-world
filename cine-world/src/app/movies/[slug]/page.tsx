@@ -133,7 +133,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   </Link>
                 )}
                 <Link
-                  href="/login"
+                  href="/log"
                   className="inline-flex items-center rounded-full border border-line-strong px-5 py-2 text-[12px] font-semibold text-ink"
                 >
                   Log this film
