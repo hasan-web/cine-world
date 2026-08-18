@@ -253,3 +253,16 @@ as $$
 $$;
 
 grant execute on function public.public_sky_by_token(uuid) to anon, authenticated;
+
+-- profiles was created with two SELECT policies and nothing else. generateShareToken() /
+-- revokeShareToken() update this table from inside the app using the RLS-enforced client, and with
+-- no UPDATE policy, RLS silently drops the write: zero rows change, no error is raised, and the
+-- client-returned token gets shown in the UI as if it saved. The real fix is this policy — anyone
+-- who generated a share link before this ran needs to generate a new one, since the old token was
+-- never actually persisted. `drop ... if exists` first: `create policy` has no `if not exists`
+-- form, and this file is re-run as new blocks are appended.
+drop policy if exists "Users can update their own profile" on public.profiles;
+create policy "Users can update their own profile"
+  on public.profiles for update
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
