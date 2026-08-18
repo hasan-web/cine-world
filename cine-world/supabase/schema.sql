@@ -266,3 +266,67 @@ create policy "Users can update their own profile"
   on public.profiles for update
   using (auth.uid() = id)
   with check (auth.uid() = id);
+
+-- User-created groupings, separate from the four fixed moods — "rainy sunday comfort" rather than
+-- a mood cluster. The id is generated client-side with crypto.randomUUID() (same pattern as
+-- share_token), not a DB default, since nothing here needs DB-side generation.
+create table if not exists public.collections (
+  id uuid not null primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  name text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.collections enable row level security;
+
+drop policy if exists "Users can view their own collections" on public.collections;
+create policy "Users can view their own collections"
+  on public.collections for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Users can insert their own collections" on public.collections;
+create policy "Users can insert their own collections"
+  on public.collections for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update their own collections" on public.collections;
+create policy "Users can update their own collections"
+  on public.collections for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Users can delete their own collections" on public.collections;
+create policy "Users can delete their own collections"
+  on public.collections for delete
+  using (auth.uid() = user_id);
+
+-- Which films sit in which collection. user_id is denormalized onto this table (not just reached
+-- through collections or films) so every query here can filter with an explicit .eq("user_id", ...)
+-- the same way films.ts now does — see the RLS lesson in that file's listFilms() comment. The
+-- composite FK ties film_id to films' own composite primary key, so a row here can never point at
+-- another user's specimen even if collection_id and film_id were both guessed correctly.
+create table if not exists public.collection_films (
+  collection_id uuid not null references public.collections(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  film_id text not null,
+  added_at timestamptz not null default now(),
+  primary key (collection_id, film_id),
+  foreign key (user_id, film_id) references public.films(user_id, id) on delete cascade
+);
+
+alter table public.collection_films enable row level security;
+
+drop policy if exists "Users can view their own collection films" on public.collection_films;
+create policy "Users can view their own collection films"
+  on public.collection_films for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Users can insert their own collection films" on public.collection_films;
+create policy "Users can insert their own collection films"
+  on public.collection_films for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Users can delete their own collection films" on public.collection_films;
+create policy "Users can delete their own collection films"
+  on public.collection_films for delete
+  using (auth.uid() = user_id);

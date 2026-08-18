@@ -14,9 +14,10 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Friends", href: "/friends" },
   { label: "Import", href: "/import" },
   { label: "Discover", href: "/movies" },
+  { label: "Collections", href: "/collections" },
 ];
 
-const SOON_ITEMS = ["Collections", "Ask My Cinema"];
+const SOON_ITEMS = ["Ask My Cinema"];
 
 interface AppShellProps {
   userEmail: string;

@@ -47,3 +47,11 @@ export type PlacedFilm = Film & { cluster: ClusterId };
 export function isPlaced(film: Film): film is PlacedFilm {
   return film.cluster !== null;
 }
+
+/** A user-created grouping, separate from the four fixed moods. */
+export interface Collection {
+  id: string;
+  name: string;
+  createdAt: string;
+  filmCount: number;
+}

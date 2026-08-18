@@ -4,7 +4,7 @@ import { createPublicClient } from "@/lib/supabase/public";
 import { verifySession } from "@/lib/dal";
 import type { ClusterId, Film, Rewatch } from "@/lib/types";
 
-interface FilmRow {
+export interface FilmRow {
   id: string;
   title: string;
   director: string;
@@ -17,9 +17,9 @@ interface FilmRow {
   watched_on: string;
 }
 
-const FILM_COLUMNS = "id, title, director, year, country, rating, cluster, note, rewatches, watched_on";
+export const FILM_COLUMNS = "id, title, director, year, country, rating, cluster, note, rewatches, watched_on";
 
-function rowToFilm(row: FilmRow): Film {
+export function rowToFilm(row: FilmRow): Film {
   return {
     id: row.id,
     title: row.title,

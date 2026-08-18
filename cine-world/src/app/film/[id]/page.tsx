@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { FilmEntry } from "@/components/atlas/FilmEntry";
 import { PlateFrame } from "@/components/atlas/PlateFrame";
+import { AddToCollectionMenu } from "@/components/collections/AddToCollectionMenu";
 import { AppShell } from "@/components/shell/AppShell";
 import { CommonsCanvas } from "@/components/sky/CommonsCanvas";
 import { CLUSTERS } from "@/data/clusters";
 import { verifySession } from "@/lib/dal";
+import { listCollectionIdsForFilm, listCollections } from "@/lib/collections";
 import { getFilm, getFilmCommons, listFilms } from "@/lib/films";
 import { isPlaced } from "@/lib/types";
 
@@ -17,7 +19,13 @@ export default async function FilmPage({ params, searchParams }: FilmPageProps) 
   const { id } = await params;
   const { new: justLoggedParam } = await searchParams;
   const user = await verifySession();
-  const [film, films, commons] = await Promise.all([getFilm(id), listFilms(), getFilmCommons(id)]);
+  const [film, films, commons, collections, memberOf] = await Promise.all([
+    getFilm(id),
+    listFilms(),
+    getFilmCommons(id),
+    listCollections(),
+    listCollectionIdsForFilm(id),
+  ]);
   const specimenNumber = films.findIndex((f) => f.id === id) + 1;
 
   return (
@@ -30,6 +38,9 @@ export default async function FilmPage({ params, searchParams }: FilmPageProps) 
               specimenNumber={specimenNumber > 0 ? specimenNumber : undefined}
               justLogged={justLoggedParam === "1"}
             />
+            <div className="mt-5 border-t border-line pt-5">
+              <AddToCollectionMenu filmId={film.id} collections={collections} memberOf={memberOf} />
+            </div>
           </div>
 
           {/* The commons plots your placement against everyone else's, so it only means anything
