@@ -11,5 +11,26 @@
   "vars": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://udunwqxeuwkccdhtebjp.supabase.co",
     "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_R7j_1Or-iU1N0Uwl6lymvQ_ZBHQW_62"
-  }
+  },
+  // Backs OpenNext's incremental cache — without this, every SSG page (movies/moods/movies-like)
+  // builds correctly but 404s in production, since the Worker has nowhere to read the prerendered
+  // HTML from. R2 is OpenNext's recommended backend but requires enabling R2 in the Cloudflare
+  // dashboard first (a manual, one-time step); KV works immediately and is used here as an
+  // unblock. KV is eventually consistent, so a page can briefly serve stale content right after a
+  // deploy — acceptable for this site's SSG pages, which don't change often. Revisit if/when R2 is
+  // enabled on the account (see open-next.config.ts).
+  "kv_namespaces": [
+    {
+      "binding": "NEXT_INC_CACHE_KV",
+      "id": "5c5dfceb7ca947709bc63f65212e1c8c",
+    },
+  ],
+  // Lets the Worker call itself to trigger background revalidation — required by OpenNext's
+  // default revalidation queue even though this site's SSG pages don't currently set `revalidate`.
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "cine-world",
+    },
+  ],
 }
