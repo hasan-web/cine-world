@@ -99,37 +99,6 @@ function ConstellationsPreview() {
   );
 }
 
-function FirstLightPreview() {
-  return (
-    <div className="flex flex-wrap justify-center gap-10">
-      <div className="text-center">
-        <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
-          <g stroke="var(--accent)" strokeWidth="1" opacity="0.85">
-            <line x1="40" y1="4" x2="40" y2="14" />
-            <line x1="40" y1="66" x2="40" y2="76" />
-            <line x1="4" y1="40" x2="14" y2="40" />
-            <line x1="66" y1="40" x2="76" y2="40" />
-            <line x1="14" y1="14" x2="20" y2="20" />
-            <line x1="66" y1="14" x2="60" y2="20" />
-            <line x1="14" y1="66" x2="20" y2="60" />
-            <line x1="66" y1="66" x2="60" y2="60" />
-          </g>
-          <circle cx="40" cy="40" r="8" fill="var(--glass-strong)" stroke="var(--accent-strong)" strokeWidth="1.4" />
-          <circle cx="40" cy="40" r="12" fill="none" stroke="var(--accent-strong)" strokeWidth="0.8" opacity="0.7" />
-        </svg>
-        <p className="mt-1 font-mono text-[10px] text-accent-strong">first light · 0 others yet</p>
-      </div>
-      <div className="text-center">
-        <svg width="80" height="80" viewBox="0 0 80 80" aria-hidden="true">
-          <circle cx="40" cy="40" r="8" fill="var(--glass-strong)" stroke="var(--accent)" strokeWidth="1.2" />
-          <circle cx="40" cy="40" r="12" fill="none" stroke="var(--accent)" strokeWidth="0.8" opacity="0.6" />
-        </svg>
-        <p className="mt-1 font-mono text-[10px] text-ink-soft">12 others have logged this one</p>
-      </div>
-    </div>
-  );
-}
-
 function TasteDriftPreview() {
   const years: Array<{ year: string; dots: Record<"tl" | "tr" | "bl" | "br", number> }> = [
     { year: "2023", dots: { tl: 2, tr: 1, bl: 1, br: 5 } },
@@ -172,7 +141,7 @@ export function WhatsComing() {
       <Reveal>
         <p className="mb-2 font-mono text-[10px] tracking-[0.2em] text-accent uppercase">In the works</p>
         <p className="mb-8 max-w-[58ch] text-[14px] leading-[1.75] text-ink-soft">
-          Five things we&rsquo;re building next. These are sketches, not screenshots — but this is the direction.
+          Three things we&rsquo;re building next. These are sketches, not screenshots — but this is the direction.
         </p>
       </Reveal>
       <div className="flex flex-col gap-10">
@@ -184,27 +153,18 @@ export function WhatsComing() {
         </ComingSoonPlate>
         <ComingSoonPlate
           title="seasons"
-          caption="your year as a ring — the months you were watching heavily, and the ones where a single mood took over."
+          caption="your year as a ring, and your whole taste as it drifts from one year to the next — the months you were watching heavily, and the ones where a single mood took over."
         >
-          <SeasonsPreview />
+          <div className="flex flex-col items-center gap-8">
+            <SeasonsPreview />
+            <TasteDriftPreview />
+          </div>
         </ComingSoonPlate>
         <ComingSoonPlate
           title="constellations you've drawn"
           caption="draw a line between two films for a reason only you can explain. No mood, no genre — just your own private logic."
         >
           <ConstellationsPreview />
-        </ComingSoonPlate>
-        <ComingSoonPlate
-          title="first light"
-          caption="a quiet mark for when you're the first person here to log a film. No leaderboard, no points — just a small flag that you got there first."
-        >
-          <FirstLightPreview />
-        </ComingSoonPlate>
-        <ComingSoonPlate
-          title="taste drift"
-          caption="the same four moods, one snapshot per year, so you can watch your whole taste drift across time."
-        >
-          <TasteDriftPreview />
         </ComingSoonPlate>
       </div>
     </div>
