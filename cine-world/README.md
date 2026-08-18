@@ -1,4 +1,4 @@
-# Constellation
+# Love for Cinema
 
 A mood-based film diary, built for [Love for Cinema](https://loveforcinema.com). No star-out-of-five average, no poster grid — every film you log is placed in one of four moods (*Solitudo*, *Amplitudo*, *Domus*, *Lacrima*), and where it lands is a choice, not a category a catalogue assigned it. A rewatch adds to that film's record instead of overwriting your first verdict, and comparing taste with a friend means overlaying two skies to see where you actually agree — not a percentage an algorithm invented.
 

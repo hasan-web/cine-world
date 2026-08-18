@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="cine-world/docs/screenshots/landing.png" alt="Constellation — Love for Cinema: a mood-based film diary" width="100%" />
+  <img src="cine-world/docs/screenshots/landing.png" alt="Love for Cinema: a mood-based film diary" width="100%" />
 </p>
 
-<h1 align="center">Constellation</h1>
-<p align="center"><em>a keepsake program for what you've watched, by <a href="https://loveforcinema.com">Love for Cinema</a></em></p>
+<h1 align="center">Love for Cinema</h1>
+<p align="center"><em>a keepsake program for what you've watched</em></p>
 
 <p align="center">
   <a href="https://loveforcinema.com"><strong>loveforcinema.com →</strong></a>
@@ -11,7 +11,7 @@
 
 ---
 
-Constellation is a film-logging app built as an alternative to the poster-grid, star-out-of-five format most letterboxd-style trackers default to. Every film you log is pressed into your own collection like a specimen in a naturalist's field book — its **position** set by how it felt, not its genre, and its **brightness** by how much it mattered.
+Love for Cinema is a film-logging app built as an alternative to the poster-grid, star-out-of-five format most letterboxd-style trackers default to. Every film you log is pressed into your own collection like a specimen in a naturalist's field book — its **position** set by how it felt, not its genre, and its **brightness** by how much it mattered.
 
 No feed. No algorithmic recommendations. No public follower count. Just your own sky, and the people you've actually chosen to compare it with.
 
