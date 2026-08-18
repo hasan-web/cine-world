@@ -25,7 +25,7 @@ export interface CatalogFilm {
 
 export const CATALOG: CatalogFilm[] = [
   {
-    slug: "chungking-express",
+    slug: "chungking-express-1994",
     title: "Chungking Express",
     director: "Wong Kar-wai",
     year: 1994,
@@ -38,7 +38,7 @@ export const CATALOG: CatalogFilm[] = [
       "Chungking Express runs on coincidence and near-misses — strangers circling each other in a crowded city without quite connecting. These films work the same wavelength.",
   },
   {
-    slug: "in-the-mood-for-love",
+    slug: "in-the-mood-for-love-2000",
     title: "In the Mood for Love",
     director: "Wong Kar-wai",
     year: 2000,
@@ -51,7 +51,7 @@ export const CATALOG: CatalogFilm[] = [
       "In the Mood for Love is about everything two people don't say to each other. If that ache is what you're after, these hold it too.",
   },
   {
-    slug: "paris-texas",
+    slug: "paris-texas-1984",
     title: "Paris, Texas",
     director: "Wim Wenders",
     year: 1984,
@@ -64,7 +64,7 @@ export const CATALOG: CatalogFilm[] = [
       "Paris, Texas moves at the pace of a man relearning how to speak. These films sit in that same quiet, unhurried devastation.",
   },
   {
-    slug: "aftersun",
+    slug: "aftersun-2022",
     title: "Aftersun",
     director: "Charlotte Wells",
     year: 2022,
@@ -77,7 +77,7 @@ export const CATALOG: CatalogFilm[] = [
       "Aftersun is a memory you only understand years later. These films work the same way — the meaning arrives after the fact.",
   },
   {
-    slug: "perfect-days",
+    slug: "perfect-days-2023",
     title: "Perfect Days",
     director: "Wim Wenders",
     year: 2023,
@@ -90,7 +90,7 @@ export const CATALOG: CatalogFilm[] = [
       "Perfect Days finds a whole life in a routine most people would overlook. These films find the same thing in small, repeated gestures.",
   },
   {
-    slug: "portrait-of-a-lady-on-fire",
+    slug: "portrait-of-a-lady-on-fire-2019",
     title: "Portrait of a Lady on Fire",
     director: "Céline Sciamma",
     year: 2019,
@@ -103,7 +103,7 @@ export const CATALOG: CatalogFilm[] = [
       "Portrait of a Lady on Fire is a love story with an ending built into it from the start. These films carry that same foreknowledge.",
   },
   {
-    slug: "columbus",
+    slug: "columbus-2017",
     title: "Columbus",
     director: "Kogonada",
     year: 2017,
@@ -114,7 +114,7 @@ export const CATALOG: CatalogFilm[] = [
       "A young woman who has put her own life on hold to care for her mother forms an unlikely friendship with a visitor stranded in Columbus, Indiana, as they talk through the town's modernist architecture.",
   },
   {
-    slug: "drive-my-car",
+    slug: "drive-my-car-2021",
     title: "Drive My Car",
     director: "Ryusuke Hamaguchi",
     year: 2021,
@@ -127,7 +127,7 @@ export const CATALOG: CatalogFilm[] = [
       "Drive My Car takes its time getting to the thing its characters can't say out loud. These films are built around the same kind of delay.",
   },
   {
-    slug: "past-lives",
+    slug: "past-lives-2023",
     title: "Past Lives",
     director: "Celine Song",
     year: 2023,
@@ -140,7 +140,7 @@ export const CATALOG: CatalogFilm[] = [
       "Past Lives is about the life you didn't choose, still visible from where you're standing. These films sit with that same what-if.",
   },
   {
-    slug: "blue-valentine",
+    slug: "blue-valentine-2010",
     title: "Blue Valentine",
     director: "Derek Cianfrance",
     year: 2010,
@@ -153,7 +153,7 @@ export const CATALOG: CatalogFilm[] = [
       "Blue Valentine shows a relationship from both ends at once. These films are just as honest about how love actually erodes.",
   },
   {
-    slug: "eternal-sunshine",
+    slug: "eternal-sunshine-of-the-spotless-mind-2004",
     title: "Eternal Sunshine of the Spotless Mind",
     director: "Michel Gondry",
     year: 2004,
@@ -166,7 +166,7 @@ export const CATALOG: CatalogFilm[] = [
       "Eternal Sunshine argues that even the painful memories are worth keeping. These films make the same case, differently.",
   },
   {
-    slug: "before-sunset",
+    slug: "before-sunset-2004",
     title: "Before Sunset",
     director: "Richard Linklater",
     year: 2004,
@@ -179,7 +179,7 @@ export const CATALOG: CatalogFilm[] = [
       "Before Sunset is one long conversation that's really about everything left unresolved. These films run on the same kind of talk.",
   },
   {
-    slug: "amelie",
+    slug: "amelie-2001",
     title: "Amélie",
     director: "Jean-Pierre Jeunet",
     year: 2001,
@@ -192,7 +192,7 @@ export const CATALOG: CatalogFilm[] = [
       "Amélie finds a whole world of meaning in small, private gestures. These films share that same delight in the small stuff.",
   },
   {
-    slug: "ratatouille",
+    slug: "ratatouille-2007",
     title: "Ratatouille",
     director: "Brad Bird",
     year: 2007,
@@ -205,7 +205,7 @@ export const CATALOG: CatalogFilm[] = [
       "Ratatouille is about caring more about the craft than anyone thinks you're allowed to. These films share that same stubborn devotion.",
   },
   {
-    slug: "lost-in-translation",
+    slug: "lost-in-translation-2003",
     title: "Lost in Translation",
     director: "Sofia Coppola",
     year: 2003,
@@ -218,7 +218,7 @@ export const CATALOG: CatalogFilm[] = [
       "Lost in Translation is two people who happen to be lonely in the same place at the same time. These films find that same accidental company.",
   },
   {
-    slug: "worst-person-in-the-world",
+    slug: "the-worst-person-in-the-world-2021",
     title: "The Worst Person in the World",
     director: "Joachim Trier",
     year: 2021,
@@ -231,7 +231,7 @@ export const CATALOG: CatalogFilm[] = [
       "The Worst Person in the World is about not knowing which version of your life is the real one yet. These films are in the same uncertain place.",
   },
   {
-    slug: "moonlight",
+    slug: "moonlight-2016",
     title: "Moonlight",
     director: "Barry Jenkins",
     year: 2016,
@@ -244,7 +244,7 @@ export const CATALOG: CatalogFilm[] = [
       "Moonlight says the most in the moments its characters stay silent. These films trust that same kind of quiet.",
   },
   {
-    slug: "her",
+    slug: "her-2013",
     title: "Her",
     director: "Spike Jonze",
     year: 2013,
@@ -255,7 +255,7 @@ export const CATALOG: CatalogFilm[] = [
       "A lonely writer going through a divorce falls in love with an AI operating system that seems to understand him better than anyone in his life so far has.",
   },
   {
-    slug: "burning",
+    slug: "burning-2018",
     title: "Burning",
     director: "Lee Chang-dong",
     year: 2018,
@@ -266,7 +266,7 @@ export const CATALOG: CatalogFilm[] = [
       "A young man reconnects with a childhood friend, only for a wealthy stranger she brings back from a trip to introduce something that unsettles all three of them.",
   },
   {
-    slug: "shoplifters",
+    slug: "shoplifters-2018",
     title: "Shoplifters",
     director: "Hirokazu Kore-eda",
     year: 2018,

@@ -14,6 +14,11 @@ export function filmId(title: string, year: number | null): string {
   const slug = title
     .toLowerCase()
     .trim()
+    // Decomposes accented Latin characters (é → e + a combining acute accent) so the strip below
+    // can drop just the accent mark rather than the letter itself. Without this, "Amélie" lost
+    // the "é" entirely rather than falling back to "e" — "am-lie" instead of "amelie".
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
