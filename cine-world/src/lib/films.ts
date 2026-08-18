@@ -34,20 +34,34 @@ function rowToFilm(row: FilmRow): Film {
   };
 }
 
-/** The signed-in user's full collection. RLS also scopes this, but we verify the session up front too. */
+/**
+ * The signed-in user's full collection. RLS on `films` also allows an accepted friend's rows
+ * through (see "Friends can view each other's films" in schema.sql) — that's deliberate for
+ * listFilmsForUser(friendId), but it means an unscoped select here would silently merge a
+ * friend's films into "your" collection. The explicit eq is load-bearing, not defensive.
+ */
 export async function listFilms(): Promise<Film[]> {
-  await verifySession();
+  const user = await verifySession();
   const supabase = await createClient();
-  const { data, error } = await supabase.from("films").select(FILM_COLUMNS).order("created_at", { ascending: true });
+  const { data, error } = await supabase
+    .from("films")
+    .select(FILM_COLUMNS)
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: true });
 
   if (error) throw new Error(`Failed to load films: ${error.message}`);
   return (data as FilmRow[]).map(rowToFilm);
 }
 
 export async function getFilm(id: string): Promise<Film | null> {
-  await verifySession();
+  const user = await verifySession();
   const supabase = await createClient();
-  const { data, error } = await supabase.from("films").select(FILM_COLUMNS).eq("id", id).maybeSingle();
+  const { data, error } = await supabase
+    .from("films")
+    .select(FILM_COLUMNS)
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .maybeSingle();
 
   if (error) throw new Error(`Failed to load film: ${error.message}`);
   return data ? rowToFilm(data as FilmRow) : null;
@@ -184,11 +198,12 @@ export async function countFilms(): Promise<number> {
  * shipping them all to the browser to place a handful would be wasteful.
  */
 export async function listUnplacedFilms(limit = 40): Promise<Film[]> {
-  await verifySession();
+  const user = await verifySession();
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("films")
     .select(FILM_COLUMNS)
+    .eq("user_id", user.id)
     .is("cluster", null)
     .order("watched_on", { ascending: false })
     .limit(limit);
