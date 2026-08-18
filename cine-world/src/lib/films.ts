@@ -1,5 +1,6 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { verifySession } from "@/lib/dal";
 import type { ClusterId, Film, Rewatch } from "@/lib/types";
 
@@ -79,6 +80,47 @@ export async function getFilmCommons(id: string): Promise<CommonsPlacement[]> {
 
   if (error) throw new Error(`Failed to load the commons: ${error.message}`);
   return data as CommonsPlacement[];
+}
+
+export interface PublicFilmStats {
+  logCount: number;
+  rewatchCount: number;
+  avgRating: number;
+  topCluster: ClusterId | null;
+}
+
+interface PublicFilmStatsRow {
+  log_count: number | string | null;
+  rewatch_count: number | string | null;
+  avg_rating: number | string | null;
+  top_cluster: ClusterId | null;
+}
+
+/**
+ * Real, anonymized usage numbers for a film's public /movies/[slug] page. Deliberately does not
+ * call verifySession() (this is read by signed-out visitors, and public_film_stats() is granted to
+ * the `anon` role for exactly that reason) and deliberately uses the cookie-free client rather than
+ * the usual `createClient()` — touching cookies here would force the whole static/ISR movie page to
+ * render dynamically on every request for data that has nothing to do with the visitor's session.
+ *
+ * Returns null both when the film has no logs yet and when it has too few to clear the
+ * anonymization threshold enforced inside the SQL function itself — the two cases are
+ * indistinguishable from here on purpose, so there's nothing for a caller to infer either way.
+ */
+export async function getPublicFilmStats(filmId: string): Promise<PublicFilmStats | null> {
+  const supabase = createPublicClient();
+  const { data, error } = await supabase.rpc("public_film_stats", { p_film_id: filmId }).maybeSingle();
+
+  if (error) throw new Error(`Failed to load film stats: ${error.message}`);
+  const row = data as PublicFilmStatsRow | null;
+  if (!row || row.log_count == null) return null;
+
+  return {
+    logCount: Number(row.log_count),
+    rewatchCount: Number(row.rewatch_count),
+    avgRating: Number(row.avg_rating),
+    topCluster: row.top_cluster ?? null,
+  };
 }
 
 export interface NewFilm {

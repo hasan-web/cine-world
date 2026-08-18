@@ -7,8 +7,13 @@ import { LandingHeader } from "@/components/landing/LandingHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { CATALOG, getCatalogFilm, getMoreFromDirector, getRelatedFilms, hasMoviesLikePage } from "@/data/catalog";
 import { CLUSTERS } from "@/data/clusters";
+import { getPublicFilmStats } from "@/lib/films";
 
 export const dynamicParams = false;
+// Real usage numbers below can only grow over time, so the static page is worth regenerating
+// periodically rather than only at build time — once a day is plenty for a stat that changes
+// this slowly, and keeps this from ever hitting the database on a live request.
+export const revalidate = 86400;
 
 interface MoviePageProps {
   params: Promise<{ slug: string }>;
@@ -48,6 +53,8 @@ export default async function MoviePage({ params }: MoviePageProps) {
   const related = getRelatedFilms(slug);
   const moreFromDirector = getMoreFromDirector(slug);
   const likePage = hasMoviesLikePage(slug);
+  const stats = await getPublicFilmStats(film.slug);
+  const topCluster = stats?.topCluster ? CLUSTERS.find((c) => c.id === stats.topCluster) : null;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -97,6 +104,24 @@ export default async function MoviePage({ params }: MoviePageProps) {
                   </span>
                 ))}
               </div>
+
+              {stats && (
+                <p className="mb-5 text-[12.5px] text-ink-faint">
+                  <span className="font-semibold text-ink-soft">
+                    {stats.logCount} {stats.logCount === 1 ? "person has" : "people have"}
+                  </span>{" "}
+                  logged this on Love for Cinema
+                  {topCluster && (
+                    <>
+                      , most under <span className="text-accent-strong">{topCluster.label}</span>
+                    </>
+                  )}
+                  {stats.rewatchCount > 0 && (
+                    <> · {stats.rewatchCount} rewatch{stats.rewatchCount === 1 ? "" : "es"} logged</>
+                  )}
+                  .
+                </p>
+              )}
 
               <div className="flex flex-wrap gap-3">
                 {likePage && (

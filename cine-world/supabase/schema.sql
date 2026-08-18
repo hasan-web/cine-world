@@ -183,3 +183,45 @@ alter table public.films alter column watched_on set default current_date;
 -- Note the existing `cluster in (...)` check still holds: in SQL a check constraint passes when
 -- it evaluates to null, so nulls are admitted without weakening the constraint on real values.
 alter table public.films alter column cluster drop not null;
+
+-- Real, anonymized usage numbers for the public /movies/[slug] pages ("14 people have logged
+-- this"). A public catalog entry and a real logged film share one id whenever title and year
+-- agree (see filmId() in film-id.ts), so this is a plain aggregate over the same films table
+-- film_commons already reads from — same anonymization guarantee: no user_id, no note, no
+-- rewatch content, nothing but counts.
+--
+-- The threshold is the part film_commons didn't need, because film_commons is only ever called
+-- from inside the authenticated app by someone who already has a relationship to the data (their
+-- own collection, or a friend who agreed to share). This function is callable by anyone, signed in
+-- or not, for any film id someone cares to guess. A raw count of one is de-anonymizing on its own —
+-- "1 person logged this, rated it 5, filed it under Lacrima" identifies a specific person to
+-- anyone who already suspects who it was. Returning zero rows below the threshold, rather than a
+-- row with small numbers, means there is nothing for a caller to work with either way.
+create or replace function public.public_film_stats(p_film_id text)
+returns table (log_count bigint, rewatch_count bigint, avg_rating numeric, top_cluster text)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  with base as (
+    select cluster, rating, jsonb_array_length(coalesce(rewatches, '[]'::jsonb)) as n_rewatches
+    from public.films
+    where id = p_film_id
+  ),
+  totals as (
+    select count(*) as log_count, coalesce(sum(n_rewatches), 0) as rewatch_count, avg(rating) as avg_rating
+    from base
+  ),
+  top as (
+    select cluster from base where cluster is not null group by cluster order by count(*) desc limit 1
+  )
+  select t.log_count, t.rewatch_count, round(t.avg_rating, 1), top.cluster
+  from totals t
+  left join top on true
+  where t.log_count >= 5
+$$;
+
+-- Grants to anon too, deliberately — this is read by signed-out visitors on public movie pages,
+-- not just from inside the authenticated app.
+grant execute on function public.public_film_stats(text) to anon, authenticated;
