@@ -23,69 +23,74 @@ export default function ManifestoPage() {
 
         <div className="flex flex-col gap-6 text-[15px] leading-[1.85] text-ink-soft [&_em]:font-semibold [&_em]:text-accent-strong [&_em]:not-italic">
         <p>
-          Pauline Kael wrote film criticism for over two decades at The New Yorker and never once gave a star
-          rating — she thought a number was a way of not having to say anything real about what a film did to
-          you. Letterboxd runs on one anyway, because a library that size needs some way to stay navigable, and a
-          score out of five is the simplest sort key there is. That&rsquo;s a fair trade for a catalogue. It&rsquo;s
-          a worse one for a diary. A genre tag files <em>Amélie</em> and <em>Aftersun</em> under the same
-          word — drama, on most sites — and tells you nothing about why one leaves you humming on the walk home
-          and the other leaves you quiet for an hour. Love for Cinema started as a <em>letterboxd alternative</em>{" "}
-          for exactly that reason: not because the format is wrong, but because the unit it measures in is wrong.
+          Pauline Kael wrote about film for The New Yorker for more than twenty years and never once put a
+          number on one. She had no patience for the practice. A score, as far as she was concerned, was a way
+          of not having to say what a film had actually done to you.
         </p>
 
         <p>
-          So instead of a grid, Love for Cinema is a <em>mood-based film diary</em>. Every film you log becomes a
-          specimen pressed into your own sky, and where it lands isn&rsquo;t decided by its genre — it&rsquo;s
-          decided by you, by which of four moods it actually felt like: <em>Solitudo</em> for the quiet, tense
-          ones, <em>Amplitudo</em> for the epics, <em>Domus</em> for comfort watches, <em>Lacrima</em>{" "}
-          for what wrecked you. Two people can log the exact same film into two completely different moods, and
-          both are right — that&rsquo;s the point. Someone can file <em>Alien</em>{" "}
-          under Lacrima because it wrecked them, and someone else can file it under Domus because it&rsquo;s what
-          they put on to fall asleep to, and neither of them has described the film wrong. You&rsquo;re not
-          filing a film into a catalogue&rsquo;s
-          idea of what it is. You&rsquo;re placing it where it actually sat with you.
+          Letterboxd uses one anyway, and it&rsquo;s right to. A catalogue that size needs some way to stay
+          navigable, and five stars is the simplest sort key there is. That&rsquo;s a fair trade for a library.
+          It&rsquo;s a worse one for a diary.
         </p>
 
         <p>
-          That&rsquo;s what we mean when we say Love for Cinema lets you <em>log films by how they felt</em>, not
-          what they scored. The brightness of a specimen comes from how much it mattered to you, not from an
-          aggregate of strangers&rsquo; opinions. A film as quiet as <em>Columbus</em>{" "}
-          — two people talking about modernist architecture in a town neither of them meant to stay in — can
-          outshine a blockbuster you
-          enjoyed and forgot by the weekend, because that&rsquo;s closer to the truth of how you actually
-          experience films.
+          Genre does the same flattening. Most sites file <em>Amélie</em> and <em>Aftersun</em>{" "}
+          under the same word — drama — which tells you nothing about why one sends you home humming and the other leaves you
+          sitting in the dark for an hour after the credits. We started Love for Cinema as a letterboxd
+          alternative for that reason. The format isn&rsquo;t the problem. The unit is.
         </p>
 
         <p>
-          Most trackers also treat a rewatch as a correction: you watch something again, you update the number,
-          the old verdict disappears. Love for Cinema treats it as a second data point instead of a replacement.
-          Watch <em>Eternal Sunshine of the Spotless Mind</em>{" "}
-          at twenty-two and it&rsquo;s a film about a breakup. Watch it again once you&rsquo;ve actually forgotten someone, on purpose or not, and it&rsquo;s
-          a different film — not because it changed, but because you did. Log a rewatch and it adds a new mark to
-          that film&rsquo;s own timeline rather than overwriting the first one, so the way your reading of a film
-          moved — sometimes gently, sometimes completely — stays visible instead of getting erased. Some of the
-          most interesting entries in a collection are the ones where the newest mark and the oldest one
-          don&rsquo;t agree at all.
+          So there&rsquo;s no grid here. Every film you log gets pressed into your own sky like a specimen, and
+          where it lands is up to you: four moods, no genres. <em>Solitudo</em>{" "}
+          for the quiet ones and the tense ones. <em>Amplitudo</em> for the ones built at scale.{" "}
+          <em>Domus</em> for comfort. <em>Lacrima</em>{" "}
+          for whatever took something out of you.
         </p>
 
         <p>
-          The part we&rsquo;re most protective of, though, is friends. Love for Cinema isn&rsquo;t a social feed —
-          there&rsquo;s no follower count, no public activity wall. What it has instead is a <em>taste twin</em>{" "}
-          match: once you and a friend have both agreed to it, your collections overlay each other, and any film
-          you both happened to place in the exact same spot lights up. A percentage-match score would tell you
-          that you and a friend both &ldquo;liked&rdquo; <em>Burning</em>{" "}
-          and leave it there. Finding out you both
-          filed it, unprompted, in the exact same unsettled corner of your own sky tells you something a
-          percentage can&rsquo;t — that the specific, hard-to-name unease it left in you was the same unease it
-          left in them. That coincidence is a better definition of a taste twin than any algorithm we could have
-          written instead.
+          Two people can put the same film in two different moods and both be right. Someone files{" "}
+          <em>Alien</em>{" "}
+          under Lacrima. Someone else falls asleep to it once a month and files it under Domus. Neither of them
+          is wrong, because neither of them is describing <em>Alien</em>. They&rsquo;re
+          describing where it sat with them.
         </p>
 
         <p>
-            None of this makes Love for Cinema faster to use than a five-tap rating. It&rsquo;s meant for people
-            who already suspected that wasn&rsquo;t really the point — who want a record of what they watched that
-            still means something to them years later, not just a list they can prove they finished.
-          </p>
+          Brightness works the same way. How bright a specimen burns comes from how much the film mattered to
+          you, not from an aggregate of strangers. Something as quiet as <em>Columbus</em>{" "}
+          — two people talking about modernist architecture in a town neither of them meant to stay in — can outshine a blockbuster
+          you enjoyed and had forgotten by Sunday. That&rsquo;s usually closer to the truth of it anyway.
+        </p>
+
+        <p>
+          Most trackers treat a rewatch as a correction. You watch it again, you fix the number, the old verdict
+          disappears. We treat it as a second data point. Watch <em>Eternal Sunshine of the Spotless Mind</em>{" "}
+          at twenty-two and it&rsquo;s a film about a breakup. Watch it again after you&rsquo;ve actually forgotten
+          someone, on purpose or otherwise, and it&rsquo;s a different film, though nothing about it changed.
+          Logging a rewatch adds a mark to that film&rsquo;s own timeline instead of writing over the first one,
+          so the drift stays visible. Some of the best entries in a collection are the ones where the newest
+          mark and the oldest one flatly disagree.
+        </p>
+
+        <p>
+          The part we&rsquo;re most protective of is friends. There&rsquo;s no feed here, no follower count, no
+          wall of activity. What there is instead is a taste twin match: you and a friend both opt in, your
+          collections overlay each other, and any film you both happened to place in exactly the same spot
+          lights up. A percentage would tell you the two of you both liked <em>Burning</em>{" "}
+          and stop there. Finding out you&rsquo;d independently filed it in the same unsettled corner of your own sky tells you
+          something a percentage can&rsquo;t reach — that the specific, hard-to-name thing it left in you was the
+          thing it left in them too. We couldn&rsquo;t have written an algorithm that finds that. The coincidence
+          does it for free.
+        </p>
+
+        <p>
+          None of this is faster than tapping four stars and moving on. It was never going to be. Love for
+          Cinema is for people who want to log films by how they felt, not what they scored, and who want a
+          record that still means something to them in ten years rather than one that proves they got through
+          the list.
+        </p>
         </div>
 
         <div className="mt-10 border-t border-line pt-8 text-center">
