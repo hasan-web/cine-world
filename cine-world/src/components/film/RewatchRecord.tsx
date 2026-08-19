@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { logRewatch, type LogRewatchState } from "@/app/film/[id]/actions";
 import { CLUSTERS } from "@/data/clusters";
 import type { ClusterId, Rewatch } from "@/lib/types";
@@ -29,6 +29,14 @@ export function RewatchRecord({ filmId, initialRewatches, initialCluster }: Rewa
   const [justAdded, setJustAdded] = useState<Rewatch | null>(null);
   const [rating, setRating] = useState(4);
   const [cluster, setCluster] = useState<ClusterId>(initialCluster ?? CLUSTERS[0].id);
+  const [lineDrawn, setLineDrawn] = useState(false);
+
+  useEffect(() => {
+    // A frame gap so the browser paints the collapsed line before flipping the class — flipping
+    // in the same tick as mount can skip the transition entirely in some browsers.
+    const raf = requestAnimationFrame(() => setLineDrawn(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   if (state !== prevState) {
     setPrevState(state);
@@ -44,7 +52,7 @@ export function RewatchRecord({ filmId, initialRewatches, initialCluster }: Rewa
       <span className="mb-2 block text-[10.5px] tracking-[0.06em] text-ink-faint uppercase">Rewatch record</span>
       {rewatches.length > 0 && (
         <div className="relative mb-1 flex h-[34px] items-start">
-          <div className="absolute top-[14px] right-0 left-0 h-px bg-line" />
+          <div className={`rewatch-line absolute top-[14px] right-0 left-0 h-px bg-line ${lineDrawn ? "rewatch-line-drawn" : ""}`} />
           {rewatches.map((rewatch, i) => {
             const label = CLUSTERS.find((c) => c.id === rewatch.cluster)?.label;
             const tooltip = [

@@ -76,7 +76,9 @@ export function findNearestStar<T extends StarLike>(
  * A glowing point of light — soft shadow-blur halo, brighter and larger once `bright` (rating
  * ≥ 4 or coincident with a friend's placement). `scale` (default 1) shrinks and fades the mark —
  * used to animate a just-logged star settling into place; values above 1 (a brief overshoot) are
- * allowed for the settle's bounce, but alpha itself is clamped at full opacity.
+ * allowed for the settle's bounce, but alpha itself is clamped at full opacity. `twinkle` (default
+ * 1) is a separate multiplier for the idle brightness pulse — kept apart from `scale` since they
+ * animate on different clocks and a settling star shouldn't also be twinkling mid-bounce.
  */
 export function drawStar(
   ctx: CanvasRenderingContext2D,
@@ -85,10 +87,11 @@ export function drawStar(
   bright = false,
   scale = 1,
   dim = false,
+  twinkle = 1,
 ) {
   const r = star.r * Math.max(scale, 0) * (bright ? 1.15 : 1);
   ctx.save();
-  ctx.globalAlpha = (dim ? 0.15 : 1) * Math.min(1, Math.max(scale, 0));
+  ctx.globalAlpha = (dim ? 0.15 : 1) * Math.min(1, Math.max(scale, 0)) * twinkle;
   ctx.shadowColor = color;
   ctx.shadowBlur = dim ? 3 : bright ? 16 : 7;
   ctx.fillStyle = color;
@@ -99,8 +102,36 @@ export function drawStar(
 }
 
 /**
+ * A per-star brightness multiplier that drifts slowly between ~0.7 and 1 on its own sine wave —
+ * phase and speed seeded from the star's id, so a whole sky doesn't pulse in unison. Cheap: one
+ * sine per star per frame, no allocation.
+ */
+export function twinkleFor(starId: string, elapsedMs: number): number {
+  const seed = hashString(starId);
+  const phase = (seed % 1000) / 1000 * Math.PI * 2;
+  const speed = 0.00035 + (seed % 500) / 500 / 3500;
+  return 0.78 + 0.22 * (0.5 + 0.5 * Math.sin(elapsedMs * speed + phase));
+}
+
+/** An expanding, fading ring — the outward pulse a star gives off the moment it settles into place. */
+export function drawSettleRing(ctx: CanvasRenderingContext2D, star: PositionedStar, color: string, t: number) {
+  if (t <= 0 || t >= 1) return;
+  ctx.save();
+  ctx.globalAlpha = 0.8 * (1 - t);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.arc(star.x, star.y, star.r + t * 20, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+/**
  * A faint thread connecting each star to its nearest same-cluster neighbor. When `activeCluster`
- * is set, threads outside that cluster fade back so the highlighted mood reads clearly.
+ * is set, threads outside that cluster fade back so the highlighted mood reads clearly, and
+ * `revealProgress` (0-1, default 1) draws only that fraction of each active-cluster thread's
+ * length — animated from the caller, this is what makes the constellation draw itself in rather
+ * than snap to visible the instant a mood is hovered.
  */
 export function drawThreads(
   ctx: CanvasRenderingContext2D,
@@ -108,6 +139,7 @@ export function drawThreads(
   color: string,
   seed: number,
   activeCluster?: ClusterId | null,
+  revealProgress = 1,
 ) {
   const rnd = mulberry32(seed);
   ctx.strokeStyle = color;
@@ -119,11 +151,24 @@ export function drawThreads(
     if (!neighbor) continue;
     const jx = (rnd() - 0.5) * 3;
     const jy = (rnd() - 0.5) * 3;
-    ctx.globalAlpha = activeCluster != null && star.item.cluster !== activeCluster ? 0.12 : 1;
+    const isActive = activeCluster != null && star.item.cluster === activeCluster;
+    ctx.globalAlpha = activeCluster != null && !isActive ? 0.12 : 1;
+    const midX = (star.x + neighbor.x) / 2 + jx;
+    const midY = (star.y + neighbor.y) / 2 + jy;
+    const progress = isActive ? revealProgress : 1;
     ctx.beginPath();
     ctx.moveTo(star.x, star.y);
-    ctx.lineTo((star.x + neighbor.x) / 2 + jx, (star.y + neighbor.y) / 2 + jy);
-    ctx.lineTo(neighbor.x, neighbor.y);
+    if (progress >= 1) {
+      ctx.lineTo(midX, midY);
+      ctx.lineTo(neighbor.x, neighbor.y);
+    } else if (progress > 0.5) {
+      const segT = (progress - 0.5) * 2;
+      ctx.lineTo(midX, midY);
+      ctx.lineTo(midX + (neighbor.x - midX) * segT, midY + (neighbor.y - midY) * segT);
+    } else {
+      const segT = progress * 2;
+      ctx.lineTo(star.x + (midX - star.x) * segT, star.y + (midY - star.y) * segT);
+    }
     ctx.stroke();
   }
   ctx.globalAlpha = 1;

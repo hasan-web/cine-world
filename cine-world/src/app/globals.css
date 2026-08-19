@@ -115,6 +115,24 @@ body {
   }
 }
 
+/* The line joining a film's rewatch marks starts collapsed and draws itself left to right on
+   mount — a small, literal echo of the app's own claim that a rewatch record shows your reading
+   of a film actually moving over time, rather than just a static row of dots. */
+.rewatch-line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.rewatch-line-drawn {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rewatch-line {
+    transform: scaleX(1);
+    transition: none;
+  }
+}
+
 /* Content easing into place as it scrolls into view. The hidden state lives in CSS but is only
    ever undone by JS (or the noscript override in the layout), so a reader without JS still sees
    everything — the animation is an enhancement, never a gate on the content. */

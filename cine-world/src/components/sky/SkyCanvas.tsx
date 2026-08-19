@@ -4,11 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   drawClusterLabel,
+  drawSettleRing,
   drawStar,
   drawThreads,
   fitCanvas,
   findNearestStar,
   layoutStars,
+  twinkleFor,
   type PositionedStar,
 } from "@/lib/starfield";
 import type { Cluster, ClusterId, PlacedFilm } from "@/lib/types";
@@ -38,6 +40,9 @@ function easeOutBack(t: number): number {
   return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
 
+const SETTLE_DURATION = 650;
+const REVEAL_DURATION = 550;
+
 export function SkyCanvas({
   films,
   clusters,
@@ -55,8 +60,18 @@ export function SkyCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<PositionedStar<PlacedFilm>[]>([]);
   const hasAnimatedRef = useRef(false);
+  const activeClusterRef = useRef<ClusterId | null>(activeCluster);
+  const clusterChangedAtRef = useRef(0);
   const [hovered, setHovered] = useState<PositionedStar<PlacedFilm> | null>(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
+
+  // Read via a ref inside the render loop instead of a dependency — hovering different moods
+  // shouldn't tear down and rebuild the whole canvas pipeline below, just change what the
+  // already-running loop paints. Only the transition moment is recorded, for the reveal animation.
+  useEffect(() => {
+    if (activeClusterRef.current !== activeCluster) clusterChangedAtRef.current = performance.now();
+    activeClusterRef.current = activeCluster;
+  }, [activeCluster]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -64,6 +79,8 @@ export function SkyCanvas({
     if (!container || !canvas) return;
 
     let rafId = 0;
+    let stopped = false;
+    const mountedAt = performance.now();
 
     // Resolved from the live cascade, not hardcoded, so canvas painting tracks light/dark mode.
     const styles = getComputedStyle(container);
@@ -71,13 +88,39 @@ export function SkyCanvas({
     const threadColor = styles.getPropertyValue("--line-strong").trim() || "rgba(0,0,0,0.16)";
     const labelPrimary = styles.getPropertyValue("--accent-strong").trim() || "#8f6a26";
     const labelSecondary = styles.getPropertyValue("--ink-soft").trim() || "#5b5f70";
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const paint = (ctx: CanvasRenderingContext2D, width: number, stars: PositionedStar<PlacedFilm>[], settleScale?: number) => {
+    let width = container.getBoundingClientRect().width;
+    let ctx = fitCanvas(canvas, width, height);
+    let stars = layoutStars(films, clusters, width, height, seed);
+    starsRef.current = stars;
+
+    const relayout = () => {
+      width = container.getBoundingClientRect().width;
+      ctx = fitCanvas(canvas, width, height);
+      stars = layoutStars(films, clusters, width, height, seed);
+      starsRef.current = stars;
+    };
+
+    const paint = (now: number) => {
+      const active = activeClusterRef.current;
+      const revealElapsed = now - clusterChangedAtRef.current;
+      const revealProgress = active == null || reduceMotion ? 1 : Math.min(1, revealElapsed / REVEAL_DURATION);
+
+      const settleElapsed = now - mountedAt;
+      const settling = !reduceMotion && newStarId && !hasAnimatedRef.current && settleElapsed < SETTLE_DURATION;
+      const settleT = settling ? settleElapsed / SETTLE_DURATION : 1;
+      const settleScale = settling ? easeOutBack(settleT) : 1;
+      if (newStarId && settleElapsed >= SETTLE_DURATION && !hasAnimatedRef.current) {
+        hasAnimatedRef.current = true;
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+
       ctx.clearRect(0, 0, width, height);
-      drawThreads(ctx, stars, threadColor, seed + 1, activeCluster);
+      drawThreads(ctx, stars, threadColor, seed + 1, active, revealProgress);
       if (showLabels) {
         for (const cluster of clusters) {
-          ctx.globalAlpha = activeCluster != null && cluster.id !== activeCluster ? 0.35 : 1;
+          ctx.globalAlpha = active != null && cluster.id !== active ? 0.35 : 1;
           drawClusterLabel(
             ctx,
             cluster.x * width - 30,
@@ -91,49 +134,38 @@ export function SkyCanvas({
         ctx.globalAlpha = 1;
       }
       for (const star of stars) {
-        const scale = settleScale != null && star.item.id === newStarId ? settleScale : 1;
-        const dim = activeCluster != null && star.item.cluster !== activeCluster;
-        drawStar(ctx, star, starColor, star.item.rating >= 4, scale, dim);
+        const isNew = star.item.id === newStarId;
+        const scale = isNew ? settleScale : 1;
+        const dim = active != null && star.item.cluster !== active;
+        const twinkle = reduceMotion ? 1 : twinkleFor(star.item.id, now);
+        drawStar(ctx, star, starColor, star.item.rating >= 4, scale, dim, twinkle);
+        if (isNew && settling) drawSettleRing(ctx, star, starColor, settleT);
       }
     };
 
-    const render = () => {
-      const width = container.getBoundingClientRect().width;
-      const ctx = fitCanvas(canvas, width, height);
-      const stars = layoutStars(films, clusters, width, height, seed);
-      starsRef.current = stars;
+    if (reduceMotion) {
+      paint(mountedAt);
+    } else {
+      const loop = (now: number) => {
+        if (stopped) return;
+        paint(now);
+        rafId = requestAnimationFrame(loop);
+      };
+      rafId = requestAnimationFrame(loop);
+    }
 
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const shouldAnimate =
-        newStarId && !hasAnimatedRef.current && !reduceMotion && stars.some((s) => s.item.id === newStarId);
-
-      if (shouldAnimate) {
-        hasAnimatedRef.current = true;
-        const duration = 650;
-        const start = performance.now();
-        const step = (now: number) => {
-          const t = Math.min(1, (now - start) / duration);
-          paint(ctx, width, stars, easeOutBack(t));
-          if (t < 1) {
-            rafId = requestAnimationFrame(step);
-          } else {
-            window.history.replaceState(null, "", window.location.pathname);
-          }
-        };
-        rafId = requestAnimationFrame(step);
-      } else {
-        paint(ctx, width, stars);
-      }
-    };
-
-    render();
-    const observer = new ResizeObserver(render);
+    const observer = new ResizeObserver(() => {
+      relayout();
+      if (reduceMotion) paint(performance.now());
+    });
     observer.observe(container);
+
     return () => {
+      stopped = true;
       observer.disconnect();
       cancelAnimationFrame(rafId);
     };
-  }, [films, clusters, height, seed, color, showLabels, newStarId, activeCluster]);
+  }, [films, clusters, height, seed, color, showLabels, newStarId]);
 
   return (
     <div ref={containerRef} className="relative w-full">
