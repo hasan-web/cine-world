@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FooterAuthLink } from "@/components/landing/FooterAuthLink";
 import { CLUSTERS } from "@/data/clusters";
 
 export function LandingFooter() {
@@ -30,9 +31,7 @@ export function LandingFooter() {
             </Link>
           </li>
           <li>
-            <Link href="/login" className="text-ink-soft hover:text-ink">
-              Sign in
-            </Link>
+            <FooterAuthLink />
           </li>
         </ul>
       </div>
