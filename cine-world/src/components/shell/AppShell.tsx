@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { LandingFooter } from "@/components/landing/LandingFooter";
 import { signOut } from "@/lib/auth-actions";
 
 interface NavItem {
@@ -91,6 +92,10 @@ export function AppShell({ userEmail, activePath, children }: AppShellProps) {
 
           {children}
         </main>
+      </div>
+
+      <div className="mt-8">
+        <LandingFooter />
       </div>
     </div>
   );

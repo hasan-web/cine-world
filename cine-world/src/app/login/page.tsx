@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { LandingFooter } from "@/components/landing/LandingFooter";
 import { createClient } from "@/lib/supabase/client";
 import { signInWithEmail, type SignInState } from "./actions";
 
@@ -18,7 +19,8 @@ export default function LoginPage() {
   const [state, action, pending] = useActionState(signInWithEmail, initialState);
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-[440px] items-center px-7 py-16">
+    <div className="flex min-h-screen flex-col">
+      <main className="mx-auto flex w-full max-w-[440px] flex-1 items-center px-7 py-16">
       <div className="glass w-full px-8 py-10">
         <h1 className="mb-1 text-[13px] font-semibold tracking-[0.14em] text-accent-strong uppercase">Love for Cinema</h1>
         <p className="mb-4 text-[16px] text-ink-soft">a keepsake program for what you&rsquo;ve watched</p>
@@ -72,6 +74,10 @@ export default function LoginPage() {
           </>
         )}
       </div>
-    </main>
+      </main>
+      <div className="px-4 pb-4 sm:px-6">
+        <LandingFooter />
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Reveal } from "@/components/motion/Reveal";
 import { PublicPageShell } from "@/components/shell/PublicPageShell";
 import { getCatalogFilmsByCluster } from "@/data/catalog";
@@ -45,9 +44,6 @@ export default function MoodsIndexPage() {
             );
           })}
         </div>
-      </div>
-      <div className="px-4 pb-4 sm:px-6">
-        <LandingFooter />
       </div>
     </PublicPageShell>
   );

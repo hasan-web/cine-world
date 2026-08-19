@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Reveal } from "@/components/motion/Reveal";
 import { PublicPageShell } from "@/components/shell/PublicPageShell";
 import { CATALOG, getCatalogFilm, getRelatedFilms, hasMoviesLikePage } from "@/data/catalog";
@@ -116,9 +115,6 @@ export default async function MoviesLikePage({ params }: MoviesLikePageProps) {
             </Link>
           </div>
         </Reveal>
-      </div>
-      <div className="px-4 pb-4 sm:px-6">
-        <LandingFooter />
       </div>
     </PublicPageShell>
   );

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { LandingFooter } from "@/components/landing/LandingFooter";
 
 export const metadata: Metadata = {
   title: "A mood-based film diary and letterboxd alternative",
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 
 export default function ManifestoPage() {
   return (
+    <>
     <main className="mx-auto max-w-[680px] px-6 py-16 sm:px-10 sm:py-20">
       <Link href="/" className="text-[11px] tracking-[0.08em] text-accent uppercase">
         ← Love for Cinema
@@ -103,5 +105,9 @@ export default function ManifestoPage() {
         </div>
       </div>
     </main>
+    <div className="px-4 pb-4 sm:px-6">
+      <LandingFooter />
+    </div>
+    </>
   );
 }

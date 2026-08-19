@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LandingFooter } from "@/components/landing/LandingFooter";
 import { PublicSkyCanvas } from "@/components/sky/PublicSkyCanvas";
 import { ShareIntents } from "@/components/sky/ShareIntents";
 import { Reveal } from "@/components/motion/Reveal";
@@ -78,9 +77,6 @@ export default async function SkyPage({ params }: SkyPageProps) {
             </div>
           </div>
         </Reveal>
-      </div>
-      <div className="px-4 pb-4 sm:px-6">
-        <LandingFooter />
       </div>
     </PublicPageShell>
   );

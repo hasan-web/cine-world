@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LandingFooter } from "@/components/landing/LandingFooter";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { AppShell } from "@/components/shell/AppShell";
 import { createClient } from "@/lib/supabase/client";
@@ -40,6 +41,9 @@ export function PublicPageShell({ children }: PublicPageShellProps) {
     <>
       <LandingHeader />
       <main>{children}</main>
+      <div className="px-4 pb-4 sm:px-6">
+        <LandingFooter />
+      </div>
     </>
   );
 }

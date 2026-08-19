@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StarMark } from "@/components/atlas/StarMark";
-import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Reveal } from "@/components/motion/Reveal";
 import { PublicPageShell } from "@/components/shell/PublicPageShell";
 import { CATALOG, getCatalogFilm, getMoreFromDirector, getRelatedFilms, hasMoviesLikePage } from "@/data/catalog";
@@ -189,9 +188,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
             </section>
           </Reveal>
         )}
-      </div>
-      <div className="px-4 pb-4 sm:px-6">
-        <LandingFooter />
       </div>
     </PublicPageShell>
   );
