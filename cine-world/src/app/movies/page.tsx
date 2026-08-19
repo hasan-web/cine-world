@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DiscoverPersonalityCard } from "@/components/movies/DiscoverPersonalityCard";
 import { Reveal } from "@/components/motion/Reveal";
 import { PublicPageShell } from "@/components/shell/PublicPageShell";
 import { CATALOG } from "@/data/catalog";
@@ -23,6 +24,11 @@ export default function MoviesIndexPage() {
             A small, hand-picked set of films — not a database dump. Each one links to what it&rsquo;s similar to
             and which of the four moods it sits in.
           </p>
+        </Reveal>
+
+        <DiscoverPersonalityCard />
+
+        <Reveal>
           <div className="mb-10 flex flex-wrap gap-2">
             {CLUSTERS.map((c) => (
               <Link
