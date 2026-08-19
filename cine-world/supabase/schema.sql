@@ -330,3 +330,34 @@ drop policy if exists "Users can delete their own collection films" on public.co
 create policy "Users can delete their own collection films"
   on public.collection_films for delete
   using (auth.uid() = user_id);
+
+-- Cached LLM-generated blurbs for Ask My Cinema's ambient insight cards ("this month" and "your
+-- cinema profile"). Regenerated only when stale — see getCinemaInsights() — rather than on every
+-- visit, so glancing at the page doesn't burn a model call and the phrasing doesn't reshuffle every
+-- time you look at it. One row per user; film_count_at_generation lets the app notice "you logged
+-- five more films since this was written" without needing a separate change-tracking mechanism.
+create table if not exists public.cinema_insights (
+  user_id uuid not null primary key references auth.users(id) on delete cascade,
+  month_note text not null,
+  profile_note text not null,
+  film_count_at_generation integer not null default 0,
+  generated_at timestamptz not null default now()
+);
+
+alter table public.cinema_insights enable row level security;
+
+drop policy if exists "Users can view their own cinema insights" on public.cinema_insights;
+create policy "Users can view their own cinema insights"
+  on public.cinema_insights for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Users can insert their own cinema insights" on public.cinema_insights;
+create policy "Users can insert their own cinema insights"
+  on public.cinema_insights for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Users can update their own cinema insights" on public.cinema_insights;
+create policy "Users can update their own cinema insights"
+  on public.cinema_insights for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);

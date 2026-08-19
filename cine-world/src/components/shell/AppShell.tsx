@@ -19,9 +19,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Import", href: "/import" },
   { label: "Discover", href: "/movies" },
   { label: "Collections", href: "/collections" },
+  { label: "Ask My Cinema", href: "/ask" },
 ];
-
-const SOON_ITEMS = ["Ask My Cinema"];
 
 interface AppShellProps {
   userEmail: string;
@@ -82,11 +81,6 @@ export function AppShell({ userEmail, activePath, children }: AppShellProps) {
                 </Link>
               );
             })}
-            {SOON_ITEMS.map((label) => (
-              <span key={label} className="rounded-xl px-3 py-2 text-[13.5px] text-ink-faint/60" title="Coming soon">
-                {label}
-              </span>
-            ))}
           </nav>
 
           <Link

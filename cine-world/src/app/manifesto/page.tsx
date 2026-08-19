@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import { LandingFooter } from "@/components/landing/LandingFooter";
+import { ManifestoCta } from "@/components/manifesto/ManifestoCta";
+import { PublicPageShell } from "@/components/shell/PublicPageShell";
 
 export const metadata: Metadata = {
   title: "A mood-based film diary and letterboxd alternative",
@@ -11,13 +11,9 @@ export const metadata: Metadata = {
 
 export default function ManifestoPage() {
   return (
-    <>
-    <main className="mx-auto max-w-[680px] px-6 py-16 sm:px-10 sm:py-20">
-      <Link href="/" className="text-[11px] tracking-[0.08em] text-accent uppercase">
-        ← Love for Cinema
-      </Link>
-
-      <div className="glass mt-8 px-7 py-10 sm:px-12 sm:py-14">
+    <PublicPageShell>
+    <div className="mx-auto max-w-[680px] px-6 pt-8 pb-16 sm:px-10 sm:pb-20">
+      <div className="glass px-7 py-10 sm:px-12 sm:py-14">
         <p className="mb-2 text-[10.5px] tracking-[0.14em] text-accent uppercase">Why we built it this way</p>
         <h1 className="mb-8 max-w-[20ch] text-[26px] font-semibold text-ink">
           A mood-based film diary for people who are done with star averages
@@ -95,19 +91,9 @@ export default function ManifestoPage() {
         </p>
         </div>
 
-        <div className="mt-10 border-t border-line pt-8 text-center">
-          <Link
-            href="/login"
-            className="inline-block rounded-full bg-gradient-to-br from-accent to-accent-strong px-7 py-3 text-[12.5px] font-semibold text-white"
-          >
-            Sign in and start your own sky →
-          </Link>
-        </div>
+        <ManifestoCta />
       </div>
-    </main>
-    <div className="px-4 pb-4 sm:px-6">
-      <LandingFooter />
     </div>
-    </>
+    </PublicPageShell>
   );
 }
