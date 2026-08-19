@@ -2,6 +2,7 @@
 
 import { Suspense, useActionState, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { DatePicker, todayISO } from "@/components/log/DatePicker";
 import { TitleSearch } from "@/components/log/TitleSearch";
 import { AppShell } from "@/components/shell/AppShell";
 import { CLUSTERS } from "@/data/clusters";
@@ -33,6 +34,7 @@ function LogForm() {
   const [state, action, pending] = useActionState(logFilm, initialState);
   const [cluster, setCluster] = useState<ClusterId>(CLUSTERS[0].id);
   const [rating, setRating] = useState(4);
+  const [watchedOn, setWatchedOn] = useState(todayISO());
   const directorRef = useRef<HTMLInputElement>(null);
   const yearRef = useRef<HTMLInputElement>(null);
   const countryRef = useRef<HTMLInputElement>(null);
@@ -92,13 +94,7 @@ function LogForm() {
             </label>
             <label className="flex items-baseline gap-2.5">
               <span className="text-[10.5px] tracking-[0.06em] text-ink-faint uppercase">Watched</span>
-              <input
-                name="watchedOn"
-                type="date"
-                defaultValue={new Date().toISOString().slice(0, 10)}
-                max={new Date().toISOString().slice(0, 10)}
-                className="border-b border-line bg-transparent pb-1.5 text-[13px] text-ink outline-none"
-              />
+              <DatePicker name="watchedOn" value={watchedOn} onChange={setWatchedOn} />
             </label>
           </div>
 

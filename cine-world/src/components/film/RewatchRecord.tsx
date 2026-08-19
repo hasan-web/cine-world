@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useState } from "react";
 import { logRewatch, type LogRewatchState } from "@/app/film/[id]/actions";
+import { DatePicker, todayISO } from "@/components/log/DatePicker";
 import { CLUSTERS } from "@/data/clusters";
 import type { ClusterId, Rewatch } from "@/lib/types";
 
@@ -18,10 +19,6 @@ function sortKey(r: Rewatch): string {
   return r.date ?? `${r.year}-01-01`;
 }
 
-function todayIso(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
 export function RewatchRecord({ filmId, initialRewatches, initialCluster }: RewatchRecordProps) {
   const [state, action, pending] = useActionState(logRewatch.bind(null, filmId), initialActionState);
   const [prevState, setPrevState] = useState(state);
@@ -29,6 +26,7 @@ export function RewatchRecord({ filmId, initialRewatches, initialCluster }: Rewa
   const [justAdded, setJustAdded] = useState<Rewatch | null>(null);
   const [rating, setRating] = useState(4);
   const [cluster, setCluster] = useState<ClusterId>(initialCluster ?? CLUSTERS[0].id);
+  const [watchedDate, setWatchedDate] = useState(todayISO());
   const [lineDrawn, setLineDrawn] = useState(false);
 
   useEffect(() => {
@@ -88,13 +86,7 @@ export function RewatchRecord({ filmId, initialRewatches, initialCluster }: Rewa
         <input type="hidden" name="cluster" value={cluster} />
         <label className="flex items-baseline gap-2">
           <span className="text-[9.5px] tracking-[0.06em] text-ink-faint uppercase">Watched</span>
-          <input
-            name="date"
-            type="date"
-            defaultValue={todayIso()}
-            max={todayIso()}
-            className="border-b border-line bg-transparent pb-1 text-[11.5px] text-ink outline-none"
-          />
+          <DatePicker name="date" value={watchedDate} onChange={setWatchedDate} />
         </label>
         <div className="flex items-center gap-2">
           <span className="text-[9.5px] tracking-[0.06em] text-ink-faint uppercase">Felt</span>
