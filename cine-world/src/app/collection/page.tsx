@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getMyShareToken } from "@/app/collection/actions";
+import { CinemaPersonalityCard } from "@/components/collection/CinemaPersonalityCard";
 import { FriendOverlapPlate } from "@/components/collection/FriendOverlapPlate";
 import { ShareCard } from "@/components/collection/ShareCard";
 import { ShareLinkControl } from "@/components/collection/ShareLinkControl";
@@ -10,8 +11,11 @@ import { SkyCanvas } from "@/components/sky/SkyCanvas";
 import { CLUSTERS } from "@/data/clusters";
 import { EXAMPLE_FILMS } from "@/data/exampleFilms";
 import { verifySession } from "@/lib/dal";
+import { buildDiary } from "@/lib/diary";
 import { countUnplacedFilms, listFilms, listFilmsForUser } from "@/lib/films";
 import { listFriends } from "@/lib/friends";
+import { buildStats } from "@/lib/stats";
+import { getCinemaInsights } from "@/lib/cinemaInsights";
 import { isPlaced, type Film, type PlacedFilm } from "@/lib/types";
 
 const NEW_COLLECTION_THRESHOLD = 4;
@@ -52,7 +56,12 @@ export default async function CollectionPage() {
   // Only placed films belong in the sky and its statistics — an imported film has no mood yet,
   // and inventing a position for it would put a star somewhere its owner never chose.
   const films = allFilms.filter(isPlaced);
-  const friendFilms = await Promise.all(friends.map((f) => listFilmsForUser(f.id)));
+  // A personality read off a handful of films would overclaim, so it uses the same "not enough
+  // yet" line as the rest of this page rather than its own threshold.
+  const [friendFilms, personality] = await Promise.all([
+    Promise.all(friends.map((f) => listFilmsForUser(f.id))),
+    allFilms.length >= NEW_COLLECTION_THRESHOLD ? getCinemaInsights(allFilms) : Promise.resolve(null),
+  ]);
   const twins = friends.map((friend, i) => ({ friend, films: friendFilms[i].filter(isPlaced) }));
   const isNewCollection = films.length > 0 && films.length < NEW_COLLECTION_THRESHOLD;
   const totalRewatches = films.reduce((sum, f) => sum + (f.rewatches?.length ?? 0), 0);
@@ -74,8 +83,39 @@ export default async function CollectionPage() {
     }, []);
   const ringColors = ["var(--accent)", "var(--star)", "var(--companion)", "var(--ink-faint)"];
 
+  const exampleStats = buildStats(EXAMPLE_FILMS, buildDiary(EXAMPLE_FILMS));
+  const exampleTopMood = exampleStats.moods[0];
+
   return (
     <AppShell userEmail={user.email ?? ""} activePath="/collection">
+      {personality ? (
+        <CinemaPersonalityCard
+          name={personality.personalityName}
+          tagline={personality.personalityTagline}
+          description={personality.profileNote}
+          topMood={
+            personality.moods[0] && personality.moods[0].count > 0
+              ? { label: personality.moods[0].cluster.label, pct: Math.round(personality.moods[0].fraction * 100) }
+              : null
+          }
+          rewatchRatePct={personality.rewatchRatePct}
+          averageRating={personality.averageRating}
+          topEra={personality.topEra}
+        />
+      ) : (
+        <ExampleContent label="what this fills in with, once you've logged a few more">
+          <CinemaPersonalityCard
+            name="The Patient Watcher"
+            tagline="for the ones who stay in a feeling longer than most"
+            description="Solitudo and Domus split the sample collection evenly, but the one rewatch — Perfect Days — tips it toward staying with a film rather than moving on to the next one."
+            topMood={{ label: exampleTopMood.cluster.label, pct: Math.round(exampleTopMood.fraction * 100) }}
+            rewatchRatePct={Math.round((exampleStats.rewatches / exampleStats.totalViewings) * 100)}
+            averageRating={exampleStats.averageRating}
+            topEra="2020s"
+          />
+        </ExampleContent>
+      )}
+
       {unplaced > 0 && (
         <Link
           href="/place"

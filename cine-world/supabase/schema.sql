@@ -361,3 +361,10 @@ create policy "Users can update their own cinema insights"
   on public.cinema_insights for update
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
+
+-- A named taste archetype ("The Patient Watcher") for the Home page's personality card, generated
+-- in the same pass as month_note/profile_note above. Defaults to '' rather than null so the
+-- add-column itself never fails on rows written before this card existed — getCinemaInsights()
+-- treats a stale/blank pair as cache-miss the same way it already treats a missing row.
+alter table public.cinema_insights add column if not exists personality_name text not null default '';
+alter table public.cinema_insights add column if not exists personality_tagline text not null default '';

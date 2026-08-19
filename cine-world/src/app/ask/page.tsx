@@ -5,6 +5,7 @@ import { ExampleContent } from "@/components/shell/ExampleContent";
 import { EXAMPLE_FILMS } from "@/data/exampleFilms";
 import { verifySession } from "@/lib/dal";
 import { buildDiary } from "@/lib/diary";
+import { listFilms } from "@/lib/films";
 import { buildStats, type MoodShare } from "@/lib/stats";
 import { getCinemaInsights } from "@/lib/cinemaInsights";
 
@@ -52,7 +53,8 @@ function InsightPanels({ monthNote, profileNote, moods }: { monthNote: string; p
 
 export default async function AskPage() {
   const user = await verifySession();
-  const insights = await getCinemaInsights();
+  const films = await listFilms();
+  const insights = await getCinemaInsights(films);
 
   const exampleMoods = buildStats(EXAMPLE_FILMS, buildDiary(EXAMPLE_FILMS)).moods;
 
