@@ -61,28 +61,33 @@ export function LandingHero() {
             Love for Cinema is a film diary built around that part — where a film actually sat with you, not the
             number you gave it on the way out.
           </p>
-          <div className="rise mb-9 flex flex-wrap items-center gap-4" style={{ animationDelay: "270ms" }}>
-            <Link
-              href="/login"
-              className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-6 py-3 text-[13px] font-semibold text-white shadow-[0_10px_30px_var(--color-accent-soft)]"
-            >
-              Start your sky →
-            </Link>
-            {/* The low-commitment door in. Signing up is a lot to ask of someone who has known this
-                app for eight seconds; placing eight films is not, and it teaches the whole premise
-                by making them do it. */}
-            <Link
-              href="/where-it-sits"
-              className="rounded-full border border-line-strong px-6 py-3 text-[13px] font-semibold text-ink-soft hover:border-accent/50 hover:text-ink"
-            >
-              Try it — no signup →
-            </Link>
-            <a
-              href="#why-different"
-              className="text-[13px] text-ink-soft underline decoration-line-strong underline-offset-4 hover:text-ink"
-            >
-              Why it works like this
-            </a>
+          {/* The game leads rather than the sign-up. Asking someone who has known this app for eight
+              seconds to make an account is the bigger favour; placing eight films is not, and it
+              teaches the whole premise by making them do it. "Start your sky" keeps its name and
+              stays one click away for anyone who arrived already sold. */}
+          <div className="rise mb-9" style={{ animationDelay: "270ms" }}>
+            <div className="flex flex-wrap items-center gap-4">
+              <Link
+                href="/where-it-sits"
+                className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-6 py-3 text-[13px] font-semibold text-white shadow-[0_10px_30px_var(--color-accent-soft)]"
+              >
+                Place eight films →
+              </Link>
+              <Link
+                href="/login"
+                className="rounded-full border border-line-strong px-6 py-3 text-[13px] font-semibold text-ink-soft hover:border-accent/50 hover:text-ink"
+              >
+                Start your sky →
+              </Link>
+              <a
+                href="#why-different"
+                className="text-[13px] text-ink-soft underline decoration-line-strong underline-offset-4 hover:text-ink"
+              >
+                Why it works like this
+              </a>
+            </div>
+            {/* Carries the reassurance that used to live inside the old button's own text. */}
+            <p className="mt-3 text-[11px] text-ink-faint">no signup · about a minute</p>
           </div>
 
           <div className="rise flex flex-wrap gap-2" style={{ animationDelay: "360ms" }}>
