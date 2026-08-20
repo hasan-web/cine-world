@@ -60,7 +60,10 @@ function LogForm() {
 
           <TitleSearch onSelect={handleSelect} defaultValue={initialTitle} />
 
-          <div className="mb-5 flex gap-4">
+          {/* Stacked below sm. Side by side, these pairs had a min-content wider than a phone
+              viewport, which pushed the whole form — and every ancestor up to the page — past the
+              right edge. */}
+          <div className="mb-5 flex flex-col gap-4 sm:flex-row">
             <label className="flex flex-1 items-baseline gap-2.5">
               <span className="text-[10.5px] tracking-[0.06em] text-ink-faint uppercase">Director</span>
               <input
@@ -82,7 +85,7 @@ function LogForm() {
             </label>
           </div>
 
-          <div className="mb-6 flex gap-4">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row">
             <label className="flex flex-1 items-baseline gap-2.5">
               <span className="text-[10.5px] tracking-[0.06em] text-ink-faint uppercase">Country</span>
               <input
@@ -99,7 +102,8 @@ function LogForm() {
           </div>
 
           <p className="mb-2 text-[10.5px] tracking-[0.06em] text-ink-faint uppercase">Mood</p>
-          <div className="mb-6 flex gap-6">
+          {/* Two-up on a phone rather than four across, which needed 300px of min-content. */}
+          <div className="mb-6 grid grid-cols-2 gap-x-4 gap-y-5 sm:flex sm:gap-6">
             {CLUSTERS.map((c) => (
               <button
                 type="button"

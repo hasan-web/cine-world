@@ -21,6 +21,9 @@
   --glass-strong: rgba(255, 255, 255, 0.09);
   --glass-border: rgba(255, 255, 255, 0.13);
   --glass-edge: rgba(255, 255, 255, 0.06);
+  /* Solid backing for floating panels — see .popover. Reads as the same material as .glass once
+     it's sitting over the page gradient, but without depending on backdrop-filter to be legible. */
+  --surface-float: #151a27;
   --ink: #f3f4f8;
   --ink-soft: #b6bacb;
   --ink-faint: #767c93;
@@ -64,9 +67,27 @@
 }
 
 body {
-  background: radial-gradient(ellipse 1400px 900px at 20% -10%, var(--bg-top), var(--bg-bottom) 60%);
-  background-attachment: fixed;
+  background: var(--bg-bottom);
   color: var(--ink);
+}
+
+/*
+ * The page gradient sits on its own fixed layer rather than on `body` with
+ * `background-attachment: fixed`.
+ *
+ * A fixed *attachment* stays put while the content scrolls over it, so the browser has to
+ * re-rasterise it against the moving page every single frame. On mobile that's what made fast
+ * scrolling visibly tear and then snap back a frame or two later. A fixed-*position* element gets
+ * its own compositor layer instead, so scrolling just moves content over it and never repaints it:
+ * identical picture, none of the per-frame cost.
+ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 1400px 900px at 20% -10%, var(--bg-top), var(--bg-bottom) 60%);
 }
 
 /* The one reusable glass-material surface — translucent, blurred, with a soft top-edge
@@ -81,6 +102,21 @@ body {
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 var(--glass-edge);
+}
+
+/*
+ * A panel that floats over page content, as opposed to sitting in the flow.
+ *
+ * .glass is 5.5% white and relies on backdrop-filter to stay readable. That's fine for a card with
+ * only the page gradient behind it, and wrong for an overlay: mobile browsers composite
+ * backdrop-filter unreliably, and the date picker ended up showing the mood buttons and note field
+ * straight through itself. Anything that floats gets a solid background — a menu you can read the
+ * form through is worse than one that isn't translucent at all.
+ */
+.popover {
+  background: var(--surface-float);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.65);
 }
 
 /* A rewatch dot growing into place, same overshoot-then-settle feel as a just-logged star. Only

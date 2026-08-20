@@ -41,8 +41,26 @@ export function AppShell({ userEmail, activePath, children }: AppShellProps) {
     <div className="min-h-screen p-4 md:p-7">
       <div className="mx-auto grid max-w-[1360px] gap-5 md:grid-cols-[224px_1fr]">
         <aside className="glass p-3 md:sticky md:top-7 md:h-fit md:p-5">
-          <div className="flex items-center justify-between md:hidden">
-            <span className="text-[15px] font-semibold text-accent-strong">Love for Cinema</span>
+          {/* Below md this is the only header there is. The account actions used to live in a
+              second glass bar directly beneath this one, which meant a phone spent two full rows of
+              screen on chrome before any content — so + Log and Sign out fold up into this row and
+              that bar becomes desktop-only. */}
+          <div className="flex items-center gap-2 md:hidden">
+            <span className="text-[14px] font-semibold text-accent-strong">Love for Cinema</span>
+            <Link
+              href="/log"
+              className="ml-auto rounded-full bg-gradient-to-br from-accent to-accent-strong px-3 py-1.5 text-[11.5px] font-semibold whitespace-nowrap text-white"
+            >
+              + Log
+            </Link>
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="rounded-full border border-line-strong px-2.5 py-1.5 text-[10px] tracking-[0.04em] whitespace-nowrap text-ink-soft uppercase"
+              >
+                Sign out
+              </button>
+            </form>
             <button
               type="button"
               onClick={() => setMenuOpen((v) => !v)}
@@ -83,33 +101,28 @@ export function AppShell({ userEmail, activePath, children }: AppShellProps) {
             })}
           </nav>
 
+          {/* Desktop only now — on mobile "+ Log" is always visible in the header row above, so
+              repeating it inside the menu was just a second copy of the same button. */}
           <Link
             href="/log"
-            className={`${menuOpen ? "block" : "hidden"} mt-3 rounded-2xl bg-gradient-to-br from-accent to-accent-strong px-4 py-2.5 text-center text-[13px] font-semibold text-white shadow-[0_6px_20px_var(--color-accent-soft)] md:mt-6 md:block`}
+            className="mt-6 hidden rounded-2xl bg-gradient-to-br from-accent to-accent-strong px-4 py-2.5 text-center text-[13px] font-semibold text-white shadow-[0_6px_20px_var(--color-accent-soft)] md:block"
           >
             + Log a film
           </Link>
         </aside>
 
         <main className="flex flex-col gap-5">
-          <div className="glass flex items-center justify-between gap-4 px-5 py-3">
-            <span className="hidden text-[13px] font-mono text-ink-soft sm:inline">{userEmail}</span>
-            <div className="ml-auto flex items-center gap-3">
-              <Link
-                href="/log"
-                className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-4 py-2 text-[12px] font-semibold text-white md:hidden"
+          {/* Desktop only — on a phone this row's contents now live in the sidebar header above. */}
+          <div className="glass hidden items-center justify-between gap-4 px-5 py-3 md:flex">
+            <span className="text-[13px] font-mono text-ink-soft">{userEmail}</span>
+            <form action={signOut} className="ml-auto">
+              <button
+                type="submit"
+                className="rounded-full border border-line-strong px-3.5 py-1.5 text-[11px] tracking-[0.04em] text-ink-soft uppercase"
               >
-                + Log
-              </Link>
-              <form action={signOut}>
-                <button
-                  type="submit"
-                  className="rounded-full border border-line-strong px-3.5 py-1.5 text-[11px] tracking-[0.04em] text-ink-soft uppercase"
-                >
-                  Sign out
-                </button>
-              </form>
-            </div>
+                Sign out
+              </button>
+            </form>
           </div>
 
           {children}

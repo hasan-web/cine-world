@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -49,6 +49,7 @@ interface DatePickerProps {
 export function DatePicker({ value, onChange, max, name }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   const maxDate = max ? parseISO(max) : parseISO(todayISO());
   const selected = parseISO(value);
@@ -62,6 +63,32 @@ export function DatePicker({ value, onChange, max, name }: DatePickerProps) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  /**
+   * Nudges the panel back on screen when opening it near an edge. The "Watched" field sits at the
+   * right of its row on /log, so a panel anchored to the field's left ran straight off a phone
+   * viewport — the calendar was cut in half mid-week.
+   *
+   * Writes the transform directly rather than through state: this has to happen before paint (a
+   * visible jump otherwise), and measuring then setting state would re-render for a value only the
+   * DOM needs. Both edges are handled, since the same picker is left-aligned in the rewatch form.
+   */
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!open || !panel) return;
+
+    panel.style.transform = "";
+    const rect = panel.getBoundingClientRect();
+    // documentElement.clientWidth, not window.innerWidth: innerWidth includes any horizontal
+    // overflow the page already has, so measuring against it let the panel "fit" inside an area
+    // that was only that wide *because the panel was hanging off the edge*.
+    const viewport = document.documentElement.clientWidth;
+    const margin = 8;
+    let shift = 0;
+    if (rect.right > viewport - margin) shift = viewport - margin - rect.right;
+    if (rect.left + shift < margin) shift = margin - rect.left;
+    if (shift !== 0) panel.style.transform = `translateX(${shift}px)`;
+  }, [open]);
 
   function openPicker() {
     setViewYear(selected.getFullYear());
@@ -98,13 +125,18 @@ export function DatePicker({ value, onChange, max, name }: DatePickerProps) {
         type="button"
         onClick={openPicker}
         aria-expanded={open}
-        className="border-b border-line pb-1.5 text-[13px] text-ink outline-none hover:border-line-strong"
+        className="border-b border-line pb-1.5 text-[13px] whitespace-nowrap text-ink outline-none hover:border-line-strong"
       >
         {selected.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
       </button>
 
       {open && (
-        <div className="glass absolute top-full left-0 z-20 mt-2 w-[236px] !rounded-xl p-3">
+        <div
+          ref={panelRef}
+          /* max-w so a viewport narrower than the panel shrinks it instead of letting it hang off
+             the edge and give the whole page a horizontal scrollbar. */
+          className="popover absolute top-full left-0 z-30 mt-2 w-[236px] max-w-[calc(100vw-1rem)] rounded-xl p-3"
+        >
           <div className="mb-2 flex items-center justify-between">
             <button
               type="button"
