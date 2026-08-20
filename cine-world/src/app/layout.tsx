@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
 
@@ -28,6 +28,18 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     images: ["/og-image.png"],
   },
+};
+
+/**
+ * The app renders dark only (see globals.css). Declaring it here as well as in CSS covers the part
+ * CSS can't reach: themeColor tints the mobile browser's own chrome, which otherwise stays pale
+ * above a black page and is the main reason the site read as "less dark" on a phone than on a
+ * desktop. colorScheme lands in the markup, so native controls are told before the stylesheet
+ * arrives rather than after.
+ */
+export const viewport: Viewport = {
+  colorScheme: "dark",
+  themeColor: "#0c0f1a",
 };
 
 export default function RootLayout({
