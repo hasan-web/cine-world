@@ -120,7 +120,18 @@ export default async function LandingPage() {
             >
               Sign in and start your own →
             </Link>
-            <p className="mt-4">
+            {/* The catch for someone who read the whole page and still didn't sign up — the last
+                thing they see should be an offer that costs them nothing. */}
+            <p className="mt-4 text-[12px] text-ink-faint">
+              Not ready?{" "}
+              <Link
+                href="/where-it-sits"
+                className="underline decoration-line-strong underline-offset-4 hover:text-ink-soft"
+              >
+                Place eight films first →
+              </Link>
+            </p>
+            <p className="mt-2">
               <Link
                 href="/manifesto"
                 className="text-[12px] text-ink-faint underline decoration-line-strong underline-offset-4"

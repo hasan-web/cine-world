@@ -16,6 +16,11 @@ export function LandingHeader() {
           <span className="text-[14px] font-semibold text-accent-strong">Love for Cinema</span>
         </Link>
         <nav className="flex items-center gap-5">
+          {/* First on purpose: it's the only nav item a first-time visitor can act on without an
+              account, so it shouldn't sit behind the reference sections. */}
+          <Link href="/where-it-sits" className="hidden text-[12.5px] text-ink-soft hover:text-ink sm:inline">
+            Play
+          </Link>
           <Link href="/movies" className="hidden text-[12.5px] text-ink-soft hover:text-ink sm:inline">
             Movies
           </Link>

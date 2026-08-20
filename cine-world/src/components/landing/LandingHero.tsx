@@ -43,7 +43,10 @@ export function LandingHero() {
       />
 
       <div className="relative mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
-        <div>
+        {/* min-w-0 because a grid item defaults to min-width:auto — without it the CTA row's
+            min-content widens the whole column past the viewport on narrow screens, and the
+            section's overflow-hidden then silently crops the copy rather than wrapping it. */}
+        <div className="min-w-0">
           <p className="rise mb-4 text-[11px] tracking-[0.3em] text-accent uppercase">
             Love for Cinema
           </p>
@@ -64,6 +67,15 @@ export function LandingHero() {
               className="rounded-full bg-gradient-to-br from-accent to-accent-strong px-6 py-3 text-[13px] font-semibold text-white shadow-[0_10px_30px_var(--color-accent-soft)]"
             >
               Start your sky →
+            </Link>
+            {/* The low-commitment door in. Signing up is a lot to ask of someone who has known this
+                app for eight seconds; placing eight films is not, and it teaches the whole premise
+                by making them do it. */}
+            <Link
+              href="/where-it-sits"
+              className="rounded-full border border-line-strong px-6 py-3 text-[13px] font-semibold text-ink-soft hover:border-accent/50 hover:text-ink"
+            >
+              Try it — no signup →
             </Link>
             <a
               href="#why-different"

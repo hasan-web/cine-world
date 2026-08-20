@@ -16,6 +16,11 @@ export function LandingFooter() {
         <p className="mb-3 text-[10.5px] tracking-[0.1em] text-ink-faint uppercase">Explore</p>
         <ul className="flex flex-col gap-2 text-[13px]">
           <li>
+            <Link href="/where-it-sits" className="text-ink-soft hover:text-ink">
+              Where does it sit with you?
+            </Link>
+          </li>
+          <li>
             <Link href="/movies" className="text-ink-soft hover:text-ink">
               Movies
             </Link>
