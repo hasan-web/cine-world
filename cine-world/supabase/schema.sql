@@ -368,3 +368,39 @@ create policy "Users can update their own cinema insights"
 -- treats a stale/blank pair as cache-miss the same way it already treats a missing row.
 alter table public.cinema_insights add column if not exists personality_name text not null default '';
 alter table public.cinema_insights add column if not exists personality_tagline text not null default '';
+
+-- Backs the public /where-it-sits placement game: for each requested film, how the crowd actually
+-- split it across the four moods, so a player can be told "you're one of the 9% who file this under
+-- Domus". Same anonymization contract as public_film_stats — counts only, no user_id, no note, no
+-- rating, no dates — and the same 5-placement floor per film, since a split of one is just that
+-- person's row restated. Films under the floor return no rows at all, and the game falls back to
+-- comparing against the catalogue's own placement instead.
+--
+-- Takes an array rather than one id per call because the game needs all eight films up front; eight
+-- separate round trips to render one page would be the only expensive thing about a static page.
+create or replace function public.public_placement_split(p_film_ids text[])
+returns table (film_id text, cluster text, placements bigint)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  with counts as (
+    select f.id as film_id, f.cluster, count(*) as placements
+    from public.films f
+    where f.id = any(p_film_ids) and f.cluster is not null
+    group by f.id, f.cluster
+  ),
+  totals as (
+    select c.film_id, sum(c.placements) as total
+    from counts c
+    group by c.film_id
+  )
+  select c.film_id, c.cluster, c.placements
+  from counts c
+  join totals t on t.film_id = c.film_id
+  where t.total >= 5
+$$;
+
+-- anon too, deliberately: the whole point of this page is that it works before anyone signs up.
+grant execute on function public.public_placement_split(text[]) to anon, authenticated;

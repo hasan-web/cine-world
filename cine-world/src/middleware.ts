@@ -1,7 +1,16 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_ROUTES = ["/login", "/auth/confirm", "/manifesto", "/movies", "/movies-like", "/moods", "/sky"];
+const PUBLIC_ROUTES = [
+  "/login",
+  "/auth/confirm",
+  "/manifesto",
+  "/movies",
+  "/movies-like",
+  "/moods",
+  "/sky",
+  "/where-it-sits",
+];
 
 /**
  * Refreshes the Supabase session cookie on every request and does an optimistic
