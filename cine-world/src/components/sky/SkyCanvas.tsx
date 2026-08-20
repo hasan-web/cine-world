@@ -168,7 +168,20 @@ export function SkyCanvas({
   }, [films, clusters, height, seed, color, showLabels, newStarId]);
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    /*
+     * The canvas is deliberately out of flow, and the container carries the height instead.
+     *
+     * fitCanvas() gives the canvas an explicit pixel width. While it was in flow that width became
+     * its container's min-content, so the container could never shrink below the widest it had ever
+     * been — the ResizeObserver above then kept re-measuring that stale width and the canvas
+     * ratcheted: it grew with the viewport but never shrank back. On the landing page the canvas
+     * and the hero copy share one grid track on mobile, so a stale desktop-width canvas held the
+     * track open and the hero's overflow-hidden silently cropped the copy after a phone rotate.
+     *
+     * Positioned absolutely, the container's width depends only on its parent, so a resize measures
+     * honestly and the loop can't form.
+     */
+    <div ref={containerRef} className="relative w-full" style={{ height }}>
       <canvas
         ref={canvasRef}
         onMouseMove={
@@ -195,7 +208,7 @@ export function SkyCanvas({
               }
             : undefined
         }
-        className={`block w-full ${navigable ? "cursor-pointer" : ""}`}
+        className={`absolute top-0 left-0 block ${navigable ? "cursor-pointer" : ""}`}
       />
       {interactive && hovered && (
         <div

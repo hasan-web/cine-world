@@ -79,7 +79,9 @@ export function PublicSkyCanvas({ stars, clusters, height }: PublicSkyCanvasProp
   }, [stars, clusters, height]);
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    /* Canvas out of flow so its own pixel width can't pin the container open on resize — see the
+       full explanation in SkyCanvas.tsx. */
+    <div ref={containerRef} className="relative w-full" style={{ height }}>
       <canvas
         ref={canvasRef}
         onMouseMove={(e) => {
@@ -89,7 +91,7 @@ export function PublicSkyCanvas({ stars, clusters, height }: PublicSkyCanvasProp
           if (nearest) setHoverPos({ x: nearest.x, y: nearest.y });
         }}
         onMouseLeave={() => setHovered(null)}
-        className="block w-full cursor-pointer"
+        className="absolute top-0 left-0 block cursor-pointer"
       />
       {hovered && (
         <div

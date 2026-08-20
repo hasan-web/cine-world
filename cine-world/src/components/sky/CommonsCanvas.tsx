@@ -68,8 +68,10 @@ export function CommonsCanvas({ placements, yours, clusters, height }: CommonsCa
   }, [placements, yours, clusters, height]);
 
   return (
-    <div ref={containerRef} className="relative w-full">
-      <canvas ref={canvasRef} className="block w-full" />
+    /* Canvas out of flow so its own pixel width can't pin the container open on resize — see the
+       full explanation in SkyCanvas.tsx. */
+    <div ref={containerRef} className="relative w-full" style={{ height }}>
+      <canvas ref={canvasRef} className="absolute top-0 left-0 block" />
     </div>
   );
 }
